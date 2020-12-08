@@ -1,8 +1,8 @@
 import os
 import secrets
 from Portal import app
-from PIL import Image
 from flask import Flask, session, escape, render_template, url_for, flash, redirect, request
+from werkzeug import url_encode
 from Portal.forms import SubmitResearchWork, ReviewSubmission, LoginForm
 import hashlib #for SHA512
 from flask_login import login_user, current_user, logout_user, login_required
@@ -47,8 +47,19 @@ def logout():
     return redirect(url_for('login'))
 
 
-@app.route("/dashboard", methods= ['POST', 'GET'])
-@login_required
-def dashboard():
+@app.route("/gradeSubmission")
+def gradeSubmission():
+    form = ReviewSubmission(request.form) 
+    return render_template('grade.html', title='Grade Submission', form=form)
 
-    return render_template('dashboard.html', title='Dashboard', form=form)
+
+@app.route("/dashboard", methods= ['POST', 'GET'])
+def dashboard():
+    # to be added to dashboard:
+    # <div class="col s6">
+    #     {% for papers in studentSubmissions %}
+    #         <a href = "{{ url_for('static', filename= student.ID + organizer.photo1) }}"> <img class="circle responive-img account-img" src="{{ photo1 }}"> </a>
+    #     { % endfor %} 
+    # </div>
+    return render_template('dashboard.html', title='Dashboard')
+

@@ -1,0 +1,64 @@
+{% extends "layout.html" %}
+{% block content %}
+
+<html itemscope itemtype="http://schema.org/Article">
+<body>
+<br>
+    <div class="valign col s12 center-align transparent">
+        <form method="POST" action="/login">
+            {{ form.hidden_tag() }}
+            <fieldset class="form-group">
+                <h3><b>Review Submission</b></h3>
+                <hr>
+                <br>
+
+                 <div class="form-group">
+                    {{ form.efforts.label(class="form-control-label") }}
+                    {% if form.efforts.errors %}
+                        {{ form.efforts(class="form-control form-control-lg is-invalid") }}
+                        <div class="invalid-feedback">
+                            {% for error in form.efforts.errors %}
+                                <span>{{ error }}</span>
+                            {% endfor %}
+                        </div>
+                    {% else %}
+                        {{ form.efforts(class="form-control form-control-lg") }}
+                    {% endif %}
+                </div>
+
+                <div class="form-group">
+                    {{ form.novelty.label(class="form-control-label") }}
+                    {% if form.novelty.errors %}
+                        {{ form.novelty(class="form-control form-control-lg is-invalid") }}
+                        <div class="invalid-feedback">
+                            {% for error in form.novelty.errors %}
+                                <span>{{ error }}</span>
+                            {% endfor %}
+                        </div>
+                    {% else %}
+                        {{ form.novelty(class="form-control form-control-lg") }}
+                    {% endif %}
+                </div>
+
+                <div class="form-group">
+                    {{ form.relevance.label(class="form-control-label") }}
+                    {% if form.relevance.errors %}
+                        {{ form.relevance(class="form-control form-control-lg is-invalid") }}
+                        <div class="invalid-feedback">
+                            {% for error in form.relevance.errors %}
+                                <span>{{ error }}</span>
+                            {% endfor %}
+                        </div>
+                    {% else %}
+                        {{ form.relevance(class="form-control form-control-lg") }}
+                    {% endif %}
+                </div>
+            <br>
+            
+            <div class="form-group">
+            {{ form.submit(class="button-border hoverable waves-effect waves-light btn-large blue lighten-5 black-text") }}
+            </div>
+        </form>
+    </body>
+</html>
+{% endblock content %}

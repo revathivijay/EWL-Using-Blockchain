@@ -1,32 +1,58 @@
 {% extends "layout.html" %}
 {% block content %}
 
+<head>
+    <script src="static/js/pdfobject.js"></script>
+</head>
+
       <div class="row valign wrapper">
         <div class="col s4">
-          <h3 class="account-heading black-text"><b>Welcome, </b>{{ student.name }}<br>
+          <h3 class="account-heading black-text"><b>Welcome, </b>studentName
         </div>
       </div>
-
-    <div class = "dim card amber accent-2 hoverable col s12">
+    <div class = "dim card blue lighten-5 col s12">
         <fieldset class="form-group">
-            <h4 class="brown-text-text darken-1"><b>Account Info: {{ student.name }}</b></h4>
+            <br>
+            <h4><b>Account Info</b></h4>
             <hr>
             <br>
 
             <div class="form-group">
-                <h5 class = "brown-text darken-1"><b>Email</b></h5>
-                {{ student.email }}
+                <h5><b>ID number</b></h5>
+                ID number
+            </div>
+            <br>
+
+            <div class="form-group">
+                <h5><b>Department</b></h5>
+                dummyDept
+            </div>
+            <br>
+
+            <div class="form-group">
+                <h5><b>Email</b></h5>
+                studentEmail
+            </div>
+            <br>
+
+        </fieldset>
+    </div>
+    <hr>
+    <div class = "dim card blue lighten-5 col s12">
+        <fieldset class="form-group">
+            <br>
+            <!-- if list of WIP or work published is non empty, do the following: -->
+            <div class="form-group">
+                <h5><b>Research Paper 1</b></h5>
+                <b> Status: </b> In progress <br>
+                <script>PDFObject.embed("C:/Users/Nidhee/Desktop/FourthYearResources/OE.pdf", "#paper1");</script>
             </div>
             <br>
         </fieldset>
     </div>
 
-    <!--
-    <div class="col s6">
-        {% for papers in studentSubmissions %}
-            <a href = "{{ url_for('static', filename= student.ID + organizer.photo1) }}"> <img class="circle responive-img account-img" src="{{ photo1 }}"> </a>
-        { % endfor %} 
-    </div>
-    -->
-
 {% endblock content %}
+
+
+
+

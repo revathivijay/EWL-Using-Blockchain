@@ -15,6 +15,6 @@ class SubmitResearchWork(FlaskForm):
 
 class ReviewSubmission(FlaskForm):
 	scale = [(1, 'Non-existent'), (2, 'Poor'), (3, 'Average'), (4, 'Good'), (5, 'Excellent')]
-    effort = SelectField('Effort', choices=scale, validators=[Required()])
-    novelty = SelectField('Novelty', choices=scale, validators=[Required()])
-    relevance = SelectField('Relevance', choices=scale, validators=[Required()])
+	effort = SelectField('Effort', choices=scale, validators=[Required()])
+	novelty = SelectField('Novelty', choices=scale, validators=[Required()])
+	relevance = SelectField('Relevance', choices=scale, validators=[Required()])
