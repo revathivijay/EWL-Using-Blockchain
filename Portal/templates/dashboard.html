@@ -51,6 +51,35 @@
         </fieldset>
     </div>
 
+    <div class = "dim card blue lighten-5 col s12">
+        <span class = 'black-text'>
+            <h5><b> Upload more work </b></h5>
+            <hr>
+            <form method=post enctype=multipart/form-data>
+            <div class="form-group">
+                     {{ form.Document.label(class="form-control-label") }}
+                     {% if form.Document.errors %}
+                         {{ form.Document(class="form-control form-control-lg is-invalid") }}
+                         <div class="invalid-feedback">
+                             {% for error in form.Document.errors %}
+                                 <span>{{ error }}</span>
+                             {% endfor %}
+                         </div>
+                     {% else %}
+                         {{ form.Document(class="form-control form-control-lg") }}
+                     {% endif %}
+            </div>
+        </span> 
+        <div class="form-group">
+        <a href = "{{url_for('dashboard')}}"> {{ form.submit(class="button-border hoverable waves-effect waves-light btn-large blue lighten-3 black-text") }}
+        </div>
+        </form>
+        </p>
+    </div>
+
+
+    
+
 {% endblock content %}
 
 

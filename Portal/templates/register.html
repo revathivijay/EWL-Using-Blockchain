@@ -3,13 +3,12 @@
 
 <html itemscope itemtype="http://schema.org/Article">
 <body>
-<h1>Student Registration</h1>
 <br>
-    <div class="valign col s12 center-align transparent">
+    <div class="valign center-align dim card blue lighten-5">
         <form method="POST" action="/register">
             {{ form.hidden_tag() }}
             <fieldset class="form-group">
-                <h3><b>Register</b></h3>
+                <h3><b>Student</b></h3>
                 <hr>
                 <br>
 
@@ -56,7 +55,7 @@
             <br>
             
             <div class="form-group">
-            {{ form.submit(class="button-border hoverable waves-effect waves-light btn-large blue lighten-5 black-text") }}
+            <b>{{ form.submit(class="button-border hoverable waves-effect waves-light btn-large blue lighten-3 black-text") }}</b>
             </div>
         </form>
     </body>

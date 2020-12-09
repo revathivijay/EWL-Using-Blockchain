@@ -192,14 +192,14 @@ def logout():
     return redirect('/register')
 
 
-
 @app.route("/")
 def home():
     return "HOME"
 
-@app.route("/dashboard")
+@app.route("/dashboard", methods=['POST', 'GET'])
 def dashboard():
-    return "DASHBOARD"
+    form = SubmitResearchWork(request.form)
+    return render_template('dashboard.html', title='Dashboard', form = form)
 
 
 # @app.route("/login", methods=['GET', 'POST'])
