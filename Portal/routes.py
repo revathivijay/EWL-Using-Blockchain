@@ -3,7 +3,7 @@
 # from Portal import app
 # from flask import Flask, session, escape, render_template, url_for, flash, redirect, request
 # from werkzeug import url_encode
-from Portal.forms import SubmitResearchWork, ReviewSubmission, LoginForm
+from forms import SubmitResearchWork, ReviewSubmission, LoginForm
 # import hashlib #for SHA512
 from flask_login import login_user, current_user, logout_user, login_required
 # from sqlalchemy.orm import Session
