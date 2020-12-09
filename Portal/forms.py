@@ -7,11 +7,18 @@ from wtforms.validators import DataRequired, Length, Email, EqualTo, Required, N
 class LoginForm(FlaskForm):
     email = StringField('Email', validators=[DataRequired(), Email()])
     password = PasswordField('Password', validators=[DataRequired()])
+    id = StringField('id', validators=[])
     remember = BooleanField('Remember me')
     submit = SubmitField('Login')
 
 class SubmitResearchWork(FlaskForm):
-	submittedWork = FileField('Research work',validators=[FileAllowed(['.docx', '.pdf', '.txt'])])
+    students = StringField('students', validators=[DataRequired()])
+    staff = StringField('staff', validators=[DataRequired()])
+    topic = StringField('topic', validators=[DataRequired()])
+    departments = StringField('departments', validators=[DataRequired()])
+    Document = FileField('Document',validators=[FileAllowed(['.docx', '.pdf', '.txt'])])
+    submit = SubmitField('Add')
+
 
 class ReviewSubmission(FlaskForm):
 	scale = [(1, 'Non-existent'), (2, 'Poor'), (3, 'Average'), (4, 'Good'), (5, 'Excellent')]

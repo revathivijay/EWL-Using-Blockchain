@@ -33,11 +33,7 @@
             </div>
             <!-- Navbar Right Side -->
             <div class="navbar-nav">
-                {% if current_user.is_authenticated %}
-                  <a class="hoverable nav-item nav-link" href="{{ url_for('logout') }}"><b>Logout</b></a>
-                {% else %}
-                  <a class="hoverable nav-item nav-link" href="{{ url_for('login') }}"><b>Login</b></a>
-                {% endif %}
+                  <a class="hoverable nav-item nav-link" href="{{ url_for('register') }}"><b>Logout/login</b></a>
             </div>
           </div>
         </div>
@@ -57,10 +53,8 @@
           {% endwith %}
           {% block content %} {% endblock %}
         </div>
-        {% if current_user.type == 'P' or current_user.type == 'S' %}
       </div>
     </main>
-    {% endif %}
 
     <div class = "footer">
      </div>
