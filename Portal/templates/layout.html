@@ -13,6 +13,7 @@
     <!--Import materialize.css-->
 
     <link type="text/css" rel="stylesheet" href="static/css/materialize.min.css" media="screen,projection"/>
+    <link type="text/css" rel="stylesheet" href="static/css/materialize.css" media="screen,projection"/>
 
     {% if title %}
         <title>{{ title }}</title>
@@ -21,7 +22,7 @@
     {% endif %}
 </head>
 <body class = "content">
-    <header class="site-header">
+    <header class="collapsible-header">
       <nav class="grey darken-4 navbar navbar-expand-md navbar-dark">
         <div class="container">
           <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarToggle" aria-controls="navbarToggle" aria-expanded="false" aria-label="Toggle navigation">
@@ -39,9 +40,9 @@
         </div>
       </nav>
     </header>
-    <main role="main" class="container">
+    <main role="main" class="main-div">
       <div class="row">
-        <div class="col-md-8">
+        <div class="col s12">
           {% with messages = get_flashed_messages(with_categories=true) %}
             {% if messages %}
               {% for category, message in messages %}

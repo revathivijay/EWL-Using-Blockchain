@@ -1,77 +1,163 @@
 {% extends "layout.html" %}
 {% block content %}
-
 <html itemscope itemtype="http://schema.org/Article">
 <body>
-<h1>Add Project</h1>
-<br>
-    <div class="valign col s12 center-align transparent">
-        <form method="POST" action="/add_project">
-            {{ form.hidden_tag() }}
-            <fieldset class="form-group">
-                <h3><b>Register</b></h3>
+
+<head>
+    <script src="static/js/pdfobject.js"></script>
+</head>
+     <div class = "child-div blue lighten-5 col s3" style="width: 30%; float:left; position:fixed">
+        <fieldset class="form-group">
+            <br>
+            <h4><b>Add new project</h4>
+            <h6> for dummyStudent </h6>
+            <hr>
+            <br>
+
+        <form method="POST" action="{{ url_for('add_project') }}" enctype="multipart/form-data">
+            <div class="form-group">
+                <h6><b>Students</b></h6>
+                    {% if submit_work_form.students.errors %}
+                        {{ submit_work_form.students(class="form-control form-control-lg is-invalid") }}
+                        <div class="invalid-feedback">
+                            {% for error in submit_work_form.students.errors %}
+                                <span>{{ error }}</span>
+                            {% endfor %}
+                        </div>
+                    {% else %}
+                        {{ submit_work_form.students(class="form-control form-control-lg") }}
+                    {% endif %}
+            </div>
+            <br>
+
+            <div class="form-group">
+                <h6><b>Mentor</b></h6>
+                    {% if submit_work_form.staff.errors %}
+                        {{ submit_work_form.staff(class="form-control form-control-lg is-invalid") }}
+                        <div class="invalid-feedback">
+                            {% for error in submit_work_form.staff.errors %}
+                                <span>{{ error }}</span>
+                            {% endfor %}
+                        </div>
+                    {% else %}
+                        {{ submit_work_form.staff(class="form-control form-control-lg") }}
+                    {% endif %}
+            </div>
+            <br>
+
+            <div class="form-group">
+                <h6><b>Research topic</b></h6>
+                    {% if submit_work_form.topic.errors %}
+                        {{ submit_work_form.topic(class="form-control form-control-lg is-invalid") }}
+                        <div class="invalid-feedback">
+                            {% for error in submit_work_form.topic.errors %}
+                                <span>{{ error }}</span>
+                            {% endfor %}
+                        </div>
+                    {% else %}
+                        {{ submit_work_form.topic(class="form-control form-control-lg") }}
+                    {% endif %}
+            </div>
+            <br>
+
+            <div class="form-group">
+                <h6><b>Department(s)</b></h6>
+                    {% if submit_work_form.departments.errors %}
+                        {{ submit_work_form.departments(class="form-control form-control-lg is-invalid") }}
+                        <div class="invalid-feedback">
+                            {% for error in submit_work_form.departments.errors %}
+                                <span>{{ error }}</span>
+                            {% endfor %}
+                        </div>
+                    {% else %}
+                        {{ submit_work_form.departments(class="form-control form-control-lg") }}
+                    {% endif %}
+            </div>
+            <br>
+
+            <div class="form-group">
+                 {{ submit_work_form.Document.label(class="form-control-label") }}
+                 {% if submit_work_form.Document.errors %}
+                     {{ submit_work_form.Document(class="form-control form-control-lg is-invalid") }}
+                     <div class="invalid-feedback">
+                         {% for error in submit_work_form.Document.errors %}
+                             <span>{{ error }}</span>
+                         {% endfor %}
+                     </div>
+                 {% else %}
+                     {{ submit_work_form.Document(class="form-control form-control-lg") }}
+                 {% endif %}
+            </div>
+
+            <div class="form-group">
+            <a href = "{{ url_for('add_project') }}"> {{ submit_work_form.submit(class="button-border hoverable waves-effect waves-light btn-large blue lighten-3 black-text") }} </a>
+            </div>
+            </b></h4>
+        </form>
+    </fieldset>
+</div>
+    <hr>
+    <div class = "child-div card blue lighten-5 col s7" style="width: 68%; float:right; overflow-y:scroll; height:100%; ">
+        <fieldset class="form-group">
+            <br>
+           
+           {% for i in range(0, total) %}
+
+                <div class="form-group">
+                    <h5><b>{{ topic_list[i] }}</b></h5>
+                    <i>Status:</i> Submitted for publication  <br>
+                    <br>
+                    {% for file in file_lists[i] %}
+                        <embed src="./static/documents/{{ file }}" type="application/pdf" height="400px" width="80%"> 
+                        <hr>
+                    {% endfor %}
+                </div>
+                <br>
+                
+                <div class = "dim">
+                <span class = 'black-text'>
+                    <h6><b> Update your progress</b></h6>
+                    <form method="POST" action="{{ url_for('update_project', id=my_projects[i]) }}" enctype="multipart/form-data">
+                    <div class="form-group">
+                             {{ update_work_form.updatedDocument.label(class="form-control-label") }}
+                             {% if update_work_form.updatedDocument.errors %}
+                                 {{ update_work_form.updatedDocument(class="form-control form-control-lg is-invalid") }}
+                                 <div class="invalid-feedback">
+                                     {% for error in update_work_form.updatedDocument.errors %}
+                                         <span>{{ error }}</span>
+                                     {% endfor %}
+                                 </div>
+                             {% else %}
+                                 {{ update_work_form.updatedDocument(class="form-control form-control-lg") }}
+                             {% endif %}
+                    </div>
+                </span> 
+                <div class="form-group">
+                    <a href = "{{ url_for('update_project', id=my_projects[i]) }}"> {{ update_work_form.update(class="button-border hoverable waves-effect waves-light btn-large blue lighten-3 black-text") }} </a>
+                </div>
+            </form>
+        </form>
+                </p>
+                </div>
+                <br>
                 <hr>
                 <br>
 
-                <div class="form-group">
-                    {{ form.students.label(class="form-control-label") }}
-                    {% if form.students.errors %}
-                        {{ form.students(class="form-control form-control-lg is-invalid") }}
-                        <div class="invalid-feedback">
-                            {% for error in form.students.errors %}
-                                <span>{{ error }}</span>
-                            {% endfor %}
-                        </div>
-                    {% else %}
-                        {{ form.students(class="form-control form-control-lg") }}
-                    {% endif %}
-                </div>
 
-                <div class="form-group">
-                    {{ form.staff.label(class="form-control-label") }}
-                    {% if form.staff.errors %}
-                        {{ form.staff(class="form-control form-control-lg is-invalid") }}
-                        <div class="invalid-feedback">
-                            {% for error in form.staff.errors %}
-                                <span>{{ error }}</span>
-                            {% endfor %}
-                        </div>
-                    {% else %}
-                        {{ form.staff(class="form-control form-control-lg") }}
-                    {% endif %}
-                </div>
-                <div class="form-group">
-                    {{ form.topic.label(class="form-control-label") }}
-                    {% if form.topic.errors %}
-                        {{ form.topic(class="form-control form-control-lg is-invalid") }}
-                        <div class="invalid-feedback">
-                            {% for error in form.topic.errors %}
-                                <span>{{ error }}</span>
-                            {% endfor %}
-                        </div>
-                    {% else %}
-                        {{ form.topic(class="form-control form-control-lg") }}
-                    {% endif %}
-                </div>
-                <div class="form-group">
-                    {{ form.departments.label(class="form-control-label") }}
-                    {% if form.departments.errors %}
-                        {{ form.departments(class="form-control form-control-lg is-invalid") }}
-                        <div class="invalid-feedback">
-                            {% for error in form.departments.errors %}
-                                <span>{{ error }}</span>
-                            {% endfor %}
-                        </div>
-                    {% else %}
-                        {{ form.departments(class="form-control form-control-lg") }}
-                    {% endif %}
-                </div>
-            <br>
+           {% endfor %}
+
             
-            <div class="form-group">
-            {{ form.submit(class="button-border hoverable waves-effect waves-light btn-large blue lighten-5 black-text") }}
-            </div>
-        </form>
+
+        </fieldset>
+    </div>
+
+    
+
     </body>
 </html>
+
 {% endblock content %}
+
+
+
+

@@ -19,6 +19,9 @@ class SubmitResearchWork(FlaskForm):
     Document = FileField('Document',validators=[FileAllowed(['.docx', '.pdf', '.txt'])])
     submit = SubmitField('Add')
 
+class UpdateResearchWork(FlaskForm):
+    updatedDocument = FileField('Document',validators=[FileAllowed(['.docx', '.pdf', '.txt'])])
+    update = SubmitField('Update')
 
 class ReviewSubmission(FlaskForm):
 	scale = [(1, 'Non-existent'), (2, 'Poor'), (3, 'Average'), (4, 'Good'), (5, 'Excellent')]
