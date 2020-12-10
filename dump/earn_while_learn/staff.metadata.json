@@ -1,1 +1,1 @@
-{"options":{},"indexes":[{"v":2,"key":{"_id":1},"name":"_id_","ns":"earn_while_learn.staff"}],"uuid":"c8ceefab036c47268c6b370e10f63f5f"}
+{"indexes":[{"v":{"$numberInt":"2"},"key":{"_id":{"$numberInt":"1"}},"name":"_id_"}],"uuid":"85c0c3bc64a5492c89757d5378738596","collectionName":"staff"}

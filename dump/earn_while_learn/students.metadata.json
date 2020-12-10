@@ -1,1 +1,1 @@
-{"options":{},"indexes":[{"v":2,"key":{"_id":1},"name":"_id_","ns":"earn_while_learn.students"}],"uuid":"ab2f11bfdf1b406d86e79ade210d5658"}
+{"indexes":[{"v":{"$numberInt":"2"},"key":{"_id":{"$numberInt":"1"}},"name":"_id_"}],"uuid":"c3b508e969054ff09a829f342dfa6677","collectionName":"students"}

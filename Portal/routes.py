@@ -3,7 +3,7 @@
 # from Portal import app
 # from flask import Flask, session, escape, render_template, url_for, flash, redirect, request
 # from werkzeug import url_encode
-from forms import SubmitResearchWork, ReviewSubmission, LoginForm
+from Portal.forms import SubmitResearchWork, ReviewSubmission, LoginForm
 # import hashlib #for SHA512
 from flask_login import login_user, current_user, logout_user, login_required
 # from sqlalchemy.orm import Session
@@ -17,14 +17,14 @@ from flask import Flask, render_template, request, Response, send_file, redirect
 # from send_email import Email
 import json
 
-from bson import json_util
+# from bson import json_util
 from flask import Flask, render_template, url_for, request, session, redirect, send_from_directory, jsonify
 import pandas
 # import Lib
 import cv2
 import sys
 
-from pyzbar import pyzbar
+# from pyzbar import pyzbar
 # import cv2
 
 
@@ -255,4 +255,4 @@ def dashboard():
 #     return render_template('dashboard.html', title='Dashboard')
 #
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.run(debug=True, port=8080)
