@@ -152,7 +152,7 @@ def add_project():
 def helper_login_student():
     session['username'] = 'Ram'
     session['id'] = '171071059'
-    return redirect('/')
+    return redirect('/dashboard')
 
 @app.route('/helper_login_staff')
 def helper_login_staff():
