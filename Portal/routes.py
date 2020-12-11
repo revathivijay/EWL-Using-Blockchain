@@ -316,12 +316,19 @@ def home():
 def dashboard():
 
 	#For NIDHEE:  *all students* contains an array of ids.
-	#PREREQUISITE: Add impact_factor using following code:  mongo.db.students.update({}, {"$set": {"impact_score":0}})
+	#PREREQUISITE: Add impact_factor using following code:  mongo.db.students.update({}, {"$set": {"impact_score":0}}) ====DONE===== 
 	#PREREQUISITE #2: Add random impact factor values for some students.
 	all_students = displayRanklist()
 	form = SubmitResearchWork(request.form)
 	return render_template('dashboard.html', title='Dashboard', form = form, all_students = all_students)
 
+def displayRanklist():
+	students = mongo.db.students
+	cursor = students.find({"impact_score":{"$gt": 0 }}, {"id":1})
+	all_students = []
+	for document in cursor:
+		all_students.append(document['id'])
+	return all_students
 
 # @app.route("/login", methods=['GET', 'POST'])
 # def login():
