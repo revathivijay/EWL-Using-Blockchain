@@ -216,10 +216,25 @@ def update_project(id):
 	return redirect('/add_project')
 
 
-@app.route('/verify_project', methods=['GET', 'POST'])
-def verify_project():
-	form = ReviewSubmission(request.form)
-	return 'render the verify_project render_template here'
+# @app.route('/verify_project', methods=['GET', 'POST'])
+# def verify_project():
+	# form = ReviewSubmission(request.form)
+	# verification_status = request.form.publishedStatus
+	# if (verification_status=='P'):
+	# 	topic = 'FYP Bi-Weekly Report - November 2020'
+	# 	research = mongo.db.research
+	# 	project = research.find_one({"topic": topic})
+	# 	project.update({"$set": {"isPublished": True}})
+	# 	publicationJournal = "ARCHIVES OF COMPUTATIONAL METHODS IN ENGINEERING"
+	# 	impact_factor = 50
+	# 	students_ids = project['students']
+	# 	no_of_students = len(students_ids)
+	# 	each_student_impact_factor = impact_factor / no_of_students
+	# 	for student_id in students_ids:
+	# 		students = mongo.db.students
+	# 		students.find_one({"id": student_id}).update({'$set': {"impactScore": each_student_impact_factor}})
+
+	# return render_template('verify_project.html', form=form, )
 
 
 def get_project_lists():
@@ -299,8 +314,13 @@ def home():
 
 @app.route("/dashboard", methods=['POST', 'GET'])
 def dashboard():
+
+	#For NIDHEE:  *all students* contains an array of ids.
+	#PREREQUISITE: Add impact_factor using following code:  mongo.db.students.update({}, {"$set": {"impact_score":0}})
+	#PREREQUISITE #2: Add random impact factor values for some students.
+	all_students = displayRanklist()
 	form = SubmitResearchWork(request.form)
-	return render_template('dashboard.html', title='Dashboard', form = form)
+	return render_template('dashboard.html', title='Dashboard', form = form, all_students = all_students)
 
 
 # @app.route("/login", methods=['GET', 'POST'])
