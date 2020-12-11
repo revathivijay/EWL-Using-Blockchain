@@ -176,7 +176,7 @@ def add_project():
 			# for projects now inserted
 			return render_template('add_project.html', msg = "", submit_work_form=submit_work_form, update_work_form=update_work_form, my_projects = my_projects, topic_list=topic_list, file_lists=file_lists, total=total)
 		
-		return "NOoooooooooooooooo"		
+		return "NOOOoooooooooooooooo"
 
 	# for already existing projects
 	my_projects, topic_list, file_lists = get_project_lists()
@@ -214,6 +214,12 @@ def update_project(id):
 
 	print('Doc uploaded')
 	return redirect('/add_project')
+
+
+@app.route('/verify_project', methods=['GET', 'POST'])
+def verify_project():
+	form = ReviewSubmission(request.form)
+	return 'render the verify_project render_template here'
 
 
 def get_project_lists():
