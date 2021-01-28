@@ -1,0 +1,107 @@
+{% extends "layout.html" %}
+{% block content %}
+<html itemscope itemtype="http://schema.org/Article">
+<body>
+
+        <hr>
+    <div class = "child-div card amber lighten-4 col s12" style="width: 68%; float:right; overflow-y:scroll; height:100%; ">
+        <fieldset class="form-group">
+        <br>
+        <h4><b>Apply for a Job</h4>
+        <br>
+           
+           {% for i in range(0, total) %}
+
+                <div class="form-group">
+                <h6><b>Title</b></h6>
+                    {% if add_jobs_form.title.errors %}
+                        {{ add_jobs_form.title(class="form-control form-control-lg is-invalid") }}
+                        <div class="invalid-feedback">
+                            {% for error in add_jobs_form.title.errors %}
+                                <span>{{ error }}</span>
+                            {% endfor %}
+                        </div>
+                    {% else %}
+                        {{ add_jobs_form.title(class="form-control form-control-lg") }}
+                    {% endif %}
+            </div>
+            <br>
+
+            <div class="form-group">
+                <h6><b>Place</b></h6>
+                    {% if add_jobs_form.place.errors %}
+                        {{ add_jobs_form.place(class="form-control form-control-lg is-invalid") }}
+                        <div class="invalid-feedback">
+                            {% for error in add_jobs_form.place.errors %}
+                                <span>{{ error }}</span>
+                            {% endfor %}
+                        </div>
+                    {% else %}
+                        {{ add_jobs_form.place(class="form-control form-control-lg") }}
+                    {% endif %}
+            </div>
+            <br>
+
+            <div class="form-group">
+                <h6><b>Description</b></h6>
+                    {% if add_jobs_form.description.errors %}
+                        {{ add_jobs_form.description(class="form-control form-control-lg is-invalid") }}
+                        <div class="invalid-feedback">
+                            {% for error in add_jobs_form.description.errors %}
+                                <span>{{ error }}</span>
+                            {% endfor %}
+                        </div>
+                    {% else %}
+                        {{ add_jobs_form.description(class="form-control form-control-lg") }}
+                    {% endif %}
+            </div>
+            <br>
+
+            <div class="form-group">
+                <h6><b>Vacancy</b></h6>
+                    {% if add_jobs_form.vacancy.errors %}
+                        {{ add_jobs_form.vacancy(class="form-control form-control-lg is-invalid") }}
+                        <div class="invalid-feedback">
+                            {% for error in add_jobs_form.vacancy.errors %}
+                                <span>{{ error }}</span>
+                            {% endfor %}
+                        </div>
+                    {% else %}
+                        {{ add_jobs_form.vacancy(class="form-control form-control-lg") }}
+                    {% endif %}
+            </div>
+            <br>
+ 
+                <br>
+
+               
+                
+                <div class="center-align form-group">
+                    <b><a href = "{{ url_for('apply_for_job', id=my_projects[i]) }}"> Apply {{ (class="button-border hoverable waves-effect waves-light btn-large amber black-text") }} </a></b>
+                </div>
+            </form>
+        </form>
+                </p>
+                </div>
+                <br>
+                <hr style="height:1px;border:none;color:#333;background-color:#333;" />
+                <br>
+
+
+           {% endfor %}
+
+            
+
+        </fieldset>
+    </div>
+
+    
+
+    </body>
+</html>
+
+{% endblock content %}
+
+
+
+

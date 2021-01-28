@@ -33,3 +33,16 @@ class ReviewSubmission(FlaskForm):
 	relevance = SelectField('Relevance', choices=scale, validators=[Required()])
 	publishedStatus = SelectField('Current Status', choices=[('P','Published'), ('S','Submitted'),('N', 'Not submitted, still working')])
 	verify = SubmitField('Verified')
+
+class AddJobs(FlaskForm):
+	title = StringField('Job title', validators=[DataRequired()])
+	place = SelectField('Place', choices=[('C','Canteen'), ('I','Internet Lab'),('L', 'Library')])
+	description = StringField('Job description', validators=[DataRequired()])
+	vacancy = IntegerField('Vacancy', validators=[DataRequired()])
+	add = SubmitField('Add Job')
+
+class UpdateJobs(FlaskForm):
+	vacancy = IntegerField('Vacancy', validators=[DataRequired()])
+	acceptingApplication = SelectField('Accepting applications', choices=[('Y','Yes'), ('N','No')])
+	update = SubmitField('Update Job')
+
