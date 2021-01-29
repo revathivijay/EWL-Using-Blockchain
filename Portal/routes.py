@@ -3,7 +3,9 @@
 # from Portal import app
 # from flask import Flask, session, escape, render_template, url_for, flash, redirect, request
 # from werkzeug import url_encode
-from forms import SubmitResearchWork, ReviewSubmission, LoginForm, UpdateResearchWork
+from bson.objectid import ObjectId
+from Portal.forms import SubmitResearchWork, VerifyReport, LoginForm, UpdateResearchWork, VerifyPublication
+from Portal.__init__ import csv_file
 from werkzeug.utils import secure_filename
 # import hashlib #for SHA512
 from flask_login import login_user, current_user, logout_user, login_required
@@ -20,7 +22,7 @@ from flask import Flask, render_template, request, Response, send_file, redirect
 import json
 
 # from bson import json_util
-from flask import Flask, render_template, url_for, request, session, redirect, send_from_directory, jsonify
+from flask import Flask, render_template, url_for, request, session, redirect, send_from_directory, jsonify, flash
 import pandas
 # import Lib
 import cv2
@@ -154,7 +156,7 @@ def add_project():
 			destination = "/".join([target, filename])
 			upload.save(destination)
 			print(filename, "ho gayi upload")
-			file_list.append(filename)
+			file_list.append({filename:False})
 			break
 
 		print('Doc uploaded')
@@ -201,44 +203,78 @@ def update_project(id):
 		upload.save(destination)
 		# research.insert({'file_list': filename})
 		print(filename, "ho gayi upload")
-		files.append(filename)
+		files.append({filename:False})
 		break
 
 	project = mongo.db.research.find_one({"_id":ObjectId(id)})
 	if 'file_list' in project:
 		file_list = project["files"]
-		file_list = append(files[0])
+		file_list.append(files[0])
 	else:
 		file_list = [files[0]]
-	db.update({"_id":id}, {"$set":{"file_list":file_list}})
+	mongo.db.research.update({"_id":id}, {"$set":{"file_list":file_list}})
 
 	print('Doc uploaded')
 	return redirect('/add_project')
 
+@app.route('/verify_report/<p_id>/<report_name>', methods=['GET', 'POST'])
+def verify_report(p_id, report_name):
+	gradedReports = mongo.db.gradedReports
+	research = mongo.db.research
+	project = research.find_one({"_id": ObjectId(p_id)})
+	topic = project['topic']
+	form = VerifyReport(request.form)
+	if form.is_submitted():
+		gradedReports.update_one({"projectID": p_id, "reportName":report_name}, {"$set":{"effort":form.effort.data, "relevance":form.relevance.data, "novelty":form.novelty.data}} )
+		project['file_list'].get('report_name').set(True)
+		research.update_one({"_id": ObjectId(p_id)}, {"$set":{"file_list":project['file_list']}})
+		return redirect("/teacher_dashboard")
 
-# @app.route('/verify_project', methods=['GET', 'POST'])
-# def verify_project():
-	# form = ReviewSubmission(request.form)
-	# verification_status = request.form.publishedStatus
-	# if (verification_status=='P'):
-	# 	topic = 'FYP Bi-Weekly Report - November 2020'
-	# 	research = mongo.db.research
-	# 	project = research.find_one({"topic": topic})
-	# 	project.update({"$set": {"isPublished": True}})
-	# 	publicationJournal = "ARCHIVES OF COMPUTATIONAL METHODS IN ENGINEERING"
-	# 	impact_factor = 50
-	# 	students_ids = project['students']
-	# 	no_of_students = len(students_ids)
-	# 	each_student_impact_factor = impact_factor / no_of_students
-	# 	for student_id in students_ids:
-	# 		students = mongo.db.students
-	# 		students.find_one({"id": student_id}).update({'$set': {"impactScore": each_student_impact_factor}})
+	return render_template('verify_report.html',topic= topic, form=form)
 
-	# return render_template('verify_project.html', form=form, )
+
+@app.route('/verify_publication/<p_id>', methods=['GET', 'POST'])
+def verify_publication(p_id):
+
+	research = mongo.db.research
+	project = research.find_one({"_id": ObjectId(p_id)})
+	topic = project['topic']
+	doi = project['publicationDOI']
+	publicationJournal = project['publicationJournal']
+	publicationJournal = "ARCHIVES OF COMPUTATIONAL METHODS IN ENGINEERING"
+
+	form = VerifyPublication(request.form)
+
+
+	if form.is_submitted():
+		if 'verify' in request.form:
+
+			research.update({"topic":topic},{"$set": {"isPublished": True}})
+
+			impact_factor = -1
+			for row in csv_file:
+				if publicationJournal==row[1]:
+					impact_factor = float(row[3])
+					break
+
+			if impact_factor == -1:
+				impact_factor = 2 	# Generic other journal
+
+			students_ids = project['students']
+			no_of_students = len(students_ids)
+			each_student_impact_factor = impact_factor / no_of_students
+			for student_id in students_ids:
+				students = mongo.db.students
+				students.update({"id": student_id},{'$set': {"impactScore": each_student_impact_factor}})
+			flash('Verification was successful!', 'success')
+			return redirect('/teacher_dashboard')
+		elif 'notVerify' in request.form:
+			flash('Verification was not successful!', 'danger')
+			return redirect('/teacher_dashboard')
+	return render_template('verify_publication.html', form=form, topic = topic, publicationJournal = publicationJournal, p_id=p_id, doi=doi )
 
 
 def get_project_lists():
-
 	my_projects = []
 	topic_list = []
 	file_lists = []
@@ -322,6 +358,36 @@ def dashboard():
 	form = SubmitResearchWork(request.form)
 	return render_template('dashboard.html', title='Dashboard', form = form, all_students = all_students)
 
+@app.route("/teacher_dashboard", methods=['POST', 'GET'])
+def teacher_dashboard():
+	###TODO: get teacher_id from login
+	teacher_id = '1'
+	research = mongo.db.research
+	all_research_projects = research.find({'staff':teacher_id})
+	vr_topic_list = []
+	vp_topic_list = []
+	p_id_vr = []
+	p_id_vp = []
+	report_name_vr = []
+
+	for project in all_research_projects:
+
+		# Any report is not verified in a certain topic
+		for file in project['file_list']:
+			if project['file_list'].get(file) == False:
+				vr_topic_list.append(project['topic']+":\t"+str(file))
+				p_id_vr.append(str(project['_id']))
+				report_name_vr.append(file)
+
+
+		# students submitted for publication but teacher needs to verify
+		if(project['isPublished']==False and project['publicationDOI'] != None and project['publicationJournal']!=None):
+			vp_topic_list.append(project['topic'])
+			p_id_vp.append(str(project['_id']))
+
+
+	return render_template('teacher-dashboard.html', title='Dashboard', vr_topic_list=vr_topic_list, p_id_vr=p_id_vr, report_name_vr = report_name_vr, total_vr = len(p_id_vr), vp_topic_list=vp_topic_list, p_id_vp=p_id_vp, total_vp = len(p_id_vp))
+
 def displayRanklist():
 	students = mongo.db.students
 	cursor = students.find({"impact_score":{"$gt": 0 }}, {"id":1})
@@ -368,7 +434,7 @@ def displayRanklist():
 #
 # @app.route("/gradeSubmission")
 # def gradeSubmission():
-#     form = ReviewSubmission(request.form)
+#     form = VerifyReport(request.form)
 #     return render_template('grade.html', title='Grade Submission', form=form)
 #
 #
