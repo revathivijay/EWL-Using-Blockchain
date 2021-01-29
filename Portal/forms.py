@@ -26,7 +26,8 @@ class UpdateResearchWork(FlaskForm):
 	DOI = IntegerField('DOI')
 	update = SubmitField('Update')
 
-class ReviewSubmission(FlaskForm):
+
+class VerifyReport(FlaskForm):
 	scale = [(1, 'Non-existent'), (2, 'Poor'), (3, 'Average'), (4, 'Good'), (5, 'Excellent')]
 	effort = SelectField('Effort', choices=scale, validators=[Required()])
 	novelty = SelectField('Novelty', choices=scale, validators=[Required()])
@@ -41,8 +42,11 @@ class AddJobs(FlaskForm):
 	vacancy = IntegerField('Vacancy', validators=[DataRequired()])
 	add = SubmitField('Add Job')
 
-class UpdateJobs(FlaskForm):
-	vacancy = IntegerField('Vacancy', validators=[DataRequired()])
-	acceptingApplication = SelectField('Accepting applications', choices=[('Y','Yes'), ('N','No')])
-	update = SubmitField('Update Job')
+class VerifyPublication(FlaskForm):
+	topic = StringField("Topic")
+	publicationJournal = StringField("Journal")
+	DOI = StringField("DOI")
+	verify = SubmitField('Verified')
+	notVerify = SubmitField('Not Verified')
+
 
