@@ -1,0 +1,39 @@
+{% extends "layout.html" %}
+{% block content %}
+<html itemscope itemtype="http://schema.org/Article">
+<body>
+
+    <div class = "col s12" style="width: 90%; float:center">
+        <fieldset class="form-group">
+        <br>
+        <h4><b>Job Applicants</h4>
+        <br>
+           
+        <h5><b>{{ title }}</b></h5>
+        <b>Vacancies:</b> {{ vacancies }}
+        <br>
+        {% for i in range(0, total) %}
+            <div class = "child-div card amber lighten-4 col s10" style="width: 90%; float:left">
+                <div class="form-group">
+                    <h6><b>{{ name_list[i] }}</b></h6>
+                    <b>ID:</b> {{ id_list[i] }}
+                    <b>Description</b>: {{ description_list[i] }}
+                    <b>Resume</b>
+                        <embed src="./static/documents/{{ resume_list[i] }}" type="application/pdf" height="200px" width="80%"> 
+                </div>
+            </div>
+            <div class = "child-div col s2" style="width: 10%; float:right">
+                <b><a href = "{{ url_for('add_candidate', job_id=job_id, student_id=id_list[i]) }}"> Accept candidate {{ (class="button-border hoverable waves-effect waves-light btn-large amber black-text") }} </a></b>
+            </div>
+            <br>
+        {% endfor %}    
+
+    </div>
+</body>
+</html>
+
+{% endblock content %}
+
+
+
+

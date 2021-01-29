@@ -49,4 +49,17 @@ class VerifyPublication(FlaskForm):
 	verify = SubmitField('Verified')
 	notVerify = SubmitField('Not Verified')
 
+class CreateJob(FlaskForm):
+	title = StringField('Job title', validators=[DataRequired()])
+	duration = IntegerField('Duration in total hours required', validators=[DataRequired()])
+	description = StringField('Job description', validators=[DataRequired()])
+	vacancies = IntegerField('Vacancies', validators=[DataRequired()])
+	add = SubmitField('Add Job')
+
+class UpdateJobs(FlaskForm):
+	vacancies = IntegerField('Vacancies', validators=[DataRequired()])
+	acceptingApplication = SelectField('Accepting applications', choices=[('Y','Yes'), ('N','No')])
+	update = SubmitField('Update Job')
+
+
 

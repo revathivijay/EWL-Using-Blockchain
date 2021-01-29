@@ -446,5 +446,114 @@ def displayRanklist():
 #     # </div>
 #     return render_template('dashboard.html', title='Dashboard')
 #
+
+
+# View all open jobs
+@app.route("/get_open_jobs", methods=["POST", "GET"])
+def get_open_jobs():
+	# for displaying all jobs 
+	jobs_ = mongo.db.jobs
+	jobs = jobs_.find({})
+
+	# add condition for displaying only jobs w unfilled vacancies
+	L_title = []
+	L_description = []
+	L_vacancies = []
+	L_id = []
+	for job in jobs:
+		print(job["title"], job["description"], job["vacancies"])
+		title, description, vacancies, id = job["title"], job["description"], job["vacancies"], job["id"]
+		L_title.append(title)
+		L_description.append(description)
+		L_vacancies.append(vacancies)
+		L_id.append(id)
+	total = len(L_title)	
+	return render_template('get_open_jobs.html', title_list=L_title, description_list=L_description, vacancies_list=L_vacancies, id_list=L_id, total=total)
+
+
+# Get candidates
+@app.route("/get_candidates/<job_id>", methods=["POST", "GET"])
+def get_candidates(job_id):
+
+	jobs_ = mongo.db.jobs
+	job = jobs_.find_one({"id":job_id})
+	job_title = job["title"]
+	job_vacancies = job["vacancies"]
+
+	candidates = job["candidates"]
+	candidates_db = mongo.db.students
+
+	L_id = []
+	L_name = []
+	L_description = []
+	L_resume = []
+
+	for candidate_id in candidates:
+		candidate = candidates_db.find_one({"id":candidate_id})
+
+		print(candidate["id"], candidate["name"], candidate["description"], candidate["resume"])
+		id, name, description, resume = candidate["id"], candidate["name"], candidate["description"], candidate["resume"]
+
+		L_id.append(id)
+		L_name.append(name)
+		L_description.append(description)
+		L_resume.append(resume)
+
+		total = len(L_id)
+
+	return render_template('get_candidates.html', id_list=L_id, name_list=L_name, description_list=L_description, resume_list=L_resume, total=total, title=job_title, vacancies=job_vacancies, job_id=job_id)
+
+
+# Apply for job
+@app.route("/apply_for_job/<job_id>", methods=["POST", "GET"])
+# by student applying for jobs
+def apply_for_job(job_id):
+	candidate_id = session["id"]
+	# print()
+	job = mongo.db.jobs.find_one({"id":job_id})
+	if "candidates" in job:
+		job["candidates"].append(candidate_id)
+	else:
+		job["candidates"]=[candidate_id]
+
+	# add a condition later to precent appending/applying more than once if already applied  
+	return render_template('get_open_jobs.html')	
+	#return render_template('get_open_jobs.html', candidates=job["candidates"])
+	
+
+# Add candidate (by staff)
+@app.route("/add_candidate/<job_id>/<student_id>", methods=["POST", "GET"])
+# for staff alloting a job to the student
+def add_candidate(job_id, student_id):
+	candidate_id = student_id
+	# print()
+	job = mongo.db.jobs.find_one({"id":job_id})
+	if "candidates" in job:
+		job["candidates"].append(candidate_id)
+	else:
+		job["candidates"]=[candidate_id]
+		job["vacancies"] = job["vacancies"]-1
+	return redirect(url_for('get_candidates', job_id=job_id))
+
+
+# Create job
+@app.route("/create_job", methods=["POST", "GET"])
+def create_job():
+	form = CreateJob(request.form)
+	
+	if request.method == 'POST':
+		print("using db")
+		jobs = mongo.db.jobs
+		id = jobs.count()
+		title = request.form.get('title')
+		description = request.form.get('description')
+		duration = request.form.get('duration')
+		vacancies = request.form.get('vacancies')		
+		jobs.insert({"id":id, "title":title, "description":description, "duration":duration, "vacancies":vacancies})
+		print("job added")
+	#return redirect("/get_open_jobs")
+	render_template('create_job.html', create_job_form=form)
+	
+
 if __name__ == '__main__':
 	app.run(debug=True, port=1240)
