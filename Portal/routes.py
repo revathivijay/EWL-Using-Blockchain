@@ -5,6 +5,7 @@
 # from werkzeug import url_encode
 from bson.objectid import ObjectId
 from Portal.forms import SubmitResearchWork, VerifyReport, LoginForm, UpdateResearchWork, VerifyPublication
+from Portal.__init__ import csv_file
 
 from werkzeug.utils import secure_filename
 # import hashlib #for SHA512
