@@ -15,10 +15,13 @@ gradedReports = mongo.db.reports
 # students.update_many({}, {"$set": {"impactScore":0}})
 # research.update({}, {"$unset": {"impactFactor":-1}})
 # research.update({"_id":ObjectId('5fd04d720d98dceeddf66ad6')}, {"$set":{"file_list":{}}})
-# research.update({"_id":ObjectId('5fd04dce0d98dceeddf66ad7')}, {"$set":{"file_list":{}}})
-research.update({"_id":ObjectId('5fd335f349359305f83f9d04')}, {"$set":{"publicationDOI":"10.1145/3327960.3332389", "publicationJournal":"Future Generation Computer Systems-The International Journal of eScience", "isPublished":False}})
-# cursor = research.find({})# report1 = {"projectID":"5fd335f349359305f83f9d04", "reportName":"report1.pdf", "effort": 3, "relevance":3, "novelty":3}
-# gradedReports.insert_one(report1)
+research.update_one({"_id":ObjectId('5fd04dce0d98dceeddf66ad7')}, {"$set":{"staff":["1"]}})
+
+# research.update({"_id":ObjectId('5fd335f349359305f83f9d04')}, {"$set":{"publicationDOI":"10.1145/3327960.3332389", "publicationJournal":"Future Generation Computer Systems-The International Journal of eScience", "isPublished":False}})
+# cursor = research.find({})
+report1 = {"projectID":"5fd04dce0d98dceeddf66ad7", "reportName":"report1.pdf", "effort": None, "relevance":None, "novelty":None}
+report2 = {"projectID":"5fd04dce0d98dceeddf66ad7", "reportName":"report2.pdf", "effort": None, "relevance":None, "novelty":None}
+gradedReports.insert_many([report1, report2])
 cursor = research.find({})
 #one time insertion
 for document in cursor:

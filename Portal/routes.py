@@ -227,7 +227,7 @@ def verify_report(p_id, report_name):
 	form = VerifyReport(request.form)
 	if form.is_submitted():
 		gradedReports.update_one({"projectID": p_id, "reportName":report_name}, {"$set":{"effort":form.effort.data, "relevance":form.relevance.data, "novelty":form.novelty.data}} )
-		project['file_list'].get('report_name').set(True)
+		project['file_list'][report_name] = True
 		research.update_one({"_id": ObjectId(p_id)}, {"$set":{"file_list":project['file_list']}})
 		return redirect("/teacher_dashboard")
 
