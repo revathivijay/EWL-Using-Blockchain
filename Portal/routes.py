@@ -386,7 +386,7 @@ def teacher_dashboard():
 			p_id_vp.append(str(project['_id']))
 
 
-	return render_template('teacher-dashboard.html', title='Dashboard', vr_topic_list=vr_topic_list, p_id_vr=p_id_vr, report_name_vr = report_name_vr, total_vr = len(p_id_vr), vp_topic_list=vp_topic_list, p_id_vp=p_id_vp, total_vp = len(p_id_vp))
+	return render_template('teacher_dashboard.html', title='Dashboard', vr_topic_list=vr_topic_list, p_id_vr=p_id_vr, report_name_vr = report_name_vr, total_vr = len(p_id_vr), vp_topic_list=vp_topic_list, p_id_vp=p_id_vp, total_vp = len(p_id_vp))
 
 def displayRanklist():
 	students = mongo.db.students
