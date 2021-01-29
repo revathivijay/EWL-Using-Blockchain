@@ -7,7 +7,7 @@
 
       <div class="row valign wrapper">
         <div class="col s4">
-          <h3 class="account-heading black-text"><b>Welcome, </b>studentName
+            <h3 class="account-heading black-text"><b>Welcome, </b>studentName </h3>
         </div>
       </div>
     <div class = "dim card blue lighten-5 col s6">
@@ -36,11 +36,19 @@
             <br>
 
         </fieldset>
+
         <div class="center-align form-group">
-        <b><a href = "{{ url_for('add_project') }}" class="button-border hoverable waves-effect waves-light btn-large amber black-text"> My Projects </a></b>
+            <b><a href = "{{ url_for('add_project') }}" class="button-border hoverable waves-effect waves-light btn-large amber black-text"> My Projects </a></b>
+        </div>
+
     </div>
-    </div>
-    
+    <div class = "dim card blue lighten-5 col s6"></div>
+        <div class="center-align form-group">
+            <h3>Current Ranklist of Students</h3>
+            {% for i in range(0, total) %}
+                <b><a href = "#" class="button-border hoverable waves-effect waves-light btn-large amber black-text">{{i+1}}&nbsp&nbsp{{all_students[i]}}&nbsp&nbsp{{student_impact_score[i]}} </a></b><br>
+            {% endfor %}
+        </div>
     <hr>
 {% endblock content %}
 

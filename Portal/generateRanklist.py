@@ -22,7 +22,7 @@ research.update_one({"_id":ObjectId('5fd04dce0d98dceeddf66ad7')}, {"$set":{"staf
 report1 = {"projectID":"5fd04dce0d98dceeddf66ad7", "reportName":"report1.pdf", "effort": None, "relevance":None, "novelty":None}
 report2 = {"projectID":"5fd04dce0d98dceeddf66ad7", "reportName":"report2.pdf", "effort": None, "relevance":None, "novelty":None}
 gradedReports.insert_many([report1, report2])
-cursor = research.find({})
+cursor = students.find({})
 #one time insertion
 for document in cursor:
       print(document)

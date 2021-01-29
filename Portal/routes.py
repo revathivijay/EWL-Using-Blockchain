@@ -218,6 +218,7 @@ def update_project(id):
 	print('Doc uploaded')
 	return redirect('/add_project')
 
+
 @app.route('/verify_report/<p_id>/<report_name>', methods=['GET', 'POST'])
 def verify_report(p_id, report_name):
 	gradedReports = mongo.db.gradedReports
@@ -279,7 +280,6 @@ def get_project_lists():
 	my_projects = []
 	topic_list = []
 	file_lists = []
-
 	my_id = "171071059"
 
 	print("getting project lists", my_id)
@@ -352,12 +352,10 @@ def home():
 @app.route("/dashboard", methods=['POST', 'GET'])
 def dashboard():
 
-	#For NIDHEE:  *all students* contains an array of ids.
-	#PREREQUISITE: Add impact_factor using following code:  mongo.db.students.update({}, {"$set": {"impact_score":0}}) ====DONE===== 
-	#PREREQUISITE #2: Add random impact factor values for some students.
-	all_students = displayRanklist()
+
+	all_students, student_impact_score = displayRanklist()
 	form = SubmitResearchWork(request.form)
-	return render_template('dashboard.html', title='Dashboard', form = form, all_students = all_students)
+	return render_template('dashboard.html', title='Dashboard', form = form, all_students = all_students, student_impact_score = student_impact_score, total = len(all_students))
 
 @app.route("/teacher_dashboard", methods=['POST', 'GET'])
 def teacher_dashboard():
@@ -391,11 +389,13 @@ def teacher_dashboard():
 
 def displayRanklist():
 	students = mongo.db.students
-	cursor = students.find({"impact_score":{"$gt": 0 }}, {"id":1})
+	cursor = students.find({"impactScore":{"$gt": 0 }})
 	all_students = []
+	student_score = []
 	for document in cursor:
 		all_students.append(document['id'])
-	return all_students
+		student_score.append(document['impactScore'])
+	return all_students, student_score
 
 # @app.route("/login", methods=['GET', 'POST'])
 # def login():
@@ -433,10 +433,7 @@ def displayRanklist():
 #     return redirect(url_for('login'))
 #
 #
-# @app.route("/gradeSubmission")
-# def gradeSubmission():
-#     form = VerifyReport(request.form)
-#     return render_template('grade.html', title='Grade Submission', form=form)
+#
 #
 #
 # @app.route("/dashboard", methods= ['POST', 'GET'])
