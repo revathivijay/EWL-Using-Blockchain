@@ -4,7 +4,7 @@
 # from flask import Flask, session, escape, render_template, url_for, flash, redirect, request
 # from werkzeug import url_encode
 from bson.objectid import ObjectId
-from Portal.forms import SubmitResearchWork, VerifyReport, LoginForm, UpdateResearchWork, VerifyPublication
+from Portal.forms import SubmitResearchWork, VerifyReport, LoginForm, UpdateResearchWork, VerifyPublication, CreateJob
 from Portal.__init__ import csv_file
 
 from werkzeug.utils import secure_filename
@@ -189,7 +189,7 @@ def add_project():
 	return render_template('add_project.html', msg = "", submit_work_form=submit_work_form, update_work_form=update_work_form, my_projects = my_projects, topic_list=topic_list, file_lists=file_lists, total=total)
 
 
-@app.route('/update_project/<id>', methods=['POST'])
+@app.route('/update_project/<id>', methods=['POST', 'GET'])
 def update_project(id):
 
 	target = os.path.join(APP_ROOT, 'static/documents/')  # folder path
@@ -209,7 +209,7 @@ def update_project(id):
 
 	project = mongo.db.research.find_one({"_id":ObjectId(id)})
 	if 'file_list' in project:
-		file_list = project["files"]
+		file_list = project["file_list"]
 		file_list.append(files[0])
 	else:
 		file_list = [files[0]]
@@ -355,7 +355,7 @@ def dashboard():
 
 	all_students, student_impact_score = displayRanklist()
 	form = SubmitResearchWork(request.form)
-	return render_template('dashboard.html', title='Dashboard', form = form, all_students = all_students, student_impact_score = student_impact_score, total = len(all_students))
+	return render_template('index.html', title='Dashboard', form = form, all_students = all_students, student_impact_score = student_impact_score, total = len(all_students))
 
 @app.route("/teacher_dashboard", methods=['POST', 'GET'])
 def teacher_dashboard():
@@ -386,6 +386,10 @@ def teacher_dashboard():
 
 
 	return render_template('teacher_dashboard.html', title='Dashboard', vr_topic_list=vr_topic_list, p_id_vr=p_id_vr, report_name_vr = report_name_vr, total_vr = len(p_id_vr), vp_topic_list=vp_topic_list, p_id_vp=p_id_vp, total_vp = len(p_id_vp))
+
+@app.route("/ranklist", methods=['GET', 'POST'])
+def ranklist():
+	return render_template("ranklist.html")
 
 def displayRanklist():
 	students = mongo.db.students
@@ -468,7 +472,7 @@ def get_open_jobs():
 		L_vacancies.append(vacancies)
 		L_id.append(id)
 	total = len(L_title)	
-	return render_template('get_open_jobs.html', title_list=L_title, description_list=L_description, vacancies_list=L_vacancies, id_list=L_id, total=total)
+	return render_template('get_open_jobs.html', title_list=L_title, description_list=L_description, vacancies_list=L_vacancies, L_id=L_id, total=total)
 
 
 # Get candidates
@@ -510,11 +514,13 @@ def get_candidates(job_id):
 def apply_for_job(job_id):
 	candidate_id = session["id"]
 	# print()
-	job = mongo.db.jobs.find_one({"id":job_id})
+	job = mongo.db.jobs.find_one({"id":int(job_id)})
+	candidates = []
 	if "candidates" in job:
-		job["candidates"].append(candidate_id)
-	else:
-		job["candidates"]=[candidate_id]
+		candidates = job['candidates']
+	candidates.append(candidate_id)
+
+	mongo.db.jobs.update_one({"id": int(job_id)}, {'$set':{'candidates':candidates}})
 
 	# add a condition later to precent appending/applying more than once if already applied  
 	return render_template('get_open_jobs.html')	
@@ -541,7 +547,7 @@ def add_candidate(job_id, student_id):
 def create_job():
 	form = CreateJob(request.form)
 	
-	if request.method == 'POST':
+	if form.is_submitted():
 		print("using db")
 		jobs = mongo.db.jobs
 		id = jobs.count()
@@ -551,8 +557,8 @@ def create_job():
 		vacancies = request.form.get('vacancies')		
 		jobs.insert({"id":id, "title":title, "description":description, "duration":duration, "vacancies":vacancies})
 		print("job added")
-	#return redirect("/get_open_jobs")
-	render_template('create_job.html', create_job_form=form)
+		return redirect("/get_open_jobs")
+	return render_template('create_job.html', create_job_form=form)
 	
 
 if __name__ == '__main__':

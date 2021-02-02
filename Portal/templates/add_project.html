@@ -3,11 +3,11 @@
 <html itemscope itemtype="http://schema.org/Article">
 <body>
 
-     <div class = "child-div blue lighten-5 col s3" style="width: 30%; float:left; position:fixed">
+     <div class = "child-div blue lighten-5 col s9 valign " style="margin: 0 auto" >
         <fieldset class="form-group">
             <br>
-            <h4><b>Add new project</h4>
-            <h6> for dummyStudent </h6>
+            <h4><b>Add new project</b></h4>
+
             <br>
 
         <form method="POST" action="{{ url_for('add_project') }}" enctype="multipart/form-data">
@@ -93,107 +93,7 @@
     </fieldset>
 </div>
     <hr>
-    <div class = "child-div card amber lighten-4 col s7" style="width: 68%; float:right; overflow-y:scroll; height:100%; ">
-        <fieldset class="form-group">
-            <br>
-           
-           {% for i in range(0, total) %}
 
-                <div class="form-group center-align">
-                    <h5><b>{{ topic_list[i] }}</b></h5>
-                    <i>Status:</i> Submitted for publication  <br>
-                    <br>
-                    {% for file in file_lists[i] %}
-                        <embed src="./static/documents/{{ file }}" type="application/pdf" height="400px" width="80%"> 
-                        <hr>
-                    {% endfor %}
-                </div>
-                <br>
-                
-                <div class = "dim">
-                <span class = 'black-text'>
-                    <h6><b> Update your progress</b></h6>
-                    <form method="POST" action="{{ url_for('update_project', id=my_projects[i]) }}" enctype="multipart/form-data">
-                    <div class="form-group">
-                             {{ update_work_form.updatedDocument.label(class="form-control-label") }}
-                             {% if update_work_form.updatedDocument.errors %}
-                                 {{ update_work_form.updatedDocument(class="form-control form-control-lg is-invalid") }}
-                                 <div class="invalid-feedback">
-                                     {% for error in update_work_form.updatedDocument.errors %}
-                                         <span>{{ error }}</span>
-                                     {% endfor %}
-                                 </div>
-                             {% else %}
-                                 {{ update_work_form.updatedDocument(class="form-control form-control-lg") }}
-                             {% endif %}
-                    </div>
-                </span>
-
-                <br>
-
-                <span class="col s12">
-                    <h6><b> Publication Details</b></h6>
-                    <div class="form-group col s4">
-                     {{ update_work_form.publishedStatus.label(class="form-control-label") }}
-                     {% if update_work_form.publishedStatus.errors %}
-                         {{ update_work_form.publishedStatus(class="form-control form-control-lg is-invalid") }}
-                         <div class="invalid-feedback">
-                             {% for error in update_work_form.publishedStatus.errors %}
-                                 <span>{{ error }}</span>
-                             {% endfor %}
-                         </div>
-                     {% else %}
-                         {{ update_work_form.publishedStatus(class="form-control form-control-lg") }}
-                     {% endif %}
-                    </div>
-
-                    <div class="form-group col s4">
-                     {{ update_work_form.publication.label(class="form-control-label") }}
-                     {% if update_work_form.publication.errors %}
-                         {{ update_work_form.publication(class="form-control form-control-lg is-invalid") }}
-                         <div class="invalid-feedback">
-                             {% for error in update_work_form.publication.errors %}
-                                 <span>{{ error }}</span>
-                             {% endfor %}
-                         </div>
-                     {% else %}
-                         {{ update_work_form.publication(class="form-control form-control-lg") }}
-                     {% endif %}
-                    </div>
-
-                    <div class="form-group col s4">
-                     {{ update_work_form.DOI.label(class="form-control-label") }}
-                     {% if update_work_form.DOI.errors %}
-                         {{ update_work_form.DOI(class="form-control form-control-lg is-invalid") }}
-                         <div class="invalid-feedback">
-                             {% for error in update_work_form.DOI.errors %}
-                                 <span>{{ error }}</span>
-                             {% endfor %}
-                         </div>
-                     {% else %}
-                         {{ update_work_form.DOI(class="form-control form-control-lg") }}
-                     {% endif %}
-                    </div>
-
-                </span>
-                <div class="center-align form-group">
-                    <b><a href = "{{ url_for('update_project', id=my_projects[i]) }}"> {{ update_work_form.update(class="button-border hoverable waves-effect waves-light btn-large amber black-text") }}</a></b>
-                </div>
-            </form>
-        </form>
-                </p>
-                </div>
-                <br>
-                <hr style="height:1px;border:none;color:#333;background-color:#333;" />
-                <br>
-
-
-           {% endfor %}
-
-            
-
-        </fieldset>
-    </div>
 
     
 

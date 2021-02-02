@@ -3,12 +3,12 @@
 <html itemscope itemtype="http://schema.org/Article">
     <body>
 
-        <div class = "child-div card amber lighten-4 col s7" >
+
             <fieldset class="form-group">
 
-                <div class = "dim card amber accent-2 hoverable col s12">
+                <div class = "dim card light-blue center-align accent-2 hoverable col s6">
                     <br/>
-                    <div class="valign col s12 center-align transparent">
+                    <div class="valign col s12  transparent">
                         <form method="POST">
                             {{ form.hidden_tag() }}
                             <fieldset class="form-group">
@@ -17,8 +17,8 @@
                                 <br>
                                 <h3>{{ topic }}</h3>
 
-                                 <div class="form-group">
-                                    {{ form.effort.label(class="form-control-label") }}
+                                 <div class="form-group black-text">
+                                    {{ form.effort.label(class="") }}
                                     {% if form.effort.errors %}
                                         {{ form.effort(class="form-control form-control-lg is-invalid") }}
                                         <div class="invalid-feedback">
@@ -74,8 +74,7 @@
                     <br>
                 </div>
             </fieldset>
-        </div>
-    </body>
+        </body>
 </html>
 
 {% endblock content %}
