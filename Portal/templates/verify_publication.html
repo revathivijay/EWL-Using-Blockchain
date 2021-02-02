@@ -3,10 +3,10 @@
 <html itemscope itemtype="http://schema.org/Article">
 <body>
 
-    <div class = "child-div card amber lighten-4 col s7" style="width: 68%; float:right; overflow-y:scroll; height:100%; ">
+
         <fieldset class="form-group">
 
-            <div class = "dim card amber accent-2 hoverable col s12">
+            <div class = "dim card light-blue accent-2 hoverable col s6">
                 <br/>
                 <form method="POST" >
 
@@ -51,16 +51,16 @@
                              {% endfor %}
                          </div>
                      {% else %}
-                         {{ form.DOI(class="form-control form-control-lg", value=DOI) }}
+                         {{ form.DOI(class="form-control form-control-lg", value=doi) }}
                      {% endif %}
                     </div>
 
                 </span>
-                    <div class="form-group">
+                    <div class="form-group center-align" style="display:inline">
                         <b> {{ form.verify(class="button-border hoverable waves-effect waves-light btn-large blue lighten-3 black-text") }} </b>
                      </div>
 
-                    <div class="form-group">
+                    <div class="form-group center-align"  style="display:inline">
                         <b> {{ form.notVerify(class="button-border hoverable waves-effect waves-light btn-large blue lighten-3 black-text") }} </b>
                      </div>
 
