@@ -44,7 +44,7 @@ app = Flask(__name__)
 
 app.config['MONGO_DBNAME'] = 'earn_while_learn'
 app.config['STATIC_FOLDER'] = '/Portal/static/'
-app.config['MONGO_URI'] = 'mongodb://localhost:27017/earn_while_learn'
+app.config['MONGO_URI'] = 'mongodb+srv://taklu:taklu@cluster0.cut8t.mongodb.net/earn_while_learn?retryWrites=true&w=majority'
 app.secret_key = 'hi'
 
 mongo = PyMongo(app)
@@ -221,13 +221,13 @@ def update_project(id):
 
 @app.route('/verify_report/<p_id>/<report_name>', methods=['GET', 'POST'])
 def verify_report(p_id, report_name):
-	gradedReports = mongo.db.gradedReports
+	reports = mongo.db.reports
 	research = mongo.db.research
 	project = research.find_one({"_id": ObjectId(p_id)})
 	topic = project['topic']
 	form = VerifyReport(request.form)
 	if form.is_submitted():
-		gradedReports.update_one({"projectID": p_id, "reportName":report_name}, {"$set":{"effort":form.effort.data, "relevance":form.relevance.data, "novelty":form.novelty.data}} )
+		reports.update_one({"projectID": p_id, "reportName":report_name}, {"$set":{"effort":form.effort.data, "relevance":form.relevance.data, "novelty":form.novelty.data}} )
 		project['file_list'][report_name] = True
 		research.update_one({"_id": ObjectId(p_id)}, {"$set":{"file_list":project['file_list']}})
 		return redirect("/teacher_dashboard")
@@ -401,45 +401,7 @@ def displayRanklist():
 		student_score.append(document['impactScore'])
 	return all_students, student_score
 
-# @app.route("/login", methods=['GET', 'POST'])
-# def login():
-#     form = LoginForm(request.form)
-#     if form.validate_on_submit():
-#         user = User.query.filter_by(email=form.email.data).first()
-#
-#         #modified to use SHA512
-#
-#         s = 0
-#         for char in (form.password.data):
-#             a = ord(char)
-#             s = s+a
-#         now_hash = (str)((hashlib.sha512((str(s).encode('utf-8'))+((form.password.data).encode('utf-8')))).hexdigest())
-#         #if user and bcrypt.check_password_hash(user.password, form.password.data):
-#         if (user and (user.password==now_hash)):
-#
-#             login_user(user, remember=form.remember.data)
-#             next_page = request.args.get('next')
-#             return redirect(next_page) if next_page else redirect(url_for('dashboard'))
-#
-#         else:
-#             print('nahin hua login')
-#             flash('Login Unsuccessful. Please check email and password', 'danger')
-#
-#     else:
-#         print('ho gaya')
-#     return render_template('login.html', title='Login', form=form)
-#
-#
-#
-# @app.route("/logout")
-# def logout():
-#     logout_user()
-#     return redirect(url_for('login'))
-#
-#
-#
-#
-#
+
 # @app.route("/dashboard", methods= ['POST', 'GET'])
 # def dashboard():
 #     # to be added to dashboard:
@@ -450,7 +412,6 @@ def displayRanklist():
 #     # </div>
 #     return render_template('dashboard.html', title='Dashboard')
 #
-
 
 # View all open jobs
 @app.route("/get_open_jobs", methods=["POST", "GET"])
@@ -559,7 +520,24 @@ def create_job():
 		print("job added")
 		return redirect("/get_open_jobs")
 	return render_template('create_job.html', create_job_form=form)
-	
+
+#### Kept this here in case someone wants to experiment with code-Atlas interaction before making it final ####
+#
+# @app.route("/dbtest", methods=["POST", "GET"])
+# def dbtest():
+# 	print('################# here again')
+# 	students = mongo.db.students
+# 	print(students)
+# 	print('Another find')
+# 	print(students.find({}))
+# 	students.update_one({"id": "5"}, {"$set": {"impactScore": 1}})
+# 	print('Should update')
+#
+# 	data = {"id":"20","email":"d@d.com","impactScore": 0.75}
+# 	students.insert(data)
+# 	print('end')
+#
+# 	return ('Hi')
 
 if __name__ == '__main__':
 	app.run(debug=True, port=1240)
