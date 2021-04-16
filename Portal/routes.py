@@ -45,14 +45,13 @@ app = Flask(__name__)
 
 app.config['MONGO_DBNAME'] = 'earn_while_learn'
 app.config['STATIC_FOLDER'] = '/Portal/static/'
-app.config['MONGO_URI'] = 'mongodb://localhost:27017/earn_while_learn'
+app.config['MONGO_URI'] = 'mongodb+srv://taklu:taklu@cluster0.cut8t.mongodb.net/earn_while_learn?retryWrites=true&w=majority'
 app.secret_key = 'hi'
 
 mongo = PyMongo(app)
 
 APP_ROOT = os.path.dirname(os.path.abspath(__file__))
 print(APP_ROOT)
-
 
 @app.route('/register', methods=['POST', 'GET'])
 def register():
@@ -130,12 +129,12 @@ def register_staff():
 
 @app.route('/add_project', methods=['POST', 'GET'])
 def add_project():
-
+	print("In /add_project")
 	submit_work_form = SubmitResearchWork(request.form)
 	update_work_form = UpdateResearchWork(request.form)
-	if 'username' not in session:
-		print("IN Session")
-		return redirect('/')
+	# if 'username' not in session:
+	# 	print("IN Session")
+	# 	return redirect('/')
 
 	if request.method == 'POST':
 		print("using db")
@@ -146,7 +145,7 @@ def add_project():
 		departments_involved = request.form.get('departments')
 		print(user_id_students, user_id_staff, project_topic, departments_involved)
 
-		target = os.path.join(APP_ROOT, 'static/documents/')  # folder path
+		target = os.path.join(APP_ROOT, 'static/documents')  # folder path
 		print(target)
 		if not os.path.isdir(target):
 			os.mkdir(target)  # create folder if not exits
@@ -156,9 +155,11 @@ def add_project():
 		for upload in request.files.getlist("Document"): #multiple image handel
 			filename = secure_filename(upload.filename)
 			destination = "/".join([target, filename])
+			print(destination)
 			upload.save(destination)
 			print(filename, "ho gayi upload")
 			file_list.append({filename:False})
+			print(file_list)
 			break
 
 		print('Doc uploaded')
@@ -172,22 +173,23 @@ def add_project():
 				 'staff': user_id_staff.split(","),
 				 'topic':project_topic,
 				 'departments': departments_involved.split(","),
-				 'file_list': file_list})
+				 'file_list': file_list}, check_keys=False)
 
 			print('done inserting')
 			my_projects, topic_list, file_lists = get_project_lists()
 			total = len(my_projects)
+			print(total)
 			# for projects now inserted
 			return render_template('add_project.html', msg = "", submit_work_form=submit_work_form, update_work_form=update_work_form, my_projects = my_projects, topic_list=topic_list, file_lists=file_lists, total=total)
-		
+
 		return "NOOOoooooooooooooooo"
 
 	# for already existing projects
 	my_projects, topic_list, file_lists = get_project_lists()
-	print('$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$',file_lists)
+	print('$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$', file_lists)
 	total = len(my_projects)
 	print('already existing projects displayed')
-	return render_template('add_project.html', msg = "", submit_work_form=submit_work_form, update_work_form=update_work_form, my_projects = my_projects, topic_list=topic_list, file_lists=file_lists, total=total)
+	return render_template('add_project.html', msg = "", submit_work_form=submit_work_form, update_work_form=update_work_form, my_projects=my_projects, topic_list=topic_list, file_lists=file_lists, total=total)
 
 
 @app.route('/update_project/<id>', methods=['POST', 'GET'])
@@ -199,7 +201,7 @@ def update_project(id):
 		os.mkdir(target)  # create folder if not exits
 
 	files = []
-	for upload in request.files.getlist("Document"): #multiple image handel
+	for upload in request.files.getlist("Document"):  # multiple image handle
 		filename = secure_filename(upload.filename)
 		destination = "/".join([target, filename])
 		upload.save(destination)
@@ -352,14 +354,13 @@ def home():
 
 @app.route("/dashboard", methods=['POST', 'GET'])
 def dashboard():
-
-
 	all_students, student_impact_score = displayRanklist()
 	form = SubmitResearchWork(request.form)
 	return render_template('index.html', title='Dashboard', form = form, all_students = all_students, student_impact_score = student_impact_score, total = len(all_students))
 
 @app.route("/teacher_dashboard", methods=['POST', 'GET'])
 def teacher_dashboard():
+
 	###TODO: get teacher_id from login
 	teacher_id = '1'
 	research = mongo.db.research
@@ -450,7 +451,7 @@ def displayRanklist():
 #     #     { % endfor %}
 #     # </div>
 #     return render_template('dashboard.html', title='Dashboard')
-#
+
 
 @app.route("/get_open_jobs", methods=["POST", "GET"])
 def get_open_jobs():

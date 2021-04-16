@@ -1,18 +1,26 @@
-
-
-
 <!DOCTYPE html>
-<html lang="en">
-  <head>
-    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<html>
+<head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+
+    <link rel="shortcut icon" href="static/logo.ico">
+
+    <!--Import materialize.css-->
+
+    <link type="text/css" rel="stylesheet" href="static/css/materialize.min.css" media="screen,projection"/>
+    <link type="text/css" rel="stylesheet" href="static/css/materialize.css" media="screen,projection"/>
+
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="msapplication-tap-highlight" content="no">
-      {% if title %}
-        <title>{{ title }}</title>
-      {% else %}
-        <title>EWL</title>
-      {% endif %}
+
+    <title>Earn While Learn</title>
     <!-- Favicons-->
     <link rel="icon" href="./../static/images/favicon/favicon-32x32.png" sizes="32x32">
     <!-- Favicons-->
@@ -27,107 +35,104 @@
     <!-- INCLUDED PLUGIN CSS ON THIS PAGE -->
     <link href="{{ url_for('static',filename='vendors/perfect-scrollbar/perfect-scrollbar.css') }}" type="text/css" rel="stylesheet">
     <link href="{{ url_for('static',filename='vendors/flag-icon/css/flag-icon.min.css')}} " type="text/css" rel="stylesheet">
-  </head>
-  <body>
-    <!-- Start Page Loading -->
-    <div id="loader-wrapper">
+
+    <script>
+function openNav() {
+  document.getElementById("left-sidebar-nav").style.width = "250px";
+  document.getElementById("main").style.marginLeft = "250px";
+}
+
+/* Set the width of the sidebar to 0 and the left margin of the page content to 0 */
+function closeNav() {
+  document.getElementById("left-sidebar-nav").style.width = "0";
+  document.getElementById("main").style.marginLeft = "0";
+}
+</script>
+
+    {% if title %}
+        <title>{{ title }}</title>
+    {% else %}
+        <title>EWL</title>
+    {% endif %}
+</head>
+<div id="loader-wrapper">
       <div id="loader"></div>
       <div class="loader-section section-left"></div>
       <div class="loader-section section-right"></div>
     </div>
-    <!-- End Page Loading -->
-    <!-- //////////////////////////////////////////////////////////////////////////// -->
-    <!-- START HEADER -->
-    <header id="header" class="page-topbar">
-      <!-- start header nav-->
-      <div class="navbar-fixed">
-        <nav class="navbar-color gradient-45deg-light-blue-cyan">
-          <div class="nav-wrapper">
-            <ul class="left">
-              <li>
-                <h1 class="logo-wrapper">
-                  <a href="index.html" class="brand-logo darken-1">
-                    <img  src="{{ url_for('static', filename='images/logo/vjti-logo.png') }}" >
-                    <span class="logo-text hide-on-med-and-down">EWL</span>
-                  </a>
-                </h1>
-              </li>
-            </ul>
-
-            <ul class="right hide-on-med-and-down">
-
-
-              <li>
-                <a href="/logout"  class="waves-effect waves-block waves-light chat-collapse">
-                  Logout
-                </a>
-              </li>
-            </ul>
-
+<body class = "content">
+    <header class="collapsible-header">
+      <nav class="grey darken-4 navbar navbar-expand-md navbar-dark">
+        <div class="container">
+          <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarToggle" aria-controls="navbarToggle" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+          </button>
+          <div class="topnav collapse navbar-collapse" id="navbarToggle">
+            <div class="navbar-nav mr-auto">
+              <a class="hoverable nav-item nav-link" onclick="openNav()"><b>Navigate</b></a>
+            </div>
+            <!-- Navbar Right Side -->
+            <div class="navbar-nav">
+                  <a class="hoverable nav-item nav-link" href="{{ url_for('register') }}"><b>Logout/login</b></a>
+            </div>
           </div>
-        </nav>
-      </div>
-      <!-- end header nav-->
+        </div>
+      </nav>
     </header>
-    <!-- END HEADER -->
-    <!-- //////////////////////////////////////////////////////////////////////////// -->
-    <!-- START MAIN -->
-    <div id="main">
-      <!-- START WRAPPER -->
-      <div class="wrapper">
-        <!-- START LEFT SIDEBAR NAV-->
-        <aside id="left-sidebar-nav">
-          <ul id="slide-out" class="side-nav fixed leftside-navigation">
-            <li class="user-details red darken-2">
+
+<!------- Sidebar------------------->
+
+<div id="left-sidebar-nav" style="overflow-x: hidden; width: 0; position: fixed; z-index: 1; overflow-x: hidden; transition: 0.5s">
+    <a href="javascript:void(0)" style="position: absolute; top: 0; bottom: 0; right: 25px; font-size: 36px;" onclick="closeNav()">&times;</a>
+    <br><br>
+    <ul>
+        <li class="user-details red darken-2">
               <div class="row">
-                <div class="col col s4 m4 l4">
+                <div class="col s4">
                   <img src="{{ url_for('static',filename='images/avatar/Ritu.jpg') }}" alt="" class="circle responsive-img valign profile-image cyan">
                 </div>
-                <div class="col col s8 m8 l8">
+                <div class="col s8">
 
                   <a class="btn-flat dropdown-button waves-effect waves-light white-text profile-btn" href="#" >Anna</a>
                   <p class="user-roal">Student</p>
                 </div>
               </div>
             </li>
-            <li class="no-padding">
-              <ul class="collapsible" data-collapsible="accordion">
-                <li class="bold">
-                  <a href="{{ url_for('dashboard') }}" class="waves-effect waves-cyan">
+
+        <li>
+              <ul class="card collapsible" data-collapsible="accordion">
+                <li class="bold" style="padding: 15px">
+                  <a href="{{ url_for('dashboard') }}" class="waves-effect waves-cyan  black-text">
                       <span class="nav-text">Dashboard</span>
                     </a>
                 </li>
-                <li class="bold">
-                  <a href="{{ url_for('add_project') }}" class="waves-effect waves-cyan">
+                <li class="bold" style="padding: 15px">
+                  <a href="{{ url_for('add_project') }}" class="waves-effect waves-cyan black-text">
                       <span class="nav-text">Add Project</span>
                     </a>
                 </li>
-                <li class="bold">
-                  <a href="#" class="waves-effect waves-cyan">
+                <li class="bold" style="padding: 15px">
+                  <a href="#" class="waves-effect waves-cyan black-text">
                       <span class="nav-text">View Projects</span>
                     </a>
                 </li>
-                <li class="bold">
-                  <a href="ui-basic-buttons.html" class="waves-effect waves-cyan">
+                <li class="bold" style="padding: 15px">
+                  <a href="ui-basic-buttons.html" class="waves-effect waves-cyan black-text">
                       <span class="nav-text">View Research Ranklist</span>
                     </a>
                 </li>
-                <li class="bold">
-                  <a href="form-layouts.html" class="waves-effect waves-cyan">
+                <li class="bold" style="padding: 15px">
+                  <a href="form-layouts.html" class="waves-effect waves-cyan black-text">
 
                       <span class="nav-text">Account</span>
                     </a>
                 </li>
               </ul>
-            </li>
-          </ul>
-          <a href="#" data-activates="slide-out" class="sidebar-collapse btn-floating btn-medium waves-effect waves-light hide-on-large-only">
-            <i class="material-icons">menu</i>
-          </a>
-        </aside>
-        <!-- END LEFT SIDEBAR NAV-->
-        <!-- //////////////////////////////////////////////////////////////////////////// -->
-        <main role="main" class="main-div">
+        </li>
+    </ul>
+</div>
+
+    <main role="main" class="main-div" style="transition: margin-left .5s; padding: 10px">
       <div class="row">
         <div class="col s12">
           {% with messages = get_flashed_messages(with_categories=true) %}
@@ -144,33 +149,14 @@
       </div>
     </main>
 
-      </div>
-      <!-- END WRAPPER -->
-    </div>
-    <!-- END MAIN -->
-    <!-- //////////////////////////////////////////////////////////////////////////// -->
-    <!-- START FOOTER -->
-    <footer class="page-footer gradient-45deg-light-blue-cyan">
-        <div class="footer-copyright">
-          <div class="container">
-            <span>Designed by VJTI</span>
+    <div class = "footer">
+     </div>
 
-          </div>
-        </div>
-    </footer>
-    <!-- END FOOTER -->
-    <!-- ================================================
-    Scripts
-    ================================================ -->
-    <!-- jQuery Library -->
-    <script type="text/javascript" src="{{ url_for('static',filename='vendors/jquery-3.2.1.min.js') }}"></script>
-    <!--materialize js-->
-    <script type="text/javascript" src="{{ url_for('static',filename='js/materialize.min.js') }}"></script>
-    <!--scrollbar-->
-    <script type="text/javascript" src="{{ url_for('static',filename='vendors/perfect-scrollbar/perfect-scrollbar.min.js') }}"></script>
-    <!--plugins.js - Some Specific JS codes for Plugin Settings-->
-    <script type="text/javascript" src="{{ url_for('static',filename='js/plugins.js') }}"></script>
-    <!--custom-script.js - Add your own theme custom JS-->
-    <script type="text/javascript" src="{{ url_for('static',filename='js/custom-script.js') }}"></script>
-  </body>
+
+    <!-- Optional JavaScript -->
+    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+</body>
 </html>
