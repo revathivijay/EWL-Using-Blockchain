@@ -10,6 +10,7 @@
              <br>
 
         <form method="POST" action="{{ url_for('create_job') }}" enctype="multipart/form-data">
+
             <div class="form-group">
                 <h6><b>Title</b></h6>
                     {% if create_job_form.title.errors %}
@@ -70,7 +71,7 @@
             </div>
             <br>
             <div class="form-group">
-            <a href = "{{ url_for('create_job') }}"> <b> {{ create_job_form.add(class="button-border hoverable waves-effect waves-light btn-large blue black-text") }} </b> </a>
+            <a> <b> {{ create_job_form.createJob(class="button-border hoverable waves-effect waves-light btn-large blue black-text") }} </b> </a>
             </div>
             </b></h4>
         </form>

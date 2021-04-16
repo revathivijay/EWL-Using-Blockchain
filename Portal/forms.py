@@ -35,12 +35,12 @@ class VerifyReport(FlaskForm):
 	publishedStatus = SelectField('Current Status', choices=[('P','Published'), ('S','Submitted'),('N', 'Not submitted, still working')])
 	verify = SubmitField('Verified')
 
-class AddJobs(FlaskForm):
-	title = StringField('Job title', validators=[DataRequired()])
-	place = SelectField('Place', choices=[('C','Canteen'), ('I','Internet Lab'),('L', 'Library')])
-	description = StringField('Job description', validators=[DataRequired()])
-	vacancy = IntegerField('Vacancy', validators=[DataRequired()])
-	add = SubmitField('Add Job')
+# class AddJobs(FlaskForm):
+# 	title = StringField('Job title', validators=[DataRequired()])
+# 	place = SelectField('Place', choices=[('C','Canteen'), ('I','Internet Lab'),('L', 'Library')])
+# 	description = StringField('Job description', validators=[DataRequired()])
+# 	vacancy = IntegerField('Vacancy', validators=[DataRequired()])
+# 	add = SubmitField('Add Job')
 
 class VerifyPublication(FlaskForm):
 	topic = StringField("Topic")
@@ -54,12 +54,14 @@ class CreateJob(FlaskForm):
 	duration = IntegerField('Duration in total hours required', validators=[DataRequired()])
 	description = StringField('Job description', validators=[DataRequired()])
 	vacancies = IntegerField('Vacancies', validators=[DataRequired()])
-	add = SubmitField('Add Job')
+	createJob = SubmitField('Add Job')
 
 class UpdateJobs(FlaskForm):
 	vacancies = IntegerField('Vacancies', validators=[DataRequired()])
 	acceptingApplication = SelectField('Accepting applications', choices=[('Y','Yes'), ('N','No')])
 	update = SubmitField('Update Job')
 
-
-
+class GradeJob(FlaskForm):
+	#TODO: not sure if choices works; if it works delete this todo
+	grade = SelectField("How was the student's performance", choices=list(range(1,10)))
+	submit = SubmitField('Submit')

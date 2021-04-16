@@ -13,6 +13,8 @@ research = mongo.db.research
 staff = mongo.db.staff
 gradedReports = mongo.db.reports
 jobs = mongo.db.jobs
+jobsHistory = mongo.db.jobsHistory
+temp = mongo.db.temp
 # students.update_many({}, {"$set": {"impactScore":0}})
 # research.update({}, {"$unset": {"impactFactor":-1}})
 # research.update({"_id":ObjectId('5fd04dce0d98dceeddf66ad7')}, {"$set":{"file_list":{"report1.pdf":False}}})
@@ -24,7 +26,9 @@ jobs = mongo.db.jobs
 # report1 = {"projectID":"5fd04dce0d98dceeddf66ad7", "reportName":"report1.pdf", "effort": None, "relevance":None, "novelty":None}
 # report2 = {"projectID":"5fd04dce0d98dceeddf66ad7", "reportName":"report2.pdf", "effort": None, "relevance":None, "novelty":None}
 # gradedReports.insert_many([report1, report2])
-cursor = gradedReports.find({})
+
+temp.insert_one({"isRitu":True})
+cursor = temp.find({})
 #one time insertion
 for document in cursor:
 	print(document)

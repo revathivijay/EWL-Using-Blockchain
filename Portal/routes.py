@@ -12,6 +12,7 @@ from werkzeug.utils import secure_filename
 from flask_login import login_user, current_user, logout_user, login_required
 # from sqlalchemy.orm import Session
 # import requests
+import random
 
 # 8888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888
 import os
@@ -451,11 +452,8 @@ def displayRanklist():
 #     return render_template('dashboard.html', title='Dashboard')
 #
 
-
-# View all open jobs
 @app.route("/get_open_jobs", methods=["POST", "GET"])
 def get_open_jobs():
-	# for displaying all jobs 
 	jobs_ = mongo.db.jobs
 	jobs = jobs_.find({})
 
@@ -471,7 +469,8 @@ def get_open_jobs():
 		L_description.append(description)
 		L_vacancies.append(vacancies)
 		L_id.append(id)
-	total = len(L_title)	
+	total = len(L_title)
+
 	return render_template('get_open_jobs.html', title_list=L_title, description_list=L_description, vacancies_list=L_vacancies, L_id=L_id, total=total)
 
 
@@ -512,7 +511,7 @@ def get_candidates(job_id):
 @app.route("/apply_for_job/<job_id>", methods=["POST", "GET"])
 # by student applying for jobs
 def apply_for_job(job_id):
-	candidate_id = session["id"]
+	candidate_id =1 #student id who has logged in
 	# print()
 	job = mongo.db.jobs.find_one({"id":int(job_id)})
 	candidates = []
@@ -522,8 +521,9 @@ def apply_for_job(job_id):
 
 	mongo.db.jobs.update_one({"id": int(job_id)}, {'$set':{'candidates':candidates}})
 
-	# add a condition later to precent appending/applying more than once if already applied  
-	return render_template('get_open_jobs.html')	
+	# add a condition later to prevent appending/applying more than once if already applied
+	flash('You have succesfully applied for '+ job['title'] +'. You will be notified regarding your application status shortly. ', 'success')
+	return redirect(url_for('get_open_jobs'))
 	#return render_template('get_open_jobs.html', candidates=job["candidates"])
 	
 
@@ -540,6 +540,8 @@ def add_candidate(job_id, student_id):
 		job["candidates"]=[candidate_id]
 		job["vacancies"] = job["vacancies"]-1
 	return redirect(url_for('get_candidates', job_id=job_id))
+
+
 
 
 # Create job
@@ -560,6 +562,25 @@ def create_job():
 		return redirect("/get_open_jobs")
 	return render_template('create_job.html', create_job_form=form)
 	
+
+def allocate_job(job_id):
+	jobHistory = mongo.db.jobHistory
+	jobs = mongo.db.jobs
+	curr_job = jobs.find_one({"job_id": job_id})
+	jobHistory.find({"job_id":job_id})
+	if len(jobHistory)<25:
+		selected_candidates = random.sample(curr_job["candidates"], curr_job["vacancies"])
+	else:
+		#TODO
+		selected_candidates = []
+	return selected_candidates
+
+@app.route('/grade_job/<job_id>/<candidate_id>', methods=['GET', 'POST'])
+def grade_job(job_id, candidate_id):
+
+
+	return render_template('verify_publication.html', form=form, topic = topic, publicationJournal = publicationJournal, p_id=p_id, doi=doi )
+
 
 if __name__ == '__main__':
 	app.run(debug=True, port=1240)
