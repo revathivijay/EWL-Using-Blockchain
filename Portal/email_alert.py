@@ -5,8 +5,8 @@ from bson import ObjectId
 from routes import mongo
 
 # LOGIN CREDENTIALS
-gmail_user = 'testvjchain@gmail.com'
-gmail_password = 'vjti@123'
+MAIL_ID = 'testvjchain@gmail.com'
+MAIL_PWD = 'vjti@123'
 
 # FIXED VARIABLES
 DEFAULT_SUBJECT = "Reminder for Upcoming Project Deadline"
@@ -27,13 +27,14 @@ def send_email(sender, pwd, user_id, subject=DEFAULT_SUBJECT):
     for student in students_in_project:
         student_details = mongo.db.students.find_one({"id": student})
         recipients.append(student_details['email'])
-
+    recipients = rev_email
     # date = project['start_date']  # to be added
     date = '10 Apr 2021'
 
     # setting up email parameters
     FROM = sender
     TO = recipients if isinstance(recipients, list) else [recipients]
+    print(TO)
     SUBJECT = subject
 
     # construct body of email
@@ -55,4 +56,4 @@ def send_email(sender, pwd, user_id, subject=DEFAULT_SUBJECT):
 
 
 #TODO: WRITE TRIGGER FOR THIS FUNCTION
-send_email(gmail_user, gmail_password, '5fd04d720d98dceeddf66ad6')
+send_email(MAIL_ID, MAIL_PWD, '5fd04d720d98dceeddf66ad6')
