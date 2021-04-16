@@ -52,7 +52,6 @@ mongo = PyMongo(app)
 APP_ROOT = os.path.dirname(os.path.abspath(__file__))
 print(APP_ROOT)
 
-
 @app.route('/register', methods=['POST', 'GET'])
 def register():
 
@@ -129,12 +128,12 @@ def register_staff():
 
 @app.route('/add_project', methods=['POST', 'GET'])
 def add_project():
-
+	print("In /add_project")
 	submit_work_form = SubmitResearchWork(request.form)
 	update_work_form = UpdateResearchWork(request.form)
-	if 'username' not in session:
-		print("IN Session")
-		return redirect('/')
+	# if 'username' not in session:
+	# 	print("IN Session")
+	# 	return redirect('/')
 
 	if request.method == 'POST':
 		print("using db")
@@ -145,7 +144,7 @@ def add_project():
 		departments_involved = request.form.get('departments')
 		print(user_id_students, user_id_staff, project_topic, departments_involved)
 
-		target = os.path.join(APP_ROOT, 'static/documents/')  # folder path
+		target = os.path.join(APP_ROOT, 'static/documents')  # folder path
 		print(target)
 		if not os.path.isdir(target):
 			os.mkdir(target)  # create folder if not exits
@@ -155,9 +154,11 @@ def add_project():
 		for upload in request.files.getlist("Document"): #multiple image handel
 			filename = secure_filename(upload.filename)
 			destination = "/".join([target, filename])
+			print(destination)
 			upload.save(destination)
 			print(filename, "ho gayi upload")
 			file_list.append({filename:False})
+			print(file_list)
 			break
 
 		print('Doc uploaded')
@@ -171,22 +172,23 @@ def add_project():
 				 'staff': user_id_staff.split(","),
 				 'topic':project_topic,
 				 'departments': departments_involved.split(","),
-				 'file_list': file_list})
+				 'file_list': file_list}, check_keys=False)
 
 			print('done inserting')
 			my_projects, topic_list, file_lists = get_project_lists()
 			total = len(my_projects)
+			print(total)
 			# for projects now inserted
 			return render_template('add_project.html', msg = "", submit_work_form=submit_work_form, update_work_form=update_work_form, my_projects = my_projects, topic_list=topic_list, file_lists=file_lists, total=total)
-		
+
 		return "NOOOoooooooooooooooo"
 
 	# for already existing projects
 	my_projects, topic_list, file_lists = get_project_lists()
-	print('$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$',file_lists)
+	print('$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$', file_lists)
 	total = len(my_projects)
 	print('already existing projects displayed')
-	return render_template('add_project.html', msg = "", submit_work_form=submit_work_form, update_work_form=update_work_form, my_projects = my_projects, topic_list=topic_list, file_lists=file_lists, total=total)
+	return render_template('add_project.html', msg = "", submit_work_form=submit_work_form, update_work_form=update_work_form, my_projects=my_projects, topic_list=topic_list, file_lists=file_lists, total=total)
 
 
 @app.route('/update_project/<id>', methods=['POST', 'GET'])
@@ -198,7 +200,7 @@ def update_project(id):
 		os.mkdir(target)  # create folder if not exits
 
 	files = []
-	for upload in request.files.getlist("Document"): #multiple image handel
+	for upload in request.files.getlist("Document"):  # multiple image handle
 		filename = secure_filename(upload.filename)
 		destination = "/".join([target, filename])
 		upload.save(destination)
@@ -221,13 +223,13 @@ def update_project(id):
 
 @app.route('/verify_report/<p_id>/<report_name>', methods=['GET', 'POST'])
 def verify_report(p_id, report_name):
-	reports = mongo.db.reports
+	gradedReports = mongo.db.gradedReports
 	research = mongo.db.research
 	project = research.find_one({"_id": ObjectId(p_id)})
 	topic = project['topic']
 	form = VerifyReport(request.form)
 	if form.is_submitted():
-		reports.update_one({"projectID": p_id, "reportName":report_name}, {"$set":{"effort":form.effort.data, "relevance":form.relevance.data, "novelty":form.novelty.data}} )
+		gradedReports.update_one({"projectID": p_id, "reportName":report_name}, {"$set":{"effort":form.effort.data, "relevance":form.relevance.data, "novelty":form.novelty.data}} )
 		project['file_list'][report_name] = True
 		research.update_one({"_id": ObjectId(p_id)}, {"$set":{"file_list":project['file_list']}})
 		return redirect("/teacher_dashboard")
@@ -351,14 +353,13 @@ def home():
 
 @app.route("/dashboard", methods=['POST', 'GET'])
 def dashboard():
-
-
 	all_students, student_impact_score = displayRanklist()
 	form = SubmitResearchWork(request.form)
 	return render_template('index.html', title='Dashboard', form = form, all_students = all_students, student_impact_score = student_impact_score, total = len(all_students))
 
 @app.route("/teacher_dashboard", methods=['POST', 'GET'])
 def teacher_dashboard():
+
 	###TODO: get teacher_id from login
 	teacher_id = '1'
 	research = mongo.db.research
@@ -401,7 +402,45 @@ def displayRanklist():
 		student_score.append(document['impactScore'])
 	return all_students, student_score
 
-
+# @app.route("/login", methods=['GET', 'POST'])
+# def login():
+#     form = LoginForm(request.form)
+#     if form.validate_on_submit():
+#         user = User.query.filter_by(email=form.email.data).first()
+#
+#         #modified to use SHA512
+#
+#         s = 0
+#         for char in (form.password.data):
+#             a = ord(char)
+#             s = s+a
+#         now_hash = (str)((hashlib.sha512((str(s).encode('utf-8'))+((form.password.data).encode('utf-8')))).hexdigest())
+#         #if user and bcrypt.check_password_hash(user.password, form.password.data):
+#         if (user and (user.password==now_hash)):
+#
+#             login_user(user, remember=form.remember.data)
+#             next_page = request.args.get('next')
+#             return redirect(next_page) if next_page else redirect(url_for('dashboard'))
+#
+#         else:
+#             print('nahin hua login')
+#             flash('Login Unsuccessful. Please check email and password', 'danger')
+#
+#     else:
+#         print('ho gaya')
+#     return render_template('login.html', title='Login', form=form)
+#
+#
+#
+# @app.route("/logout")
+# def logout():
+#     logout_user()
+#     return redirect(url_for('login'))
+#
+#
+#
+#
+#
 # @app.route("/dashboard", methods= ['POST', 'GET'])
 # def dashboard():
 #     # to be added to dashboard:
@@ -411,7 +450,8 @@ def displayRanklist():
 #     #     { % endfor %}
 #     # </div>
 #     return render_template('dashboard.html', title='Dashboard')
-#
+
+
 
 # View all open jobs
 @app.route("/get_open_jobs", methods=["POST", "GET"])
@@ -520,24 +560,7 @@ def create_job():
 		print("job added")
 		return redirect("/get_open_jobs")
 	return render_template('create_job.html', create_job_form=form)
-
-#### Kept this here in case someone wants to experiment with code-Atlas interaction before making it final ####
-#
-# @app.route("/dbtest", methods=["POST", "GET"])
-# def dbtest():
-# 	print('################# here again')
-# 	students = mongo.db.students
-# 	print(students)
-# 	print('Another find')
-# 	print(students.find({}))
-# 	students.update_one({"id": "5"}, {"$set": {"impactScore": 1}})
-# 	print('Should update')
-#
-# 	data = {"id":"20","email":"d@d.com","impactScore": 0.75}
-# 	students.insert(data)
-# 	print('end')
-#
-# 	return ('Hi')
+	
 
 if __name__ == '__main__':
 	app.run(debug=True, port=1240)
