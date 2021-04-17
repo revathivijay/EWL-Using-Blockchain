@@ -73,7 +73,7 @@
                   <ul id="task-card" class="collection with-header">
                     <li class="collection-header teal accent-4">
                       <h4 class="task-card-title">My Tasks</h4>
-                      <p class="task-card-date">January 30, 2020</p>
+                      <p class="task-card-date">{{today}}</p>
                     </li>
                     <li class="collection-item dismissable">
                       <input type="checkbox" id="task1" />
@@ -96,8 +96,8 @@
                     </li>
                   </ul>
                 </div>
-                <div id="work-collections">
 
+                <div id="work-collections">
                 <div class="col s6 m6 l6">
                   <ul id="projects-collection" class="collection z-depth-1">
                     <li class="collection-item avatar">
@@ -123,7 +123,40 @@
                     {% endfor %}
                   </ul>
                 </div>
+
               </div>
+                <div id="jobs-collections">
+                <div class="col s6 m6 l6">
+                  <ul id="jobs-collection" class="collection z-depth-1">
+                    <li class="collection-item avatar">
+                      <i class="material-icons cyan circle">card_travel</i>
+                      <h6 class="collection-header m-1"><b>Campus Positions</b></h6>
+                    </li>
+                    {% for job in jobs %}
+                    <li class="collection-item">
+                      <div class="row">
+                        <div class="col s9">
+                          <p class="collections-title"> <b>{{ job['job_name'] }} </b></p>
+                          <p class="collections-content">{{ job['job_description'] }}</p>
+                        </div>
+                        <div class="col s3">
+                          {% if job['status']=='applied' %}
+                            <span class="task-cat cyan"> Applied</span>
+                          {% elif job['status']=='selected' %}
+                            <span class="task-cat green accent-3">Selected</span>
+                          <span class="col s9">Rating <b>{{ job['grade'] }}</b></span>
+                          {% else %}
+                           <span class="task-cat red darken-1 accent-2">Rejected</span>
+                          {% endif %}
+                        </div>
+                      </div>
+                    </li>
+                    {% endfor %}
+                  </ul>
+                </div>
+
+              </div>
+
               </div>
 
             </div>
