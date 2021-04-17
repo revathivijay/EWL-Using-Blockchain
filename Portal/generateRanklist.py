@@ -4,7 +4,8 @@ from flask_pymongo import PyMongo, MongoClient
 from bson import ObjectId
 
 app.config['MONGO_DBNAME'] = 'earn_while_learn'
-app.config['MONGO_URI'] = 'mongodb://localhost:27017/earn_while_learn'
+app.config['STATIC_FOLDER'] = '/Portal/static/'
+app.config['MONGO_URI'] = 'mongodb+srv://taklu:taklu@cluster0.cut8t.mongodb.net/earn_while_learn?retryWrites=true&w=majority'
 app.secret_key = 'hi'
 
 mongo = PyMongo(app)
@@ -27,8 +28,24 @@ temp = mongo.db.temp
 # report2 = {"projectID":"5fd04dce0d98dceeddf66ad7", "reportName":"report2.pdf", "effort": None, "relevance":None, "novelty":None}
 # gradedReports.insert_many([report1, report2])
 
-temp.insert_one({"isRitu":True})
+# temp.insert_one({"isRitu":True})
 cursor = temp.find({})
 #one time insertion
 for document in cursor:
 	print(document)
+
+import random
+
+
+
+import random
+
+
+
+import random
+
+
+
+import random
+
+

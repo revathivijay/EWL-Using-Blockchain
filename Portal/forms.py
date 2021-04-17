@@ -62,6 +62,8 @@ class UpdateJobs(FlaskForm):
 	update = SubmitField('Update Job')
 
 class GradeJob(FlaskForm):
+	scale = [(1, 'Non-existent'), (2, 'Poor'), (3, 'Average'), (4, 'Good'), (5, 'Excellent')]
 	#TODO: not sure if choices works; if it works delete this todo
-	grade = SelectField("How was the student's performance", choices=list(range(1,10)))
+	grade = SelectField("How was the student's performance", choices=scale, validators=[Required()])
+
 	submit = SubmitField('Submit')

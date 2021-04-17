@@ -1,4 +1,4 @@
-{% extends "layout.html" %}
+
 {% block content %}
 <html itemscope itemtype="http://schema.org/Article">
 <body>
@@ -9,16 +9,16 @@
         <br>
         <h4><b>View Open Jobs</b></h4>
         <br>
-           
+
            {% for i in range(0, total) %}
-               
+
                 <div class="card light-blue lighten-4">
                     <fieldset class="form-group">
                         <h6><b>{{ title_list[i] }}</b></h6>
                         <h6>Vacancies:  {{ vacancies_list[i] }}</h6>
                         <h6>Description:    {{ description_list[i] }}</h6>
                         <br>
-                        
+
                         <div class="center-align form-group" style="display:inline">
                             <b><a class="button-border hoverable waves-effect waves-light btn-large blue  black-text" href = "{{ url_for('apply_for_job', job_id=L_id[i]) }}"> Apply </a></b>
 <!--                            <b><a class="button-border hoverable waves-effect waves-light btn-large blue black-text" href = "{{ url_for('get_candidates', job_id=L_id[i]) }}"> View Candidates</a></b>-->
@@ -29,7 +29,7 @@
                         </div>
                     </fieldset>
                 </div>
-                
+
            {% endfor %}
            </div>
 </body>
