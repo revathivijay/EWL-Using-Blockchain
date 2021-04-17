@@ -4,7 +4,7 @@
 # from flask import Flask, session, escape, render_template, url_for, flash, redirect, request
 # from werkzeug import url_encode
 from bson.objectid import ObjectId
-from Portal.forms import SubmitResearchWork, VerifyReport, LoginForm, UpdateResearchWork, VerifyPublication, CreateJob
+from Portal.forms import SubmitResearchWork, VerifyReport, LoginForm, UpdateResearchWork, VerifyPublication, CreateJob, GradeJob
 from Portal.__init__ import csv_file
 
 from werkzeug.utils import secure_filename
@@ -13,13 +13,12 @@ from flask_login import login_user, current_user, logout_user, login_required
 # from sqlalchemy.orm import Session
 import requests
 import random
-from datetime import date
 
 import os
 import shutil
 from bson.objectid import ObjectId
 
-from bson.json_util import dumps
+from bson import json_util
 from flask import Flask, render_template, url_for, request, session, redirect, send_from_directory, jsonify, flash
 import pandas
 
@@ -41,8 +40,7 @@ mongo = PyMongo(app)
 
 APP_ROOT = os.path.dirname(os.path.abspath(__file__))
 print(APP_ROOT)
-today = date.today()
-TODAY = today.strftime("%b %d %Y")
+
 
 @app.route('/register', methods=['POST', 'GET'])
 def register():
@@ -178,7 +176,7 @@ def update_project(id):
     # 	filename = secure_filename(upload.filename)
     # 	destination = "/".join([target, filename])
     # 	upload.save(destination)
-    # 	# research.insert({'file_list': filename})
+    # 	# research.insert({'filelist': filename})
     # 	print(filename, "ho gayi upload")
     # 	files.append({filename: False})
     # 	break
@@ -221,7 +219,7 @@ def get_student_projects(s_id, s_username):
 
 @app.route('/verify_report/<p_id>/<report_name>', methods=['GET', 'POST'])
 def verify_report(p_id, report_name):
-    gradedReports = mongo.db.gradedReports
+    gradedReports = mongo.db.reports
     research = mongo.db.research
     project = research.find_one({"_id": ObjectId(p_id)})
     topic = project['topic']
@@ -230,7 +228,7 @@ def verify_report(p_id, report_name):
         gradedReports.update_one({"projectID": p_id, "reportName": report_name}, {
             "$set": {"effort": form.effort.data, "relevance": form.relevance.data, "novelty": form.novelty.data}})
         project['filelist'][report_name] = True
-        research.update_one({"_id": ObjectId(p_id)}, {"$set": {"file_list": project['file_list']}})
+        research.update_one({"_id": ObjectId(p_id)}, {"$set": {"filelist": project['filelist']}})
         return redirect("/teacher_dashboard")
 
     return render_template('verify_report.html', topic=topic, form=form)
@@ -279,7 +277,7 @@ def verify_publication(p_id):
 def get_project_lists():
     my_projects = []
     topic_list = []
-    file_lists = []
+    filelists = []
     my_id = "171071045"
 
     # print("getting project lists", my_id)
@@ -292,13 +290,13 @@ def get_project_lists():
         if my_id in students:
             my_projects.append(project["_id"])
             topic_list.append(project["topic"])
-            if 'file_list' in project:
-                file_lists.append(project["file_list"])
+            if 'filelist' in project:
+                filelists.append(project["filelist"])
             else:
-                file_lists.append([])
+                filelists.append([])
             # print('No docs uploaded')
-    # print(my_projects, topic_list, file_lists)
-    return my_projects, topic_list, file_lists
+    # print(my_projects, topic_list, filelists)
+    return my_projects, topic_list, filelists
 
 
 @app.route('/helper_login_student')
@@ -313,7 +311,6 @@ def helper_login_staff():
     session['username'] = 'Mr. Murli'
     session['id'] = '1'
     return redirect('/')
-
 
 
 # @app.route('/userlogin', methods=['POST', 'GET'])
@@ -349,7 +346,7 @@ def logout():
 
 @app.route("/")
 def home():
-    return render_template('home.html')
+    return "HOME"
 
 
 @app.route("/dashboard", methods=['POST', 'GET'])
@@ -372,23 +369,11 @@ def dashboard():
     projects = get_mentor_details(projects)
     student_rank = all_students.index(s_id) + 1
 
-    cursor = mongo.db.applicationHistory.find({'s_id' : s_id})
-    jobs = list(cursor)
-    print(jobs)
-
-    for i in range(len(jobs)):
-        j_id = jobs[i]['j_id']
-        job_details = mongo.db.jobs.find_one({'id':j_id})
-        jobs[i]['job_name'] = job_details['title']
-        jobs[i]['job_description'] = job_details['description']
-        jobs[i]['job_duration'] = job_details['duration']
-    print(jobs)
-
     return render_template('dashboard_new.html', title='Dashboard', s_name=s_name, project_nos=len(projects),
                            impact_score=impact_score,
                            coin_balance=coin_balance, projects=projects, total=len(all_students),
                            all_students=all_students,
-                           student_impact_score=student_impact_score, student_rank=student_rank, jobs=jobs
+                           student_impact_score=student_impact_score, student_rank=student_rank,
                            )
 
 
@@ -419,8 +404,8 @@ def teacher_dashboard():
     for project in all_research_projects:
 
         # Any report is not verified in a certain topic
-        for file in project['file_list']:
-            if project['file_list'].get(file) == False:
+        for file in project['filelist']:
+            if project['filelist'].get(file) == False:
                 vr_topic_list.append(project['topic'] + ":\t" + str(file))
                 p_id_vr.append(str(project['_id']))
                 report_name_vr.append(file)
@@ -551,77 +536,81 @@ def get_candidates(job_id):
 @app.route("/apply_for_job/<job_id>", methods=["POST", "GET"])
 # by student applying for jobs
 def apply_for_job(job_id):
-    candidate_id = 1  # student id who has logged in
-    # print()
-    job = mongo.db.jobs.find_one({"id": int(job_id)})
-    candidates = []
-    if "candidates" in job:
-        candidates = job['candidates']
-    candidates.append(candidate_id)
-
-    mongo.db.jobs.update_one({"id": int(job_id)}, {'$set': {'candidates': candidates}})
-
-    # add a condition later to prevent appending/applying more than once if already applied
-    flash('You have succesfully applied for ' + job[
-        'title'] + '. You will be notified regarding your application status shortly. ', 'success')
-    return redirect(url_for('get_open_jobs'))
+	student_id =171071054 #student id who has logged in
+	applicationHistory = mongo.db.applicationHistory
+	hasApplied = applicationHistory.find_one({'s_id': student_id, 'j_id': job_id})
+	# Dont allow same student to apply multiple times for a job
+	if hasApplied:
+		flash("You have already applied for this job, you will be contacted shortly with the results. ", "success")
+		return redirect(url_for('get_open_jobs'))
+	else:
+		applicationHistory.insert_one({'s_id': student_id, 'j_id': job_id, 'status': 'applied', 'grade': None})
+		flash("Thank you for applying for this job, you will be contacted shortly with the results. ", "success")
+		return redirect(url_for('get_open_jobs'))
 
 
-# return render_template('get_open_jobs.html', candidates=job["candidates"])
-
-
-# Add candidate (by staff)
-@app.route("/add_candidate/<job_id>/<student_id>", methods=["POST", "GET"])
-# for staff alloting a job to the student
-def add_candidate(job_id, student_id):
-    candidate_id = student_id
-    # print()
-    job = mongo.db.jobs.find_one({"id": job_id})
-    if "candidates" in job:
-        job["candidates"].append(candidate_id)
-    else:
-        job["candidates"] = [candidate_id]
-        job["vacancies"] = job["vacancies"] - 1
-    return redirect(url_for('get_candidates', job_id=job_id))
 
 
 # Create job
 @app.route("/create_job", methods=["POST", "GET"])
 def create_job():
-    form = CreateJob(request.form)
+	form = CreateJob(request.form)
+	
+	if form.is_submitted():
+		print("using db")
+		jobs = mongo.db.jobs
+		id = str(jobs.count())
+		title = request.form.get('title')
+		description = request.form.get('description')
+		duration = request.form.get('duration')
+		vacancies = request.form.get('vacancies')		
+		jobs.insert({"id":id, "title":title, "description":description, "duration":duration, "vacancies":vacancies})
+		print("job added")
+		return redirect("/get_open_jobs")
+	return render_template('create_job.html', create_job_form=form)
 
-    if form.is_submitted():
-        print("using db")
-        jobs = mongo.db.jobs
-        id = jobs.count()
-        title = request.form.get('title')
-        description = request.form.get('description')
-        duration = request.form.get('duration')
-        vacancies = request.form.get('vacancies')
-        jobs.insert(
-            {"id": id, "title": title, "description": description, "duration": duration, "vacancies": vacancies})
-        print("job added")
-        return redirect("/get_open_jobs")
-    return render_template('create_job.html', create_job_form=form)
 
-
+# completed and tested
 def allocate_job(job_id):
-    jobHistory = mongo.db.jobHistory
-    jobs = mongo.db.jobs
-    curr_job = jobs.find_one({"job_id": job_id})
-    jobHistory.find({"job_id": job_id})
-    if len(jobHistory) < 25:
-        selected_candidates = random.sample(curr_job["candidates"], curr_job["vacancies"])
-    else:
-        # TODO
-        selected_candidates = []
-    return selected_candidates
+	applicationHistory = mongo.db.applicationHistory
+	all_applicants = applicationHistory.find({'j_id': job_id}, {"s_id": 1, "_id":0})
+	all_applicants = [item['s_id'] for item in all_applicants]
+	curr_job = mongo.db.jobs.find_one({"id": job_id})
+
+	if len(list(applicationHistory.find({'status': 'selected'}))) < 0:
+		selected_candidates = random.sample(all_applicants, int(curr_job["vacancies"]))
+	else:
+		scores = {}
+		# Generate scores of students for the given job
+		for applicant in all_applicants:
+			all_grades = applicationHistory.find({"s_id": applicant, "status": "selected"}, {"grade": 1, "_id":0})
+			all_grades = [item['grade'] for item in all_grades]
+			# If it is his first job give him an implicit rating of 9
+			scores[applicant] = 9 if len(all_grades) == 0 else (sum(all_grades) / len(all_grades))
+
+		for key in scores.keys():
+			scores[key] = scores[key] * random.uniform(0.7, 1.0)
+		selected_candidates = list(dict(sorted(scores.items(), key=lambda item: item[1], reverse=True)).keys())[:int(curr_job["vacancies"])]
+
+	for candidate in all_applicants:
+		if candidate in selected_candidates:
+			applicationHistory.update_one({'j_id': job_id, 's_id': candidate}, {'$set': {'status': 'selected'}})
+		else:
+			applicationHistory.update_one({'j_id': job_id, 's_id': candidate}, {'$set': {'status': 'rejected'}})
+
+	return selected_candidates
 
 
 @app.route('/grade_job/<job_id>/<candidate_id>', methods=['GET', 'POST'])
 def grade_job(job_id, candidate_id):
-    return render_template('verify_publication.html', form=form, topic=topic, publicationJournal=publicationJournal,
-                           p_id=p_id, doi=doi)
+	form = GradeJob(request.form)
+	applicationHistory = mongo.db.applicationHistory
+	if form.is_submitted():
+		applicationHistory.update_one({"s_id":candidate_id, "j_id":job_id}, {"$set":{"grade":form.grade.data}})
+		flash('The job has been graded')
+		#TODO: Should the student be intimated that his job has been completed?
+		return(redirect("/teacher_dashboard"))
+	return render_template('grade_job.html', form=form)
 
 
 if __name__ == '__main__':
