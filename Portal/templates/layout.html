@@ -1,9 +1,8 @@
-
-
-
 <!DOCTYPE html>
 <html lang="en">
+
   <head>
+    <script src="./../static/js/nav.js"></script>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -11,13 +10,13 @@
       {% if title %}
         <title>{{ title }}</title>
       {% else %}
-        <title>EWL</title>
+        <title>Student Engagement</title>
       {% endif %}
     <!-- Favicons-->
     <link rel="icon" href="./../static/images/favicon/favicon-32x32.png" sizes="32x32">
     <!-- Favicons-->
     <link rel="apple-touch-icon-precomposed" href="./../static/images/favicon/apple-touch-icon-152x152.png">
-
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <!-- For Windows Phone -->
     <!-- CORE CSS-->
     <link href="{{ url_for('static',filename='css/materialize.css') }}" type="text/css" rel="stylesheet">
@@ -48,7 +47,7 @@
                 <h1 class="logo-wrapper">
                   <a href="index.html" class="brand-logo darken-1">
                     <img  src="{{ url_for('static', filename='images/logo/vjti-logo.png') }}" >
-                    <span class="logo-text hide-on-med-and-down">EWL</span>
+                    <span class="logo-text hide-on-med-and-down">Student Activities</span>
                   </a>
                 </h1>
               </li>
@@ -78,14 +77,15 @@
         <!-- START LEFT SIDEBAR NAV-->
         <aside id="left-sidebar-nav">
           <ul id="slide-out" class="side-nav fixed leftside-navigation">
-            <li class="user-details red darken-2">
+
+            <li class="user-details blue darken-4">
               <div class="row">
                 <div class="col col s4 m4 l4">
-                  <img src="{{ url_for('static',filename='images/avatar/Ritu.jpg') }}" alt="" class="circle responsive-img valign profile-image cyan">
+                  <img src="{{ url_for('static',filename='images/avatar/Revathi.jpg')}}" alt="" class="circle responsive-img valign halign profile-image cyan">
                 </div>
                 <div class="col col s8 m8 l8">
 
-                  <a class="btn-flat dropdown-button waves-effect waves-light white-text profile-btn" href="#" >Anna</a>
+                  <a class="btn-flat dropdown-button waves-effect waves-light white-text profile-btn" href="#" > {{s_name}}</a>
                   <p class="user-roal">Student</p>
                 </div>
               </div>
@@ -108,7 +108,7 @@
                     </a>
                 </li>
                 <li class="bold">
-                  <a href="ui-basic-buttons.html" class="waves-effect waves-cyan">
+                  <a href="{{url_for('ranklist')}}" class="waves-effect waves-cyan">
                       <span class="nav-text">View Research Ranklist</span>
                     </a>
                 </li>
@@ -128,9 +128,10 @@
               </ul>
             </li>
           </ul>
-          <a href="#" data-activates="slide-out" class="sidebar-collapse btn-floating btn-medium waves-effect waves-light hide-on-large-only">
+          <a href="#" data-activates="slide-out" class="sidebar-collapse btn-floating btn-medium waves-effect waves-light blue darken-2 hide-on-large-only">
             <i class="material-icons">menu</i>
-          </a>
+            </a>
+
         </aside>
         <!-- END LEFT SIDEBAR NAV-->
         <!-- //////////////////////////////////////////////////////////////////////////// -->
