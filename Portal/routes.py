@@ -277,7 +277,7 @@ def verify_publication(p_id):
 def get_project_lists():
     my_projects = []
     topic_list = []
-    file_lists = []
+    filelists = []
     my_id = "171071045"
 
     # print("getting project lists", my_id)
