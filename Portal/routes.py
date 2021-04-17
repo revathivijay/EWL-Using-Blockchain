@@ -143,7 +143,8 @@ def add_project():
 				 'departments': departments_involved.split(","),
 				 'isPublished': False,
 				 'publicationDOI': None,
-				 'publicationJournal': None
+				 'publicationJournal': None,
+				 'filelist':{}
 				 }
 			)
 
