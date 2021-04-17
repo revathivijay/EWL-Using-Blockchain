@@ -346,7 +346,7 @@ def logout():
 
 @app.route("/")
 def home():
-    return "HOME"
+    return render_template('home.html')
 
 
 @app.route("/dashboard", methods=['POST', 'GET'])
@@ -369,11 +369,23 @@ def dashboard():
     projects = get_mentor_details(projects)
     student_rank = all_students.index(s_id) + 1
 
+    cursor = mongo.db.applicationHistory.find({'s_id': s_id})
+    jobs = list(cursor)
+    print(jobs)
+
+    for i in range(len(jobs)):
+        j_id = jobs[i]['j_id']
+        job_details = mongo.db.jobs.find_one({'id': j_id})
+        jobs[i]['job_name'] = job_details['title']
+        jobs[i]['job_description'] = job_details['description']
+        jobs[i]['job_duration'] = job_details['duration']
+    print(jobs)
+
     return render_template('dashboard_new.html', title='Dashboard', s_name=s_name, project_nos=len(projects),
                            impact_score=impact_score,
                            coin_balance=coin_balance, projects=projects, total=len(all_students),
                            all_students=all_students,
-                           student_impact_score=student_impact_score, student_rank=student_rank,
+                           student_impact_score=student_impact_score, student_rank=student_rank, jobs=jobs
                            )
 
 
