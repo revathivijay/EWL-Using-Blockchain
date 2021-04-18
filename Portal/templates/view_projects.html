@@ -5,26 +5,25 @@
     <body>
         {% for project in projects %}
 
-        <h4><b> {{project['topic']}} </b></h4>
+        <span class="center-align"><h4><b> {{project['topic']}} </b></h4></span>
 
-        <div class="card blue lighten-1">
+        <div class="card lighten-1">
             <div class="card-content black-text">
                 <span class="card-title"></span>
                 <ul class="collection">
-                    <li class="collection-item"><b>Project ID:</b> {{project['_id']}}</li>
                     <li class="collection-item"><b>Students: </b>
                         {% for student in project['students'] %}
-                        <a href={{url_for('dashboard')}} class="<waves-effect waves-light btn blue black-text">{{ student }}</a>
+                        <a href={{url_for('dashboard')}} class="<waves-effect waves-light btn amber black-text">{{ student }}</a>
                         {% endfor %}
                     </li>
                     <li class="collection-item"><b>Mentors:</b>
-                        {% for student in project['staff'] %}
-                        <a href="#" class="<waves-effect waves-light btn blue black-text">{{ student }}</a>
+                        {% for staff in project['staff'] %}
+                        <a href="#" class="<waves-effect waves-light btn amber black-text">{{ staff }}</a>
                         {% endfor %}
                     </li>
                     <li class="collection-item"><b>Departments:</b>
-                        {% for student in project['departments'] %}
-                        <a href="#" class="<waves-effect waves-light btn blue black-text">{{ student }}</a>
+                        {% for dept in project['departments'] %}
+                        <a href="#" class="<waves-effect waves-light btn amber black-text">{{ dept }}</a>
                         {% endfor %}
                     </li>
 <!--                    <li class="collection-item"><b>Date of start:</b> {{ project['date'] }}</li>-->
@@ -35,7 +34,7 @@
                                 No Documents uploaded
                             {% else %}
                                 {% for file in project['filelist'] %}
-                                    <a href="#" class="<waves-effect waves-light btn blue black-text">{{file}}</a>
+                                    <a href="#" class="<waves-effect waves-light btn amber black-text">{{file}}</a>
                                 {% endfor %}
                             {% endif %}
                         {% else %}
@@ -55,11 +54,21 @@
                             No
                         {% endif %}
                     </li>
+                    <li class="collection-item"><b>Status:</b>
+                        {% if 'completed' in project %}
+                            {% if project['completed'] is sameas true %} Completed
+                            {% else %} Ongoing
+                            {% endif %}
+                        {% else %} Ongoing
+                        {% endif %}
+                    </li>
+                    <li class="collection-item"><b>Coins Earned: </b> 60
+                    </li>
 
                 </ul>
             </div>
             <div class="card-action">
-                <a href= {{url_for("update_project",id=project['_id'])}} class="btn blue lighten-5 black-text"> Update Project</a>
+                <a href= {{url_for("update_project",id=project['_id'])}} class="btn amber black-text center">Update Project</a>
             </div>
         </div>
         {% endfor %}
