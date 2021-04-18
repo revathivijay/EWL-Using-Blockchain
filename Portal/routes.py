@@ -395,6 +395,7 @@ def dashboard():
     projects = get_mentor_details(projects)
     student_rank = all_students.index(s_id) + 1
 
+
     cursor = mongo.db.applicationHistory.find({'s_id': s_id})
     jobs = list(cursor)
     print(jobs)
@@ -464,8 +465,14 @@ def teacher_dashboard():
 def ranklist():
     s_name = get_student_name(session['id'])
     all_students, student_impact_score = displayRanklist()
+    student_names = []
+    for student in all_students:
+        student_details = mongo.db.students.find_one({'id':student})
+        name = student_details['name']['fname'] + " " + student_details['name']['lname']
+        student_names.append(name)
+
     return render_template("ranklist.html", all_students=all_students, student_impact_score=student_impact_score,
-                           total=len(all_students), s_name=s_name)
+                           total=len(all_students), s_name=s_name, student_names=student_names)
 
 
 def displayRanklist():
