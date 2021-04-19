@@ -18,6 +18,8 @@ import datetime
 
 import datetime
 
+import datetime
+
 app = Flask(__name__)
 
 app.config['MONGO_DBNAME'] = 'earn_while_learn'
@@ -235,8 +237,8 @@ def update_project(id):
     project = mongo.db.research.find_one({'_id': ObjectId(id)})
     filelist = project['filelist']
 
-    # print("Hello: ", filelist)
     print("DBs Updated")
+
 
     return render_template('update_project.html', project=project, total=len(filelist), filelist=filelist,
                            my_projects=my_projects, update_work_form=update_work_form,
@@ -385,6 +387,12 @@ def helper_login_staff():
     session['id'] = '1'
     return redirect('/teacher_dashboard')
 
+@app.route('/helper_login_supervisor')
+def helper_login_supervisor():
+    session['username'] = 'Anna Canteen'
+    session['id'] = '101'
+    return redirect('/supervisor_dashboard')
+
 
 # @app.route('/userlogin', methods=['POST', 'GET'])
 # def userlogin():
@@ -421,6 +429,17 @@ def logout():
 def home():
     return render_template('home.html')  # TODO: make generic home page
 
+@app.route('/supervisor_dashboard', methods=['POST', 'GET'])
+def supervisor_dashboard():
+    s_name = get_faculty_name(session['id'])
+    user_type = get_user_type(session['id'])
+    return render_template('supervisor_dashboard.html', s_name=s_name, user_type=user_type)
+
+@app.route('/view_created_jobs', methods=['POST', 'GET'])
+def view_created_jobs():
+    s_name = get_faculty_name(session['id'])
+    user_type = get_user_type(session['id'])
+    return render_template('view_created_jobs.html', s_name=s_name, user_type=user_type)
 
 ## THIS IS STUDENT DASHBOARD
 @app.route("/dashboard", methods=['POST', 'GET'])
