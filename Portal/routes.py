@@ -213,10 +213,21 @@ def update_project(id):
 
     # if file was uploaded
     if len(files) != 0:
+        # if previously submitted files exist
+        project = mongo.db.research.find_one({'_id': ObjectId(id)})
+        if 'filelist' in project:
+            print("Files existtttt")
+            prev_files = project['filelist']
+            print("prev_files: ", prev_files)
+            prev_files[filename] = False
+        else:
+            print("Files donut existtt")
+            prev_files = files[0]
+
         mongo.db.research.update_one(
             {"_id": ObjectId(id)},
             {
-                "$set": {"filelist": files[0]}
+                "$set": {"filelist": prev_files}
             }
         )
         print("Updated in research")
@@ -317,7 +328,7 @@ def verify_publication(p_id):
     topic = project['topic']
     doi = project['publicationDOI']
     publicationJournal = project['publicationJournal']
-    publicationJournal = "ARCHIVES OF COMPUTATIONAL METHODS IN ENGINEERING"
+    # publicationJournal = "ARCHIVES OF COMPUTATIONAL METHODS IN ENGINEERING"
 
     form = VerifyPublication(request.form)
 
