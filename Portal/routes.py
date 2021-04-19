@@ -116,10 +116,18 @@ def register_staff():
     print('send to signup')
     return render_template('register_staff.html', msg="", form=form)
 
+
 def get_student_name(s_id):
     s_name = mongo.db.students.find_one({'id': s_id})
     s_name = s_name['name']['fname'] + " " + s_name['name']['lname']
     return s_name
+
+
+def get_user_type(id):
+    print(id)
+    user = mongo.db.userType.find_one({'id': id})
+    print("User: ", user)
+    return user['type']
 
 
 @app.route('/add_project', methods=['POST', 'GET'])
@@ -127,13 +135,10 @@ def add_project():
     print("In /add_project")
     submit_work_form = SubmitResearchWork(request.form)
     update_work_form = UpdateResearchWork(request.form)
-    # if 'username' not in session:
-    # 	print("IN Session")
-    # 	return redirect('/')
 
     s_id = session['id'] if session['id'] else ""
-    s_username = session['username'] if session['username'] else ""
     s_name = get_student_name(s_id)
+    user_type = get_user_type(s_id)
 
     if request.method == 'POST':
         print("using db")
@@ -165,21 +170,21 @@ def add_project():
 
             return render_template('add_project.html', msg="", submit_work_form=submit_work_form,
                                    update_work_form=update_work_form, my_projects=my_projects, topic_list=topic_list,
-                                   filelists=filelists, total=total, s_name=s_name)
+                                   filelists=filelists, total=total, s_name=s_name, user_type=user_type)
     else:
         print('In else of add project')
         return render_template('add_project.html', msg="", submit_work_form=submit_work_form,
                                update_work_form=update_work_form, my_projects=[], topic_list=[],
-                               filelists=[], total=0, s_name=s_name)
+                               filelists=[], total=0, s_name=s_name, user_type=user_type)
 
 
 @app.route('/update_project/<id>', methods=['POST', 'GET'])
 def update_project(id):
     print("In update project")
 
-    s_id = session['id'] if session['id'] else ""
-    s_username = session['username'] if session['username'] else ""
+    s_id = session['id'] if session['id'] else "171071045"
     s_name = get_student_name(s_id)
+    user_type = get_user_type(s_id)
 
     submit_work_form = SubmitResearchWork(request.form)
     update_work_form = UpdateResearchWork(request.form)
@@ -217,35 +222,55 @@ def update_project(id):
 
     return render_template('update_project.html', project=project, total=len(filelist), filelist=filelist,
                            my_projects=my_projects, update_work_form=update_work_form,
-                           submit_work_form=submit_work_form, topic_list=topic_list, s_name=s_name)
+                           submit_work_form=submit_work_form, topic_list=topic_list, s_name=s_name, user_type=user_type)
 
 
-@app.route('/view_projects')
-def view_projects():
+@app.route('/view_projects/<user_type>')
+def view_projects(user_type):
+    if user_type == 'student':
+        s_id = session['id'] if session['id'] else "171071045"
+        s_username = session['username'] if session['username'] else "revs"
+        s_name = get_student_name(s_id)
+        projects = get_projects_for_id(s_id, s_username, user_type)
+        print(projects)
+        return render_template('view_projects.html', projects=projects, s_name=s_name, user_type=user_type)
 
-    s_id = session['id'] if session['id'] else ""
-    s_username = session['username'] if session['username'] else ""
-    s_name = get_student_name(s_id)
-    projects = get_student_projects(s_id, s_username)
-    print(projects)
-    return render_template('view_projects.html', projects=projects, s_name=s_name)
+    if user_type == 'faculty':
+        f_id = session['id'] if session['id'] else "1"
+        f_username = session['username'] if session['username'] else "dp"
+        s_name = get_faculty_name(f_id)
+        projects = get_projects_for_id(f_id, f_username, user_type)
+        return render_template('view_projects.html', projects=projects, s_name=s_name, user_type=user_type)
 
 
-def get_student_projects(s_id, s_username):
-    print("In get student projects")
+def get_faculty_name(f_id):
+    faculty_details = mongo.db.staff.find_one({'id': f_id})
+    return faculty_details['name']
+
+
+def get_projects_for_id(s_id, s_username="Revathi", user_type='student'):
+    print("In get projects")
     research_db = mongo.db.research
     projects = []
-    for document in research_db.find():
-        if s_id in document['students'] or s_username in document['students']:
-            # print(document)
-            projects.append(document)
+    if user_type == 'student':
+        for document in research_db.find():
+            if s_id in document['students'] or s_username in document['students']:
+                projects.append(document)
+    elif user_type == 'faculty':
+        for document in research_db.find():
+            if s_id in document['staff']:
+                projects.append(document)
     return projects
 
 
 @app.route('/verify_report/<p_id>/<report_name>', methods=['GET', 'POST'])
 def verify_report(p_id, report_name):
     s_id = session['id']
-    s_name = get_student_name(s_id)
+    s_name = get_faculty_name(s_id)
+    print("Faculty name: ", s_name)
+
+    user_type = get_user_type(s_id)
+    print("User type: ", user_type)
     gradedReports = mongo.db.reports
     research = mongo.db.research
     project = research.find_one({"_id": ObjectId(p_id)})
@@ -258,11 +283,14 @@ def verify_report(p_id, report_name):
         research.update_one({"_id": ObjectId(p_id)}, {"$set": {"filelist": project['filelist']}})
         return redirect("/teacher_dashboard")
 
-    return render_template('verify_report.html', topic=topic, form=form, s_name=s_name)
+    return render_template('verify_report.html', topic=topic, form=form, s_name=s_name, user_type=user_type)
 
 
 @app.route('/verify_publication/<p_id>', methods=['GET', 'POST'])
 def verify_publication(p_id):
+    s_id = session['id']
+    s_name = get_faculty_name(s_id)
+    user_type = get_user_type(s_id)
     research = mongo.db.research
     project = research.find_one({"_id": ObjectId(p_id)})
     topic = project['topic']
@@ -297,7 +325,7 @@ def verify_publication(p_id):
             flash('Verification was not successful!', 'danger')
             return redirect('/teacher_dashboard')
     return render_template('verify_publication.html', form=form, topic=topic, publicationJournal=publicationJournal,
-                           p_id=p_id, doi=doi)
+                           p_id=p_id, doi=doi, s_name=s_name, user_type=user_type)
 
 
 def get_project_lists():
@@ -334,9 +362,9 @@ def helper_login_student():
 
 @app.route('/helper_login_staff')
 def helper_login_staff():
-    session['username'] = 'Mr. Murli'
+    session['username'] = 'Dr. Dhiren Patel'
     session['id'] = '1'
-    return redirect('/')
+    return redirect('/teacher_dashboard')
 
 
 # @app.route('/userlogin', methods=['POST', 'GET'])
@@ -372,9 +400,10 @@ def logout():
 
 @app.route("/")
 def home():
-    return render_template('home.html')
+    return render_template('home.html')  # TODO: make generic home page
 
 
+## THIS IS STUDENT DASHBOARD
 @app.route("/dashboard", methods=['POST', 'GET'])
 def dashboard():
     s_id = session['id']
@@ -382,19 +411,19 @@ def dashboard():
 
     student = mongo.db.students.find_one({'id': s_id})
 
-    s_name = student['name']['fname'] + " " + student['name']['lname']
+    s_name = get_student_name(s_id)
+    user_type = get_user_type(s_id)
     impact_score = student['impactScore']
 
     all_students, student_impact_score = displayRanklist()
     wallet_address = mongo.db.wallets.find_one({'walletAddress': student['walletAddress']})
     coin_balance = wallet_address['coins']
 
-    projects = get_student_projects(s_id, s_username)
+    projects = get_projects_for_id(s_id, s_username)
 
     # GETTING MENTOR DETAILS FROM A LIST OF PROJECTS
     projects = get_mentor_details(projects)
     student_rank = all_students.index(s_id) + 1
-
 
     cursor = mongo.db.applicationHistory.find({'s_id': s_id})
     jobs = list(cursor)
@@ -412,8 +441,8 @@ def dashboard():
                            impact_score=impact_score,
                            coin_balance=coin_balance, projects=projects, total=len(all_students),
                            all_students=all_students,
-                           student_impact_score=student_impact_score, student_rank=student_rank, jobs=jobs
-                           )
+                           student_impact_score=student_impact_score, student_rank=student_rank, jobs=jobs,
+                           user_type=user_type)
 
 
 def get_mentor_details(projects):
@@ -423,7 +452,7 @@ def get_mentor_details(projects):
         all_mentors = []
         for m_id in m_ids:
             m_name = mongo.db.staff.find_one({'id': m_id})
-            print("suck it", m_name, "projects: \n", projects[i])
+            # print("suck it", m_name, "projects: \n", projects[i])
             all_mentors.append(m_name['name'])
         projects[i]['mentors'] = all_mentors
     return projects
@@ -433,6 +462,9 @@ def get_mentor_details(projects):
 def teacher_dashboard():
     # TODO: get teacher_id from login
     teacher_id = '1'
+    s_id = session['id']
+    s_name = get_faculty_name(s_id)
+    user_type = get_user_type(s_id)
     research = mongo.db.research
     all_research_projects = research.find({'staff': teacher_id})
     vr_topic_list = []
@@ -458,21 +490,28 @@ def teacher_dashboard():
 
     return render_template('teacher_dashboard.html', title='Dashboard', vr_topic_list=vr_topic_list, p_id_vr=p_id_vr,
                            report_name_vr=report_name_vr, total_vr=len(p_id_vr), vp_topic_list=vp_topic_list,
-                           p_id_vp=p_id_vp, total_vp=len(p_id_vp))
+                           p_id_vp=p_id_vp, total_vp=len(p_id_vp), s_name=s_name, user_type=user_type)
 
 
 @app.route("/ranklist", methods=['GET', 'POST'])
 def ranklist():
-    s_name = get_student_name(session['id'])
+    id = session['id']
+    user_type = get_user_type(id)
+
+    if user_type=='student':
+        s_name = get_student_name(id)
+    elif user_type=='faculty':
+        s_name = get_faculty_name(id)
+
     all_students, student_impact_score = displayRanklist()
     student_names = []
     for student in all_students:
-        student_details = mongo.db.students.find_one({'id':student})
+        student_details = mongo.db.students.find_one({'id': student})
         name = student_details['name']['fname'] + " " + student_details['name']['lname']
         student_names.append(name)
 
     return render_template("ranklist.html", all_students=all_students, student_impact_score=student_impact_score,
-                           total=len(all_students), s_name=s_name, student_names=student_names)
+                           total=len(all_students), s_name=s_name, student_names=student_names, user_type=user_type)
 
 
 def displayRanklist():
@@ -527,6 +566,7 @@ def get_open_jobs():
     jobs_ = mongo.db.jobs
     jobs = jobs_.find({})
     s_name = get_student_name(session['id'])
+    user_type = get_user_type(session['id'])
     # add condition for displaying only jobs w unfilled vacancies
     L_title = []
     L_description = []
@@ -542,7 +582,7 @@ def get_open_jobs():
     total = len(L_title)
 
     return render_template('get_open_jobs.html', title_list=L_title, description_list=L_description,
-                           vacancies_list=L_vacancies, L_id=L_id, total=total, s_name=s_name)
+                           vacancies_list=L_vacancies, L_id=L_id, total=total, s_name=s_name, user_type=user_type)
 
 
 # Get candidates
