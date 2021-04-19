@@ -9,7 +9,8 @@
 
             <div>
 
-                <h5 class="mt-3">These are the following documents that need your attention:</h5>
+                <h4 class="mt-3 center-align"><i>Documents that need your attention</i></h4>
+                <br><br>
                 <div class="center-align form-group">
                     <h3>Grade Reports</h3>
                     <div class="form-group center-align">
@@ -17,7 +18,7 @@
 
                         <br>
                         {% if total_vr == 0 %}
-                            <p>You have no Reports to review!</p>
+                            <p st>You have no Reports to review!</p>
                         {% else %}
                             {% for i in range(0, total_vr) %}
                                 <b><a href = "{{ url_for('verify_report' ,  p_id = p_id_vr[i], report_name = report_name_vr[i] ) }}" class="button-border hoverable waves-effect waves-light btn-large gradient-45deg-light-blue-cyan black-text">{{vr_topic_list[i]}} </a></b>
@@ -25,6 +26,7 @@
                         {% endif %}
                     </div>
                 </div>
+                <br><hr><br>
                 <div class="center-align form-group mt-3">
                     <h3>Verify Publications</h3>
                     <br>
