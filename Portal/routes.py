@@ -439,7 +439,8 @@ def supervisor_dashboard():
 def view_created_jobs():
     s_name = get_faculty_name(session['id'])
     user_type = get_user_type(session['id'])
-    return render_template('view_created_jobs', s_name=s_name, user_type=user_type)
+    return render_template('view_created_jobs.html', s_name=s_name, user_type=user_type)
+
 
 ## THIS IS STUDENT DASHBOARD
 @app.route("/dashboard", methods=['POST', 'GET'])
