@@ -29,6 +29,8 @@ import bcrypt
 from flask import Flask, render_template, request
 import os.path
 
+import datetime
+
 app = Flask(__name__)
 
 app.config['MONGO_DBNAME'] = 'earn_while_learn'
@@ -189,40 +191,67 @@ def update_project(id):
     submit_work_form = SubmitResearchWork(request.form)
     update_work_form = UpdateResearchWork(request.form)
 
-    project = mongo.db.research.find_one({"_id": ObjectId(id)})
+    # project = mongo.db.research.find_one({"_id": ObjectId(id)})
+
+    # if request.method == 'POST':
     target = os.path.join(APP_ROOT, 'static/documents')  # folder path
-    print(target)
+    print("Target: ", target)
     if not os.path.isdir(target):
         os.mkdir(target)  # create folder if not exits
     my_projects, topic_list, filelist = get_project_lists()
+    print("Initial filelist (all projects): ", filelist)
 
     files = []
     test = request.files.getlist('Document')
     print("TEST: ", test)
+
     for upload in request.files.getlist("Document"):  # multiple image handle
         print("upload: ", upload)
         filename = secure_filename(upload.filename)
         destination = "/".join([target, filename])
         print("file dest: ", destination)
         upload.save(destination)
+        print("file saved")
         # research.insert({'filelist': filename})
         print(filename, "ho gayi upload")
         files.append({filename: False})
         break
 
-    if 'filelist' in project:
-        filelist = project["filelist"]
-        if len(files) != 0:
-            filelist[files[0]] = True
-    else:
-        if len(files) != 0:
-            filelist = [files[0]]
+    print("filessss: ", files)
 
-    mongo.db.research.update({"_id": id}, {"$set": {"filelist": filelist}})
+    # if file was uploaded
+    if len(files) != 0:
+        mongo.db.research.update_one(
+            {"_id": ObjectId(id)},
+            {
+                "$set": {"filelist": files[0]}
+            }
+        )
+        print("Updated in research")
+
+        # inserting in reports collection
+        mongo.db.reports.insert_one(
+            {
+                "projectID": ObjectId(id),
+                "reportName": filename,
+                "date_submitted": datetime.datetime.today(),
+                "effort": None,
+                "novelty":None,
+                "relevance":None
+             }
+        )
+        print("Inserted in reports")
+
+    project = mongo.db.research.find_one({'_id': ObjectId(id)})
+    filelist = project['filelist']
+
+    print("Hello: ", filelist)
+    print("DB Updated")
 
     return render_template('update_project.html', project=project, total=len(filelist), filelist=filelist,
                            my_projects=my_projects, update_work_form=update_work_form,
-                           submit_work_form=submit_work_form, topic_list=topic_list, s_name=s_name, user_type=user_type)
+                           submit_work_form=submit_work_form, topic_list=topic_list, s_name=s_name,
+                           user_type=user_type)
 
 
 @app.route('/view_projects/<user_type>')
@@ -498,9 +527,9 @@ def ranklist():
     id = session['id']
     user_type = get_user_type(id)
 
-    if user_type=='student':
+    if user_type == 'student':
         s_name = get_student_name(id)
-    elif user_type=='faculty':
+    elif user_type == 'faculty':
         s_name = get_faculty_name(id)
 
     all_students, student_impact_score = displayRanklist()
