@@ -112,10 +112,14 @@
                           <p class="collections-content">{{", ".join(project['mentors'])}}</p>
                         </div>
                         <div class="col s3">
-                          {% if project['completed'] is sameas true %}
-                          <span class="task-cat deep-orange accent-2">Completed</span>
+                          {% if project['isVerified'] is sameas true %}
+                            {% if project['completed'] is sameas true %}
+                            <span class="task-cat deep-orange accent-2">Completed</span>
+                            {% else %}
+                            <span class="task-cat cyan">Ongoing</span>
+                            {% endif %}
                           {% else %}
-                          <span class="task-cat cyan">Ongoing</span>
+                            <span class="task-cat red lighten-1">Not verified</span>
                           {% endif %}
                         </div>
                       </div>
