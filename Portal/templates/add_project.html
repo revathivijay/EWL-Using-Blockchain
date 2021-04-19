@@ -27,7 +27,7 @@
             <br>
 
             <div class="form-group">
-                <h6><b>Mentor</b></h6>
+                <h6><b>Mentor (Please enter mentor IDs) </b></h6>
                     {% if submit_work_form.staff.errors %}
                         {{ submit_work_form.staff(class="form-control form-control-lg is-invalid") }}
                         <div class="invalid-feedback">
@@ -72,7 +72,7 @@
             <br>
 
             <div class="form-group">
-                <a href = "{{ url_for('add_project') }}"> <b onclick="Materialize.toast('Submitted!', 5000)"> {{ submit_work_form.submit(class="button-border hoverable waves-effect waves-light btn-large blue black-text") }} </b> </a>
+                <a href = "{{ url_for('dashboard') }}"> <b onclick="Materialize.toast('Submitted!', 5000)"> {{ submit_work_form.submit(class="button-border hoverable waves-effect waves-light btn-large blue black-text") }} </b> </a>
             </div>
         </form>
     </fieldset>

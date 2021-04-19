@@ -468,6 +468,14 @@ def view_created_jobs():
 
     return render_template('view_created_jobs.html', s_name=s_name, user_type=user_type, jobs=display_jobs, total=len(display_jobs))
 
+@app.route('/view_document/<doc_name>', methods=['POST', 'GET'])
+def view_document(doc_name):
+    user_type = get_user_type(session['id'])
+    if user_type == 'student':
+        s_name = get_student_name(session['id'])
+    else:
+        s_name = get_faculty_name(session['id'])
+    return render_template("view_document.html", doc_name=doc_name, s_name=s_name, user_type=user_type)
 
 ## THIS IS STUDENT DASHBOARD
 @app.route("/dashboard", methods=['POST', 'GET'])

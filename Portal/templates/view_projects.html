@@ -17,9 +17,13 @@
                         {% endfor %}
                     </li>
                     <li class="collection-item"><b>Mentors:</b>
-                        {% for staff in project['staff'] %}
-                        <a href="#" class="<waves-effect waves-light btn amber black-text">{{ staff }}</a>
-                        {% endfor %}
+                        {% if project['isVerified'] is sameas true %}
+                            {% for staff in project['staff'] %}
+                            <a href="#" class="<waves-effect waves-light btn amber black-text">{{ staff }}</a>
+                            {% endfor %}
+                        {% else %}
+                        <h7>Project has not been accepted by mentors yet.</h7>
+                        {% endif %}
                     </li>
                     <li class="collection-item"><b>Departments:</b>
                         {% for dept in project['departments'] %}
@@ -34,7 +38,7 @@
                                 No Documents uploaded
                             {% else %}
                                 {% for file in project['filelist'] %}
-                                    <a href="#" class="<waves-effect waves-light btn amber black-text">{{file}}</a>
+                                    <a href = "{{ url_for('view_document', doc_name=file)}}" class="<waves-effect waves-light btn amber black-text">{{file}}</a>
                                 {% endfor %}
                             {% endif %}
                         {% else %}
@@ -69,7 +73,14 @@
             </div>
             <div class="card-action">
                 {% if user_type=='student' %}
+                    {% if project['isVerified'] is sameas true %}
                     <a href= {{url_for("update_project",id=project['_id'])}} class="btn amber black-text center">Update Project</a>
+                    {% else %}
+                    <span class="tooltipped" data-position="bottom" data-tooltip="Project can be updated only after mentors verify!">
+                        <a href= {{url_for("update_project",id=project['_id'])}} class="btn amber black-text center disabled">Update Project</a>
+                    </span>
+<!--                    <a href= {{url_for("update_project",id=project['_id'])}} class="btn tooltipped amber black-text center" data-position="bottom" data-tooltip="Mentors need to verify!">Update Project</a>-->
+                    {% endif %}
                 {% endif %}
             </div>
         </div>
