@@ -115,9 +115,7 @@ def get_student_name(s_id):
 
 
 def get_user_type(id):
-    print(id)
     user = mongo.db.userType.find_one({'id': id})
-    print("User: ", user)
     return user['type']
 
 
@@ -216,12 +214,9 @@ def update_project(id):
         # if previously submitted files exist
         project = mongo.db.research.find_one({'_id': ObjectId(id)})
         if 'filelist' in project:
-            print("Files existtttt")
             prev_files = project['filelist']
-            print("prev_files: ", prev_files)
             prev_files[filename] = False
         else:
-            print("Files donut existtt")
             prev_files = files[0]
 
         mongo.db.research.update_one(
@@ -450,7 +445,28 @@ def supervisor_dashboard():
 def view_created_jobs():
     s_name = get_faculty_name(session['id'])
     user_type = get_user_type(session['id'])
-    return render_template('view_created_jobs.html', s_name=s_name, user_type=user_type)
+
+    all_jobs = mongo.db.jobs.find()
+    display_jobs = []
+    for job in all_jobs:
+        end_date = job['start_date'] + datetime.timedelta(days=int(job['duration'])-1)
+
+        # only display jobs that haven't ended
+        if end_date >= datetime.datetime.today():
+            job['end_date'] = end_date
+            job['start_date'] = job['start_date'].strftime("%d %B, %Y")
+            job['end_date'] = job['end_date'].strftime("%d %B, %Y")
+            job['date_created'] = job['date_created'].strftime("%d %B, %Y")
+
+            # TODO: check this logic
+            if 'candidates' in job:
+                job['allocated'] = True
+            else:
+                job['allocated'] = False
+            display_jobs.append(job)
+            print(display_jobs)
+
+    return render_template('view_created_jobs.html', s_name=s_name, user_type=user_type, jobs=display_jobs, total=len(display_jobs))
 
 
 ## THIS IS STUDENT DASHBOARD
@@ -479,6 +495,8 @@ def dashboard():
     jobs = list(cursor)
     print(jobs)
 
+    today = datetime.datetime.today()
+    today = today.strftime("%d %B, %Y")
     for i in range(len(jobs)):
         j_id = jobs[i]['j_id']
         job_details = mongo.db.jobs.find_one({'id': j_id})
@@ -490,7 +508,7 @@ def dashboard():
     return render_template('student_dashboard.html', title='Dashboard', s_name=s_name, project_nos=len(projects),
                            impact_score=impact_score,
                            coin_balance=coin_balance, projects=projects, total=len(all_students),
-                           all_students=all_students,
+                           all_students=all_students, today=today,
                            student_impact_score=student_impact_score, student_rank=student_rank, jobs=jobs,
                            user_type=user_type)
 
@@ -617,22 +635,28 @@ def get_open_jobs():
     jobs = jobs_.find({})
     s_name = get_student_name(session['id'])
     user_type = get_user_type(session['id'])
-    # add condition for displaying only jobs w unfilled vacancies
+
+    # TODO: add condition for displaying only jobs w unfilled vacancies
+
     L_title = []
     L_description = []
     L_vacancies = []
+    L_start_dates = []
     L_id = []
     for job in jobs:
         print(job["title"], job["description"], job["vacancies"])
-        title, description, vacancies, id = job["title"], job["description"], job["vacancies"], job["id"]
+        title, description, vacancies, id, start_date = job["title"], job["description"], job["vacancies"], job["id"], job['start_date']
         L_title.append(title)
         L_description.append(description)
         L_vacancies.append(vacancies)
         L_id.append(id)
+        start_date = start_date.strftime("%d %B, %Y")
+        L_start_dates.append(start_date)
     total = len(L_title)
 
     return render_template('get_open_jobs.html', title_list=L_title, description_list=L_description,
-                           vacancies_list=L_vacancies, L_id=L_id, total=total, s_name=s_name, user_type=user_type)
+                           vacancies_list=L_vacancies, L_id=L_id, start_date_list = L_start_dates,
+                           total=total, s_name=s_name, user_type=user_type)
 
 
 # Get candidates
@@ -673,7 +697,7 @@ def get_candidates(job_id):
 @app.route("/apply_for_job/<job_id>", methods=["POST", "GET"])
 # by student applying for jobs
 def apply_for_job(job_id):
-    student_id = 171071054  # student id who has logged in
+    student_id = session['id'] # student id who has logged in
     applicationHistory = mongo.db.applicationHistory
     hasApplied = applicationHistory.find_one({'s_id': student_id, 'j_id': job_id})
     # Dont allow same student to apply multiple times for a job
