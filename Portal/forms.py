@@ -1,8 +1,7 @@
 from flask_wtf import FlaskForm
 from flask_wtf.file import FileField, FileAllowed
-from flask_login import current_user
 from wtforms import StringField, PasswordField, SubmitField, BooleanField, RadioField, IntegerField, TextAreaField, \
-    SelectField, HiddenField
+    SelectField, DateField
 from wtforms.validators import DataRequired, Length, Email, EqualTo, Required, NumberRange, ValidationError
 
 
@@ -62,6 +61,7 @@ class CreateJob(FlaskForm):
     duration = IntegerField('Duration in total hours required', validators=[DataRequired()])
     description = StringField('Job description', validators=[DataRequired()])
     vacancies = IntegerField('Vacancies', validators=[DataRequired()])
+    start_date = DateField('Start Date Of Job', validators=[DataRequired()])
     createJob = SubmitField('Add Job')
 
 

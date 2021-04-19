@@ -68,9 +68,33 @@
                         {{ create_job_form.vacancies(class="form-control form-control-lg") }}
                     {% endif %}
             </div>
+            <div class="form-group">
+                <h6><b>Start Date</b></h6>
+                    {% if create_job_form.start_date.errors %}
+                        {{ create_job_form.start_date(class="form-control form-control-lg is-invalid") }}
+                        <div class="invalid-feedback">
+                            {% for error in create_job_form.start_date.errors %}
+                                <span>{{ error }}</span>
+                            {% endfor %}
+                        </div>
+                    {% else %}
+                        {{ create_job_form.start_date(class="datepicker", type="text") }}
+                        <script>
+                            var dates = document.getElementsByClassName('datepicker')
+                            for (var i=0; i<dates.length; i++){
+                                dates[i].addEventListener("mousedown", function preventClosing(event) {
+                                  event.preventDefault();
+                                });
+                             }
+
+                        </script>
+
+                    {% endif %}
+
+            </div>
             <br>
             <div class="form-group">
-            <a href = "{{ url_for('create_job') }}"> <b> {{ create_job_form.add(class="button-border hoverable waves-effect waves-light btn-large blue black-text") }} </b> </a>
+            <a> <b> {{ create_job_form.createJob(class="button-border hoverable waves-effect waves-light btn-large blue black-text") }} </b> </a>
             </div>
             </b></h4>
         </form>

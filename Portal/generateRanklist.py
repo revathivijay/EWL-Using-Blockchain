@@ -1,6 +1,7 @@
 # read scores from each
 from Portal.routes import  app
 from flask_pymongo import PyMongo, MongoClient
+import datetime
 from bson import ObjectId
 
 app.config['MONGO_DBNAME'] = 'earn_while_learn'
@@ -27,25 +28,11 @@ temp = mongo.db.temp
 # report1 = {"projectID":"5fd04dce0d98dceeddf66ad7", "reportName":"report1.pdf", "effort": None, "relevance":None, "novelty":None}
 # report2 = {"projectID":"5fd04dce0d98dceeddf66ad7", "reportName":"report2.pdf", "effort": None, "relevance":None, "novelty":None}
 # gradedReports.insert_many([report1, report2])
-
+jobs.update_many({}, {"$set":{"date_created": datetime.datetime(2021, 3, 12), "expected-start-date":datetime.datetime(2021, 3, 19)}})
 # temp.insert_one({"isRitu":True})
 cursor = temp.find({})
 #one time insertion
 for document in cursor:
 	print(document)
-
-import random
-
-
-
-import random
-
-
-
-import random
-
-
-
-import random
 
 

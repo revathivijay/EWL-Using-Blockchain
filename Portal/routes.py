@@ -1,33 +1,20 @@
-# import os
-# import secrets
-# from Portal import app
-# from flask import Flask, session, escape, render_template, url_for, flash, redirect, request
-# from werkzeug import url_encode
-from bson.objectid import ObjectId
 from Portal.forms import SubmitResearchWork, VerifyReport, LoginForm, UpdateResearchWork, VerifyPublication, CreateJob, \
     GradeJob
 from Portal.__init__ import csv_file
-
 from werkzeug.utils import secure_filename
 import hashlib  # for SHA512
 from flask_login import login_user, current_user, logout_user, login_required
-# from sqlalchemy.orm import Session
 import requests
 import random
-
 import os
 import shutil
 from bson.objectid import ObjectId
-
 from bson import json_util
 from flask import Flask, render_template, url_for, request, session, redirect, send_from_directory, jsonify, flash
-import pandas
-
 from flask_pymongo import PyMongo, MongoClient
 import bcrypt
-
-from flask import Flask, render_template, request
 import os.path
+import datetime
 
 app = Flask(__name__)
 
@@ -147,6 +134,7 @@ def add_project():
         user_id_staff = request.form.get('staff')
         project_topic = request.form.get('topic')
         departments_involved = request.form.get('departments')
+
         print(user_id_students, user_id_staff, project_topic, departments_involved)
 
         if user_id_students is not None:
@@ -160,7 +148,8 @@ def add_project():
                     'isPublished': False,
                     'publicationDOI': None,
                     'publicationJournal': None,
-                    'filelist': {}
+                    'filelist': {},
+                    'date_started': datetime.datetime.today()
                 }
             )
 
@@ -180,6 +169,9 @@ def add_project():
 
 @app.route('/update_project/<id>', methods=['POST', 'GET'])
 def update_project(id):
+    # TODO: Also update the reports collection for the files submitted;
+    #  while inserting in reports collection add the following field in the mongo.db.reports.insert stmt:
+    #  "date_submitted": datetime.datetime.today()
     print("In update project")
 
     s_id = session['id'] if session['id'] else "171071045"
@@ -278,7 +270,7 @@ def verify_report(p_id, report_name):
     form = VerifyReport(request.form)
     if form.is_submitted():
         gradedReports.update_one({"projectID": p_id, "reportName": report_name}, {
-            "$set": {"effort": form.effort.data, "relevance": form.relevance.data, "novelty": form.novelty.data}})
+            "$set": {"effort": form.effort.data, "relevance": form.relevance.data, "novelty": form.novelty.data, "date_verified":datetime.datetime.today()}})
         project['filelist'][report_name] = True
         research.update_one({"_id": ObjectId(p_id)}, {"$set": {"filelist": project['filelist']}})
         return redirect("/teacher_dashboard")
@@ -649,10 +641,11 @@ def create_job():
         description = request.form.get('description')
         duration = request.form.get('duration')
         vacancies = request.form.get('vacancies')
+        start_date = datetime.datetime.strptime(request.form.get('start_date'), '%d %B, %Y')
+        date_created = datetime.datetime.today()
         jobs.insert(
-            {"id": id, "title": title, "description": description, "duration": duration, "vacancies": vacancies})
-        print("job added")
-        return redirect("/get_open_jobs")
+            {"id": id, "title": title, "description": description, "duration": duration, "vacancies": vacancies, "start_date":start_date, "date_created":date_created})
+        return (redirect("/teacher_dashboard"))
     return render_template('create_job.html', create_job_form=form)
 
 
