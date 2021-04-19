@@ -13,7 +13,7 @@
                 <ul class="collection">
                     <li class="collection-item"><b>Students: </b>
                         {% for student in project['students'] %}
-                        <a href={{url_for('dashboard')}} class="<waves-effect waves-light btn amber black-text">{{ student }}</a>
+                        <a href="#" class="<waves-effect waves-light btn amber black-text">{{ student }}</a>
                         {% endfor %}
                     </li>
                     <li class="collection-item"><b>Mentors:</b>
@@ -68,7 +68,9 @@
                 </ul>
             </div>
             <div class="card-action">
-                <a href= {{url_for("update_project",id=project['_id'])}} class="btn amber black-text center">Update Project</a>
+                {% if user_type=='student' %}
+                    <a href= {{url_for("update_project",id=project['_id'])}} class="btn amber black-text center">Update Project</a>
+                {% endif %}
             </div>
         </div>
         {% endfor %}

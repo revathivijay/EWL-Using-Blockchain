@@ -40,15 +40,27 @@
     <header id="header" class="page-topbar">
       <!-- start header nav-->
       <div class="navbar-fixed">
-        <nav class="navbar-color gradient-45deg-light-blue-cyan">
+        <nav class="navbar-color light-blue">
           <div class="nav-wrapper">
             <ul class="left">
               <li>
                 <h1 class="logo-wrapper">
-                  <a href={{url_for('dashboard')}} class="brand-logo darken-1">
-                    <img  src="{{ url_for('static', filename='images/logo/vjti-logo.png') }}" >
-                    <span class="logo-text hide-on-med-and-down">Student Activities</span>
-                  </a>
+                  {% if user_type=='student' %}
+                    <a href={{url_for('dashboard')}} class="brand-logo darken-1">
+                      <img  src="{{ url_for('static', filename='images/logo/vjti-logo.png') }}" >
+                      <span class="logo-text hide-on-med-and-down">Student Activities</span>
+                    </a>
+                  {% elif user_type == 'faculty' %}
+                    <a href={{url_for('teacher_dashboard')}} class="brand-logo darken-1">
+                      <img  src="{{ url_for('static', filename='images/logo/vjti-logo.png') }}" >
+                      <span class="logo-text hide-on-med-and-down">Student Activities</span>
+                    </a>
+                  {% else %}
+                    <a href={{url_for('home')}} class="brand-logo darken-1">
+                      <img  src="{{ url_for('static', filename='images/logo/vjti-logo.png') }}" >
+                      <span class="logo-text hide-on-med-and-down">Student Activities</span>
+                    </a>
+                  {% endif %}
                 </h1>
               </li>
             </ul>
@@ -76,49 +88,90 @@
       <div class="wrapper">
         <!-- START LEFT SIDEBAR NAV-->
         <aside id="left-sidebar-nav">
-          <ul id="slide-out" class="side-nav fixed leftside-navigation">
+          <ul id="slide-out" class="side-nav fixed leftside-navigation" style="width: 17%">
 
-            <li class="user-details red darken-2">
+            <li class="user-details">
               <div class="row">
                 <div class="col col s4 m4 l4">
-                  <img src="{{ url_for('static',filename='images/avatar/Revathi.jpg')}}" alt="" class="circle responsive-img valign halign profile-image cyan">
+                  {% if user_type=='student' %}
+                    <img src="{{ url_for('static',filename='images/avatar/ritu.jpg')}}" alt="" class="circle responsive-img valign halign profile-image cyan">
+                  {% else %}
+                    <img src="{{ url_for('static',filename='images/avatar/dhiren.jpg')}}" alt="" class="circle responsive-img valign halign profile-image cyan">
+                  {% endif %}
                 </div>
                 <div class="col col s8 m8 l8">
 
-                  <a class="btn-flat dropdown-button waves-effect waves-light white-text profile-btn" href="#" > {{s_name}}</a>
-                  <p class="user-roal">Student</p>
+                  <a class="waves-effect waves-light black-text" href="#" > {{s_name}}</a>
+                  <p class="user-roal black-text">
+                    {% if user_type=='student' %} Student
+                    {% elif user_type=='faculty' %} Faculty
+                    {% else %} Supervisor
+                    {% endif %}
+                  </p>
                 </div>
               </div>
             </li>
+            <hr>
             <li class="no-padding">
-              <ul class="collapsible" data-collapsible="accordion">
+              {% if user_type=='student' %}
+                <ul class="collapsible" data-collapsible="accordion">
+                  <li class="bold">
+                    <a href="{{ url_for('dashboard') }}" class="waves-effect waves-cyan">
+                        <span class="nav-text">Dashboard</span>
+                      </a>
+                  </li>
+                  <li class="bold">
+                    <a href="{{ url_for('add_project') }}" class="waves-effect waves-cyan">
+                        <span class="nav-text">Add Project</span>
+                      </a>
+                  </li>
+                  <li class="bold">
+                    <a href="{{ url_for('view_projects', user_type='student') }}" class="waves-effect waves-cyan">
+                        <span class="nav-text">View and Update Projects</span>
+                      </a>
+                  </li>
+                  <li class="bold">
+                    <a href="{{url_for('ranklist')}}" class="waves-effect waves-cyan">
+                        <span class="nav-text">View Research Ranklist</span>
+                      </a>
+                  </li>
+
+                  <li class="bold">
+                    <a href={{url_for('get_open_jobs')}} class="waves-effect waves-cyan">
+
+                        <span class="nav-text">Apply for jobs</span>
+                      </a>
+                  </li>
+                  <li class="bold">
+                    <a href="form-layouts.html" class="waves-effect waves-cyan">
+
+                        <span class="nav-text">Account</span>
+                      </a>
+                  </li>
+                </ul>
+              {% elif user_type=='faculty' %}
+                <ul class="collapsible" data-collapsible="accordion">
                 <li class="bold">
-                  <a href="{{ url_for('dashboard') }}" class="waves-effect waves-cyan">
+                  <a href="{{ url_for('teacher_dashboard') }}" class="waves-effect waves-cyan">
                       <span class="nav-text">Dashboard</span>
                     </a>
                 </li>
                 <li class="bold">
-                  <a href="{{ url_for('add_project') }}" class="waves-effect waves-cyan">
-                      <span class="nav-text">Add Project</span>
+                  <a href="{{ url_for('view_projects', user_type=user_type)}}" class="waves-effect waves-cyan">
+                      <span class="nav-text">Projects under me</span>
                     </a>
                 </li>
                 <li class="bold">
-                  <a href="{{ url_for('view_projects') }}" class="waves-effect waves-cyan">
-                      <span class="nav-text">View and Update Projects</span>
+                  <a href="{{ url_for('teacher_dashboard') }}" class="waves-effect waves-cyan">
+                      <span class="nav-text">View and Grade Reports</span>
                     </a>
                 </li>
                 <li class="bold">
                   <a href="{{url_for('ranklist')}}" class="waves-effect waves-cyan">
-                      <span class="nav-text">View Research Ranklist</span>
+                      <span class="nav-text">View Student Research Ranklist</span>
                     </a>
                 </li>
 
-                <li class="bold">
-                  <a href={{url_for('get_open_jobs')}} class="waves-effect waves-cyan">
-
-                      <span class="nav-text">Apply for jobs</span>
-                    </a>
-                </li>
                 <li class="bold">
                   <a href="form-layouts.html" class="waves-effect waves-cyan">
 
@@ -126,6 +179,9 @@
                     </a>
                 </li>
               </ul>
+              {% else %}
+              WHERE IS USER TYPE???
+            {% endif %}
             </li>
           </ul>
           <a href="#" data-activates="slide-out" class="sidebar-collapse btn-floating btn-medium waves-effect waves-light amber darken-2 hide-on-large-only">
