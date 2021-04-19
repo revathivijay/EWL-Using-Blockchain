@@ -6,16 +6,17 @@
     <div class = "col s12" style="width: 100%; float:center; height:100%;">
 
         <br>
-        <h4><b>View Open Jobs</b></h4>
+        <h4 class="center-align"><b>Open Positions</b></h4>
         <br>
 
            {% for i in range(0, total) %}
 
                 <div class="card amber lighten-4">
                     <fieldset class="form-group">
-                        <h6><b>{{ title_list[i] }}</b></h6>
+                        <h5><b>Position: {{ title_list[i] }}</b></h5>
                         <h6><b>Vacancies:</b>  {{ vacancies_list[i] }}</h6>
                         <h6><b>Description:</b>  {{ description_list[i] }}</h6>
+                        <h6><b>Start Date:</b>  {{ start_date_list[i] }}</h6>
                         <br>
 
                         <div class="center-align form-group" style="display:inline">

@@ -1,3 +1,42 @@
 {% extends "layout.html" %}
 {% block content %}
+<div class="container">
+    <h3 class="center-align">All Positions Created</h3>
+    {% if total==0 %}
+    <h4><b> No positions active at present! </b></h4>
+    {% else %}
+        {% for job in jobs %}
+            <div class="card">
+                <div class="card-content black-text">
+                    <span class="card-title"></span>
+                    <ul class="collection">
+                        <li class="collection-item"><b>Position Title: </b>{{ job['title'] }}</li>
+                        <li class="collection-item"><b>Description:</b> {{ job['description'] }}</li>
+                        <li class="collection-item"><b>Position created on:</b> {{ job['date_created'] }}</li>
+                        <li class="collection-item"><b>Position start date:</b> {{ job['start_date'] }}</li>
+                        <li class="collection-item"><b>Position ends on:</b> {{ job['end_date'] }} <i>(Duration: {{job['duration']}} days)</i></li>
+                        {% if job['allocated'] is sameas true %}
+                        <li class="collection-item">
+                            <b>Allocated Candidates:</b>
+                            {% for cand in job['cadidates'] %}
+                            <a href="#" class="<waves-effect waves-light btn amber black-text">{{ cand }}</a>
+                            {% endfor %}
+                        </li>
+                        {% else %}
+                        <li class="collection-item"><b>Allocated Candidates:</b> No candidates alloted yet </li>
+                        {% endif %}
+                        <li class="collection-item"><b>Coins Spent: </b>0</li>
+                    </ul>
+                </div>
+                <div class="card-action">
+                    {% if job['alocated'] is sameas true %}
+                    {% else %}
+                        <a href= "{{url_for('allocated_job')}}" class="btn amber black-text center">Allocate Job</a>
+                    {% endif %}
+                </div>
+            </div>
+            {% endfor %}
+    {% endif %}
+</div>
+
 {% endblock content %}
