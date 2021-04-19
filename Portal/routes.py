@@ -171,9 +171,7 @@ def add_project():
 
 @app.route('/update_project/<id>', methods=['POST', 'GET'])
 def update_project(id):
-    # TODO: Also update the reports collection for the files submitted;
-    #  while inserting in reports collection add the following field in the mongo.db.reports.insert stmt:
-    #  "date_submitted": datetime.datetime.today()
+
     print("In update project")
 
     s_id = session['id'] if session['id'] else "171071045"
@@ -228,8 +226,8 @@ def update_project(id):
                 "reportName": filename,
                 "date_submitted": datetime.datetime.today(),
                 "effort": None,
-                "novelty":None,
-                "relevance":None
+                "novelty": None,
+                "relevance": None
              }
         )
         print("Inserted in reports")
@@ -237,8 +235,8 @@ def update_project(id):
     project = mongo.db.research.find_one({'_id': ObjectId(id)})
     filelist = project['filelist']
 
-    print("Hello: ", filelist)
-    print("DB Updated")
+    # print("Hello: ", filelist)
+    print("DBs Updated")
 
     return render_template('update_project.html', project=project, total=len(filelist), filelist=filelist,
                            my_projects=my_projects, update_work_form=update_work_form,
@@ -674,7 +672,7 @@ def create_job():
         date_created = datetime.datetime.today()
         jobs.insert(
             {"id": id, "title": title, "description": description, "duration": duration, "vacancies": vacancies, "start_date":start_date, "date_created":date_created})
-        return (redirect("/teacher_dashboard"))
+        return (redirect("/supervisor_dashboard"))
     return render_template('create_job.html', create_job_form=form)
 
 
