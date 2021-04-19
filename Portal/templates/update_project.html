@@ -15,19 +15,33 @@
     <div class="dim">
                     <h6><b>Update your progress</b></h6>
                     <form method="POST" action="{{ url_for('update_project', id=project['_id']) }}" enctype="multipart/form-data">
-                        <div class="form-group">
-                            {{ update_work_form.updatedDocument.label(class="form-control-label") }}
-                            {% if update_work_form.updatedDocument.errors %}
-                            {{ update_work_form.updatedDocument(class="form-control form-control-lg is-invalid") }}
-                            <div class="invalid-feedback">
-                                {% for error in update_work_form.updatedDocument.errors %}
-                                <span>{{ error }}</span>
-                                {% endfor %}
+<!--                        <div class="form-group">-->
+<!--                            {{ update_work_form.updatedDocument.label(class="form-control-label") }}-->
+<!--                            {% if update_work_form.updatedDocument.errors %}-->
+<!--                            {{ update_work_form.updatedDocument(class="form-control form-control-lg is-invalid") }}-->
+<!--                            <div class="invalid-feedback">-->
+<!--                                {% for error in update_work_form.updatedDocument.errors %}-->
+<!--                                <span>{{ error }}</span>-->
+<!--                                {% endfor %}-->
+<!--                            </div>-->
+<!--                            {% else %}-->
+<!--                            {{ update_work_form.updatedDocument(class="form-control form-control-lg") }}-->
+<!--                            {% endif %}-->
+<!--                        </div>-->
+
+                            <div class="form-group">
+                                 {{ submit_work_form.Document.label(class="form-control-label") }}
+                                 {% if submit_work_form.Document.errors %}
+                                     {{ submit_work_form.Document(class="form-control form-control-lg is-invalid") }}
+                                     <div class="invalid-feedback">
+                                         {% for error in submit_work_form.Document.errors %}
+                                             <span>{{ error }}</span>
+                                         {% endfor %}
+                                     </div>
+                                 {% else %}
+                                     {{ submit_work_form.Document(class="form-control form-control-lg") }}
+                                 {% endif %}
                             </div>
-                            {% else %}
-                            {{ update_work_form.updatedDocument(class="form-control form-control-lg") }}
-                            {% endif %}
-                        </div>
 
                         <br>
 

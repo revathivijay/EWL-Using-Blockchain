@@ -56,7 +56,7 @@
                       <span class="logo-text hide-on-med-and-down">Student Activities</span>
                     </a>
                   {% else %}
-                    <a href={{url_for('home')}} class="brand-logo darken-1">
+                    <a href={{url_for('supervisor_dashboard')}} class="brand-logo darken-1">
                       <img  src="{{ url_for('static', filename='images/logo/vjti-logo.png') }}" >
                       <span class="logo-text hide-on-med-and-down">Student Activities</span>
                     </a>
@@ -66,7 +66,6 @@
             </ul>
 
             <ul class="right hide-on-med-and-down">
-
 
               <li>
                 <a href="/logout"  class="waves-effect waves-block waves-light chat-collapse">
@@ -158,7 +157,7 @@
                 </li>
                 <li class="bold">
                   <a href="{{ url_for('view_projects', user_type=user_type)}}" class="waves-effect waves-cyan">
-                      <span class="nav-text">Projects under me</span>
+                      <span class="nav-text">Projects</span>
                     </a>
                 </li>
                 <li class="bold">
@@ -173,14 +172,29 @@
                 </li>
 
                 <li class="bold">
-                  <a href="form-layouts.html" class="waves-effect waves-cyan">
-
+                  <a href="{{url_for('teacher_dashboard')}}" class="waves-effect waves-cyan">
                       <span class="nav-text">Account</span>
                     </a>
                 </li>
               </ul>
               {% else %}
-              WHERE IS USER TYPE???
+              <ul class="collapsible" data-collapsible="accordion">
+                  <li class="bold">
+                    <a href="{{url_for('create_job')}}" class="waves-effect waves-cyan">
+                        <span class="nav-text">Create Jobs</span>
+                      </a>
+                  </li>
+                <li class="bold">
+                    <a href="{{url_for('view_created_jobs')}}" class="waves-effect waves-cyan">
+                        <span class="nav-text">View Created Jobs</span>
+                      </a>
+                  </li>
+                <li class="bold">
+                    <a href="{{url_for('supervisor_dashboard')}}" class="waves-effect waves-cyan">
+                        <span class="nav-text">Account</span>
+                      </a>
+                  </li>
+              </ul>
             {% endif %}
             </li>
           </ul>
