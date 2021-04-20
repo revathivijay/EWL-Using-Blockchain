@@ -241,9 +241,7 @@ def update_project(id):
         print("Inserted in reports")
 
     project = mongo.db.research.find_one({'_id': ObjectId(id)})
-    print("HEY THERE: ", project)
     project = get_mentor_details([project])
-    # print("NOW: ", project)
     project = project[0]
 
 
@@ -300,10 +298,8 @@ def get_projects_for_id(s_id, s_username="Revathi", user_type='student'):
 def verify_report(p_id, report_name):
     s_id = session['id']
     s_name = get_faculty_name(s_id)
-    print("Faculty name: ", s_name)
-
     user_type = get_user_type(s_id)
-    print("User type: ", user_type)
+
     gradedReports = mongo.db.reports
     research = mongo.db.research
     project = research.find_one({"_id": ObjectId(p_id)})
@@ -396,7 +392,7 @@ def helper_login_student():
 @app.route('/helper_login_staff')
 def helper_login_staff():
     session['username'] = 'Dr. Dhiren Patel'
-    session['id'] = '1'
+    session['id'] = '3'
     return redirect('/teacher_dashboard')
 
 @app.route('/helper_login_supervisor')
@@ -464,7 +460,6 @@ def view_created_jobs():
             job['end_date'] = job['end_date'].strftime("%d %B, %Y")
             job['date_created'] = job['date_created'].strftime("%d %B, %Y")
 
-            # TODO: check this logic
             if 'candidates' in job:
                 job['allocated'] = True
             else:
@@ -474,14 +469,16 @@ def view_created_jobs():
 
     return render_template('view_created_jobs.html', s_name=s_name, user_type=user_type, jobs=display_jobs, total=len(display_jobs))
 
+
 @app.route('/view_document/<doc_name>', methods=['POST', 'GET'])
 def view_document(doc_name):
+    pid = request.args.get('pid')
     user_type = get_user_type(session['id'])
     if user_type == 'student':
         s_name = get_student_name(session['id'])
     else:
         s_name = get_faculty_name(session['id'])
-    return render_template("view_document.html", doc_name=doc_name, s_name=s_name, user_type=user_type)
+    return render_template("view_document.html", doc_name=doc_name, pid=pid, s_name=s_name, user_type=user_type)
 
 ## THIS IS STUDENT DASHBOARD
 @app.route("/dashboard", methods=['POST', 'GET'])
