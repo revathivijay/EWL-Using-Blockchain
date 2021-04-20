@@ -18,12 +18,12 @@ class SubmitResearchWork(FlaskForm):
     staff = StringField('staff', validators=[DataRequired()])
     topic = StringField('topic', validators=[DataRequired()])
     departments = StringField('departments', validators=[DataRequired()])
-    Document = FileField('Document', validators=[FileAllowed(['.docx', '.pdf', '.txt'])])
+    Document = FileField('Document', validators=[FileAllowed(['.pdf'])])
     submit = SubmitField('Add')
 
 
 class UpdateResearchWork(FlaskForm):
-    updatedDocument = FileField('Document', validators=[FileAllowed(['.docx', '.pdf', '.txt'])])
+    updatedDocument = FileField('Document', validators=[FileAllowed(['.pdf'])])
     publishedStatus = SelectField('Current Status', choices=[('P', 'Published'), ('S', 'Submitted'),
                                                              ('N', 'Not submitted, still working')])
     publication = StringField('Journal Name')

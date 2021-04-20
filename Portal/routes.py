@@ -536,8 +536,8 @@ def get_mentor_details(projects):
 
 @app.route("/teacher_dashboard", methods=['POST', 'GET'])
 def teacher_dashboard():
-    # TODO: get teacher_id from login
-    teacher_id = '1'
+
+    teacher_id = session['id']
     s_id = session['id']
     s_name = get_faculty_name(s_id)
     user_type = get_user_type(s_id)
