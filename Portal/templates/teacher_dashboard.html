@@ -21,7 +21,7 @@
                             <p st>You have no Reports to review!</p>
                         {% else %}
                             {% for i in range(0, total_vr) %}
-                                <b><a href = "{{ url_for('verify_report' ,  p_id = p_id_vr[i], report_name = report_name_vr[i] ) }}" class="button-border hoverable waves-effect waves-light btn-large gradient-45deg-light-blue-cyan black-text">{{vr_topic_list[i]}} </a></b>
+                                <b><a href = "{{ url_for('view_document', pid=p_id_vr[i], doc_name=report_name_vr[i])}}" class="button-border hoverable waves-effect waves-light btn-large gradient-45deg-light-blue-cyan black-text">{{vr_topic_list[i]}} </a></b>
                             {% endfor %}
                         {% endif %}
                     </div>

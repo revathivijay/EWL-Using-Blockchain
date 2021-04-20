@@ -38,7 +38,7 @@
                                 No Documents uploaded
                             {% else %}
                                 {% for file in project['filelist'] %}
-                                    <a href = "{{ url_for('view_document', doc_name=file)}}" class="<waves-effect waves-light btn amber black-text">{{file}}</a>
+                                    <a href = "{{ url_for('view_document', pid=project['_id'], doc_name=file)}}" class="<waves-effect waves-light btn amber black-text">{{file}}</a>
                                 {% endfor %}
                             {% endif %}
                         {% else %}
