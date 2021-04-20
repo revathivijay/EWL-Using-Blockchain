@@ -8,12 +8,12 @@
         <br>
         <h4 class="center-align"><b>Open Positions</b></h4>
         <br>
-
-           {% for i in range(0, total) %}
-
-                <div class="card amber lighten-4">
-                    <fieldset class="form-group">
-                        <h5><b>Position: {{ title_list[i] }}</b></h5>
+        <div class="row">
+            {% for i in range(0, total) %}
+                <div class="card blue-grey darken-2 col s6">
+                    <fieldset class="form-group white-text">
+                        <h5><b class="center-align">Position: {{ title_list[i] }}</b></h5>
+                        <hr>
                         <h6><b>Vacancies:</b>  {{ vacancies_list[i] }}</h6>
                         <h6><b>Description:</b>  {{ description_list[i] }}</h6>
                         <h6><b>Start Date:</b>  {{ start_date_list[i] }}</h6>
@@ -21,7 +21,6 @@
 
                         <div class="center-align form-group" style="display:inline">
                             <b><a class="center-align hoverable waves-effect waves-light btn amber black-text" href = "{{ url_for('apply_for_job', job_id=L_id[i]) }}"> Apply </a></b>
-<!--                            <b><a class="button-border hoverable waves-effect waves-light btn-large blue black-text" href = "{{ url_for('get_candidates', job_id=L_id[i]) }}"> View Candidates</a></b>-->
                         </div>
 
                         <div class="center-align form-group" style="dislay:inline">
@@ -31,7 +30,8 @@
                 </div>
 
            {% endfor %}
-           </div>
+        </div>
+    </div>
 </body>
 </html>
 

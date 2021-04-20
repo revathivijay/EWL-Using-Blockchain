@@ -16,7 +16,7 @@
                     </li>
                     <li class="collection-item"><b>Mentors:</b>
                         {% if project['isVerified'] is sameas true %}
-                            {% for staff in project['staff'] %}
+                            {% for staff in project['mentors'] %}
                             <a href="#!" class="<waves-effect waves-light btn amber black-text">{{ staff }}</a>
                             {% endfor %}
                         {% else %}

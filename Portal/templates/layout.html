@@ -48,17 +48,17 @@
                   {% if user_type=='student' %}
                     <a href={{url_for('dashboard')}} class="brand-logo darken-1">
                       <img  src="{{ url_for('static', filename='images/logo/vjti-logo.png') }}" >
-                      <span class="logo-text hide-on-med-and-down">Student Activities</span>
+                      <span class="logo-text hide-on-med-and-down">VJTI Activities</span>
                     </a>
                   {% elif user_type == 'faculty' %}
                     <a href={{url_for('teacher_dashboard')}} class="brand-logo darken-1">
                       <img  src="{{ url_for('static', filename='images/logo/vjti-logo.png') }}" >
-                      <span class="logo-text hide-on-med-and-down">Student Activities</span>
+                      <span class="logo-text hide-on-med-and-down">VJTI Activities</span>
                     </a>
                   {% else %}
                     <a href={{url_for('supervisor_dashboard')}} class="brand-logo darken-1">
                       <img  src="{{ url_for('static', filename='images/logo/vjti-logo.png') }}" >
-                      <span class="logo-text hide-on-med-and-down">Student Activities</span>
+                      <span class="logo-text hide-on-med-and-down">VJTI Activities</span>
                     </a>
                   {% endif %}
                 </h1>
@@ -93,9 +93,9 @@
               <div class="row">
                 <div class="col col s4 m4 l4">
                   {% if user_type=='student' %}
-                    <img src="{{ url_for('static',filename='images/avatar/ritu.jpg')}}" alt="" class="circle responsive-img valign halign profile-image cyan">
+                    <img src="{{ url_for('static',filename='images/avatar/revathi.jpg')}}" alt="" class="circle responsive-img valign halign profile-image cyan" style="height: 70px; width:70px;">
                   {% else %}
-                    <img src="{{ url_for('static',filename='images/avatar/dhiren.jpg')}}" alt="" class="circle responsive-img valign halign profile-image cyan">
+                    <img src="{{ url_for('static',filename='images/avatar/faculty.jpg')}}" alt="" class="circle responsive-img valign halign profile-image cyan">
                   {% endif %}
                 </div>
                 <div class="col col s8 m8 l8">

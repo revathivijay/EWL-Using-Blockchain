@@ -140,7 +140,6 @@ def add_project():
         print(user_id_students, user_id_staff, project_topic, departments_involved)
 
         if user_id_students is not None:
-            print("#### inserting project ####")
             research.insert(
                 {
                     'isVerified': False,
@@ -161,7 +160,7 @@ def add_project():
             my_projects, topic_list, filelists = get_project_lists()
             total = len(my_projects)
 
-            return render_template('add_project.html', msg="", submit_work_form=submit_work_form,
+            return render_template('student_dashboard.html', msg="", submit_work_form=submit_work_form,
                                    update_work_form=update_work_form, my_projects=my_projects, topic_list=topic_list,
                                    filelists=filelists, total=total, s_name=s_name, user_type=user_type)
     else:
@@ -316,7 +315,8 @@ def view_projects(user_type):
         s_username = session['username'] if session['username'] else "revs"
         s_name = get_student_name(s_id)
         projects = get_projects_for_id(s_id, s_username, user_type)
-        print(projects)
+        projects = get_mentor_details(projects)
+        print("view projects", projects)
         return render_template('view_projects.html', projects=projects, s_name=s_name, user_type=user_type)
 
     if user_type == 'faculty':
@@ -324,6 +324,8 @@ def view_projects(user_type):
         f_username = session['username'] if session['username'] else "dp"
         s_name = get_faculty_name(f_id)
         projects = get_projects_for_id(f_id, f_username, user_type)
+        projects = get_mentor_details(projects)
+        print("view projects", projects)
         return render_template('view_projects.html', projects=projects, s_name=s_name, user_type=user_type)
 
 
@@ -349,6 +351,9 @@ def get_projects_for_id(s_id, s_username="Revathi", user_type='student'):
 
 @app.route('/verify_project_mentor/<p_id>', methods=['GET', 'POST'])
 def verify_project_mentor(p_id):
+    s_id = session['id']
+    s_name = get_faculty_name(s_id)
+    user_type = get_user_type(s_id)
     research = mongo.db.research
     project = research.find_one({"_id": ObjectId(p_id)})
     project_topic = project['topic']
@@ -366,7 +371,8 @@ def verify_project_mentor(p_id):
 
         return (redirect("/teacher_dashboard"))
 
-    return render_template('verify_project_mentor.html', form=form, project_topic=project_topic, students=students)
+    return render_template('verify_project_mentor.html', form=form, project_topic=project_topic, students=students,
+                           s_name=s_name, user_type=user_type)
 
 
 @app.route('/verify_report/<p_id>/<report_name>', methods=['GET', 'POST'])
@@ -478,7 +484,7 @@ def helper_login_student():
 @app.route('/helper_login_staff')
 def helper_login_staff():
     session['username'] = 'Dr. Dhiren Patel'
-    session['id'] = '3'
+    session['id'] = '1'
     return redirect('/teacher_dashboard')
 
 
@@ -527,7 +533,10 @@ def home():
 
 @app.route('/supervisor_dashboard', methods=['POST', 'GET'])
 def supervisor_dashboard():
-    return redirect('view_created_jobs')
+    s_id = session['id']
+    s_name = get_faculty_name(s_id)
+    user_type = get_user_type(s_id)
+    return redirect('view_created_jobs', s_name=s_name, user_type=user_type)
 
 
 @app.route('/view_document/<doc_name>', methods=['POST', 'GET'])
@@ -635,7 +644,7 @@ def teacher_dashboard():
 def ranklist():
     id = session['id']
     user_type = get_user_type(id)
-
+    s_name = ""
     if user_type == 'student':
         s_name = get_student_name(id)
     elif user_type == 'faculty':
@@ -733,6 +742,10 @@ def get_open_jobs():
 # Get candidates
 @app.route("/get_candidates/<job_id>", methods=["POST", "GET"])
 def get_candidates(job_id):
+    s_id = session['id']
+    s_name = get_faculty_name(s_id)
+    user_type = get_user_type(s_id)
+
     applicationHistory = mongo.db.applicationHistory
     students = mongo.db.students
 
@@ -744,7 +757,8 @@ def get_candidates(job_id):
         candidate = students.find_one({"id": candidate_id})
         all_candidates.append(candidate)
 
-    return render_template('get_candidates.html', all_candidates=all_candidates, total=len(all_candidates))
+    return render_template('get_candidates.html', all_candidates=all_candidates, total=len(all_candidates),
+                           s_name=s_name, user_type=user_type)
 
 
 # Apply for job
@@ -767,6 +781,10 @@ def apply_for_job(job_id):
 # Create job
 @app.route("/create_job", methods=["POST", "GET"])
 def create_job():
+    s_id = session['id']
+    s_name = get_faculty_name(s_id)
+    user_type = get_user_type(s_id)
+
     form = CreateJob(request.form)
 
     if form.is_submitted():
@@ -782,14 +800,19 @@ def create_job():
         jobs.insert(
             {"id": id, "title": title, "description": description, "duration": duration, "vacancies": vacancies,
              "start_date": start_date, "date_created": date_created})
-        return (redirect("/supervisor_dashboard"))
-    return render_template('create_job.html', create_job_form=form)
+        return redirect("/supervisor_dashboard")
+    return render_template('create_job.html', create_job_form=form, user_type=user_type, s_name=s_name)
 
 
 @app.route('/view_created_jobs', methods=['POST', 'GET'])
 def view_created_jobs():
     # TODO: Get jobs only allocated by supervisor, uncomment the below line
     # all_jobs = mongo.db.jobs.find({"su_id":session['id']})
+
+    s_id = session['id']
+    s_name = get_faculty_name(s_id)
+    user_type = get_user_type(s_id)
+
     all_jobs = mongo.db.jobs.find({})
     applicationHistory = mongo.db.applicationHistory
     open_jobs = []
@@ -819,7 +842,8 @@ def view_created_jobs():
 
     return render_template('view_created_jobs.html', open_jobs=open_jobs, total_open_jobs=len(open_jobs),
                            ongoing_jobs=ongoing_jobs, total_ongoing_jobs=len(ongoing_jobs),
-                           completed_jobs=completed_jobs, total_completed_jobs=len(completed_jobs))
+                           completed_jobs=completed_jobs, total_completed_jobs=len(completed_jobs),
+                           s_name=s_name, user_type=user_type)
 
 
 def allocate_job(job_id):
@@ -856,33 +880,53 @@ def allocate_job(job_id):
 
 @app.route('/selected_students/<job_id>', methods=['GET', 'POST'])
 def selected_students(job_id):
+    s_id = session['id']
+    s_name = get_faculty_name(s_id)
+    user_type = get_user_type(s_id)
+
     selected_students_ = allocate_job(job_id)
     jobs = mongo.db.jobs
     jobs.update_one({"id": job_id}, {"$set": {"selected_students": selected_students_, "is_allocated": True}})
     this_job = jobs.find_one({"id": job_id})
     return render_template("selected_students.html", selected_students=selected_students_, job_title=this_job['title'],
-                           total=len(selected_students_))
+                           total=len(selected_students_), s_name=s_name, user_type=user_type)
 
 
 @app.route('/allocated_students/<job_id>', methods=['GET', 'POST'])
 def allocated_students(job_id):
+
+    s_id = session['id']
+    s_name = get_faculty_name(s_id)
+    user_type = get_user_type(s_id)
+
     jobs = mongo.db.jobs
     this_job = jobs.find_one({"id": job_id})
     return render_template("allocated_students.html", selected_students=this_job["selected_students"],
-                           job_title=this_job['title'], total=len(this_job["selected_students"]))
+                           job_title=this_job['title'], total=len(this_job["selected_students"]),
+                           s_name=s_name, user_type=user_type)
 
 
 @app.route('/grade_jobs/<job_id>', methods=['GET', 'POST'])
 def grade_jobs(job_id):
     # jobs = mongo.db.jobs
+    s_id = session['id']
+    s_name = get_faculty_name(s_id)
+    user_type = get_user_type(s_id)
+
     applicationHistory = mongo.db.applicationHistory
     students = applicationHistory.find({'j_id': job_id, 'grade': None, "status": "selected"}, {"s_id": 1, "_id": 0})
     students = [item['s_id'] for item in students]
-    return render_template("grade_jobs.html", students=students, job_id=job_id, total=len(students))
+    return render_template("grade_jobs.html", students=students, job_id=job_id, total=len(students),
+                           s_name=s_name, user_type=user_type)
 
 
 @app.route('/grade_job/<job_id>/<candidate_id>', methods=['GET', 'POST'])
 def grade_job(job_id, candidate_id):
+
+    s_id = session['id']
+    s_name = get_faculty_name(s_id)
+    user_type = get_user_type(s_id)
+
     form = GradeJob(request.form)
     applicationHistory = mongo.db.applicationHistory
     wallets = mongo.db.wallets
@@ -900,7 +944,7 @@ def grade_job(job_id, candidate_id):
         else:
             return redirect('supervisor_dashboard')
     # TODO: Should the student be intimated that his job has been completed?
-    return render_template('grade_job.html', form=form)
+    return render_template('grade_job.html', form=form, s_name=s_name, user_type=user_type)
 
 
 if __name__ == '__main__':

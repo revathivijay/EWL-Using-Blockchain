@@ -9,9 +9,9 @@
             <h4><b>Add new project</b></h4>
             <br>
 
-        <form method="POST" action="{{ url_for('add_project') }}" enctype="multipart/form-data">
+        <form method="POST" action="{{ url_for('dashboard') }}" enctype="multipart/form-data">
             <div class="form-group">
-                <h6><b>Students (Please enter institude IDs)</b></h6>
+                <h6><b>Students (Please enter institude IDs separated by commas)</b></h6>
                     {% if submit_work_form.students.errors %}
                         {{ submit_work_form.students(class="form-control form-control-lg is-invalid") }}
                         <div class="invalid-feedback">
@@ -26,7 +26,7 @@
             <br>
 
             <div class="form-group">
-                <h6><b>Mentor (Please enter mentor IDs) </b></h6>
+                <h6><b>Mentor</b></h6>
                     {% if submit_work_form.staff.errors %}
                         {{ submit_work_form.staff(class="form-control form-control-lg is-invalid") }}
                         <div class="invalid-feedback">
@@ -56,7 +56,7 @@
             <br>
 
             <div class="form-group">
-                <h6><b>Department(s)</b></h6>
+                <h6><b>Department</b></h6>
                     {% if submit_work_form.departments.errors %}
                         {{ submit_work_form.departments(class="form-control form-control-lg is-invalid") }}
                         <div class="invalid-feedback">

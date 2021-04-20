@@ -15,9 +15,13 @@ class LoginForm(FlaskForm):
 
 class SubmitResearchWork(FlaskForm):
     students = StringField('students', validators=[DataRequired()])
-    staff = StringField('staff', validators=[DataRequired()])
+    # staff = StringField('staff', validators=[DataRequired()])
+    staff = SelectField('Mentor List', choices=[('0', 'Please select mentor'), ('1', 'Dr. Dhiren Patel'), ('2', 'Prof. Vaibhav Dhore'), ('3', 'Dr. Sunil Bhirud'), ('4', 'Dr. Faruk Kazi')],
+                        validators=[DataRequired()])
     topic = StringField('topic', validators=[DataRequired()])
-    departments = StringField('departments', validators=[DataRequired()])
+    # departments = StringField('departments', validators=[DataRequired()])
+    departments = SelectField('departments', choices=[('-1', 'Please Select Department'), ('0', 'Computer Engg and IT'), ('1', 'Electrical Dept'), ('2', 'Mechanical Dept'), ('3', 'Civil Dept')],
+                              validators=[DataRequired()])
     Document = FileField('Document', validators=[FileAllowed(['.pdf'])])
     submit = SubmitField('Add')
 
