@@ -4,22 +4,20 @@
 <html itemscope itemtype="http://schema.org/Article">
     <body>
         {% for project in projects %}
-
         <span class="center-align"><h4><b> {{project['topic']}} </b></h4></span>
-
         <div class="card lighten-1">
             <div class="card-content black-text">
                 <span class="card-title"></span>
                 <ul class="collection">
                     <li class="collection-item"><b>Students: </b>
                         {% for student in project['students'] %}
-                        <a href="#" class="<waves-effect waves-light btn amber black-text">{{ student }}</a>
+                        <a href="#!" class="<waves-effect waves-light btn amber black-text">{{ student }}</a>
                         {% endfor %}
                     </li>
                     <li class="collection-item"><b>Mentors:</b>
                         {% if project['isVerified'] is sameas true %}
                             {% for staff in project['staff'] %}
-                            <a href="#" class="<waves-effect waves-light btn amber black-text">{{ staff }}</a>
+                            <a href="#!" class="<waves-effect waves-light btn amber black-text">{{ staff }}</a>
                             {% endfor %}
                         {% else %}
                         <h7>Project has not been accepted by mentors yet.</h7>
@@ -27,7 +25,7 @@
                     </li>
                     <li class="collection-item"><b>Departments:</b>
                         {% for dept in project['departments'] %}
-                        <a href="#" class="<waves-effect waves-light btn amber black-text">{{ dept }}</a>
+                        <a href="#!" class="<waves-effect waves-light btn amber black-text">{{ dept }}</a>
                         {% endfor %}
                     </li>
 <!--                    <li class="collection-item"><b>Date of start:</b> {{ project['date'] }}</li>-->
@@ -46,7 +44,7 @@
                               No Documents uploaded
                             {% else %}
                                 {% for file in project['filelist'] %}
-                                    <a href="#" class="<waves-effect waves-light btn blue black-text">{{ file }}</a>
+                                    <a href="#!" class="<waves-effect waves-light btn blue black-text">{{ file }}</a>
                                 {% endfor %}
                             {% endif %}
                         {% endif %}

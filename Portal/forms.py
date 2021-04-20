@@ -80,3 +80,17 @@ class GradeJob(FlaskForm):
     grade = SelectField("How was the student's performance", choices=scale, validators=[Required()])
 
     submit = SubmitField('Submit')
+
+
+class CreatePost(FlaskForm):
+    cause = StringField("Cause for which you need the money", validators=[DataRequired()])
+    description = StringField("Description")
+    money = IntegerField("Amount", validators=[DataRequired()])
+    endDate = DateField("Date by which the amount is needed", validators=[DataRequired()])
+    submit = SubmitField("Create Post")
+
+
+class MakePayment(FlaskForm):
+    # receiverId = StringField("Receiver's ID", validators=[DataRequired()])
+    amount = IntegerField("Amount", validators=[DataRequired()])
+    submit = SubmitField("Make Payment")
