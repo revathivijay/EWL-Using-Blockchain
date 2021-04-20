@@ -30,6 +30,10 @@ class UpdateResearchWork(FlaskForm):
     DOI = IntegerField('DOI')
     update = SubmitField('Update')
 
+class VerifyProjectMentor(FlaskForm):
+    verify = SubmitField('Verified')
+    not_verify = SubmitField('Not Verified')
+
 
 class VerifyReport(FlaskForm):
     scale = [(1, 'Non-existent'), (2, 'Poor'), (3, 'Average'), (4, 'Good'), (5, 'Excellent')]
