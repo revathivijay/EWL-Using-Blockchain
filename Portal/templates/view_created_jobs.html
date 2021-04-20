@@ -1,11 +1,11 @@
 {% extends "layout.html" %}
 {% block content %}
 <div class="container">
-    <h3 class="center-align">All Positions Created</h3>
-    {% if total==0 %}
-    <h4><b> No positions active at present! </b></h4>
+    <h2 class="center-align">Open Positions</h2>
+    {% if total_open_jobs==0 %}
+    <h4><b> No open positions at present! </b></h4>
     {% else %}
-        {% for job in jobs %}
+        {% for job in open_jobs %}
             <div class="card">
                 <div class="card-content black-text">
                     <span class="card-title"></span>
@@ -15,24 +15,76 @@
                         <li class="collection-item"><b>Position created on:</b> {{ job['date_created'] }}</li>
                         <li class="collection-item"><b>Position start date:</b> {{ job['start_date'] }}</li>
                         <li class="collection-item"><b>Position ends on:</b> {{ job['end_date'] }} <i>(Duration: {{job['duration']}} days)</i></li>
-                        {% if job['allocated'] is sameas true %}
-                        <li class="collection-item">
-                            <b>Allocated Candidates:</b>
-                            {% for cand in job['cadidates'] %}
-                            <a href="#" class="<waves-effect waves-light btn amber black-text">{{ cand }}</a>
-                            {% endfor %}
-                        </li>
-                        {% else %}
-                        <li class="collection-item"><b>Allocated Candidates:</b> No candidates alloted yet </li>
-                        {% endif %}
                         <li class="collection-item"><b>Coins Spent: </b>0</li>
                     </ul>
                 </div>
                 <div class="card-action">
-                    {% if job['alocated'] is sameas true %}
+
+                    <a href= "{{ url_for('get_candidates', job_id=job['id']) }}" class="btn amber black-text center">View Students Who Have Applied</a>
+                    {% if job['is_allocated']==false %}
+                        <a href= "{{ url_for('selected_students', job_id=job['id']) }}" class="btn amber black-text center">Allocate Job</a>
                     {% else %}
-                        <a href= "{{url_for('allocated_job')}}" class="btn amber black-text center">Allocate Job</a>
+                        <a href= "{{ url_for('allocated_students', job_id=job['id']) }}" class="btn amber black-text center">View Allocate Job</a>
                     {% endif %}
+
+
+
+                </div>
+            </div>
+            {% endfor %}
+    {% endif %}
+
+
+    <h2 class="center-align">Ongoing Positions</h2>
+    {% if total_ongoing_jobs==0 %}
+    <h4><b> No ongoing positions at present! </b></h4>
+    {% else %}
+        {% for job in ongoing_jobs %}
+            <div class="card">
+                <div class="card-content black-text">
+                    <span class="card-title"></span>
+                    <ul class="collection">
+                        <li class="collection-item"><b>Position Title: </b>{{ job['title'] }}</li>
+                        <li class="collection-item"><b>Description:</b> {{ job['description'] }}</li>
+                        <li class="collection-item"><b>Position created on:</b> {{ job['date_created'] }}</li>
+                        <li class="collection-item"><b>Position start date:</b> {{ job['start_date'] }}</li>
+                        <li class="collection-item"><b>Position ends on:</b> {{ job['end_date'] }} <i>(Duration: {{job['duration']}} days)</i></li>
+                        <li class="collection-item"><b>Coins Spent: </b>0</li>
+                    </ul>
+                </div>
+                <div class="card-action">
+                    <a href= "{{ url_for('allocated_students', job_id=job['id']) }}" class="btn amber black-text center">View Allocated Students</a>
+                    <a href= "{{ url_for('grade_jobs', job_id = job['id'])}}" class="btn amber black-text center">Complete Job</a>
+
+                </div>
+            </div>
+            {% endfor %}
+    {% endif %}
+
+
+    <h2 class="center-align">Completed Positions</h2>
+    {% if total_completed_jobs==0 %}
+    <h4><b> No Positions Completed Yet </b></h4>
+    {% else %}
+        {% for job in completed_jobs %}
+            <div class="card">
+                <div class="card-content black-text">
+                    <span class="card-title"></span>
+                    <ul class="collection">
+                        <li class="collection-item"><b>Position Title: </b>{{ job['title'] }}</li>
+                        <li class="collection-item"><b>Description:</b> {{ job['description'] }}</li>
+                        <li class="collection-item"><b>Position created on:</b> {{ job['date_created'] }}</li>
+                        <li class="collection-item"><b>Position start date:</b> {{ job['start_date'] }}</li>
+                        <li class="collection-item"><b>Position ends on:</b> {{ job['end_date'] }} <i>(Duration: {{job['duration']}} days)</i></li>
+                        <li class="collection-item"><b>Coins Spent: </b>0</li>
+                    </ul>
+                </div>
+                <div class="card-action">
+                    {% if job['is_graded']==false %}
+                        <a href= "{{ url_for('grade_jobs', job_id=job['id']) }}" class="btn amber black-text center">Grade Students</a>
+                    {% endif %}
+                    <a href= "{{ url_for('allocated_students', job_id=job['id']) }}" class="btn amber black-text center">View Past Students Who Had Applied</a>
+
                 </div>
             </div>
             {% endfor %}

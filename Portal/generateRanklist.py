@@ -15,7 +15,7 @@ research = mongo.db.research
 staff = mongo.db.staff
 gradedReports = mongo.db.reports
 jobs = mongo.db.jobs
-jobsHistory = mongo.db.jobsHistory
+applicationHistory = mongo.db.applicationHistory
 temp = mongo.db.temp
 # students.update_many({}, {"$set": {"impactScore":0}})
 # research.update({}, {"$unset": {"impactFactor":-1}})
@@ -30,7 +30,7 @@ temp = mongo.db.temp
 # gradedReports.insert_many([report1, report2])
 jobs.update_many({}, {"$set":{"date_created": datetime.datetime(2021, 3, 12), "expected-start-date":datetime.datetime(2021, 3, 19)}})
 # temp.insert_one({"isRitu":True})
-cursor = temp.find({})
+cursor = applicationHistory.find({})
 #one time insertion
 for document in cursor:
 	print(document)

@@ -115,8 +115,8 @@ def get_student_name(s_id):
 
 
 def get_user_type(id):
-    user = mongo.db.userType.find_one({'id': id})
-    return user['type']
+	user = mongo.db.userType.find_one({'id': id})
+	return user['type']
 
 
 @app.route('/add_project', methods=['POST', 'GET'])
@@ -209,15 +209,15 @@ def update_project(id):
 
     print("filessss: ", files)
 
-    # if file was uploaded
-    if len(files) != 0:
-        # if previously submitted files exist
-        project = mongo.db.research.find_one({'_id': ObjectId(id)})
-        if 'filelist' in project:
-            prev_files = project['filelist']
-            prev_files[filename] = False
-        else:
-            prev_files = files[0]
+
+	if len(files) != 0:
+		# if previously submitted files exist
+		project = mongo.db.research.find_one({'_id': ObjectId(id)})
+		if 'filelist' in project:
+			prev_files = project['filelist']
+			prev_files[filename] = False
+		else:
+			prev_files = files[0]
 
         mongo.db.research.update_one(
             {"_id": ObjectId(id)},
@@ -439,35 +439,7 @@ def home():
 
 @app.route('/supervisor_dashboard', methods=['POST', 'GET'])
 def supervisor_dashboard():
-    s_name = get_faculty_name(session['id'])
-    user_type = get_user_type(session['id'])
-    return render_template('supervisor_dashboard.html', s_name=s_name, user_type=user_type)
-
-@app.route('/view_created_jobs', methods=['POST', 'GET'])
-def view_created_jobs():
-    s_name = get_faculty_name(session['id'])
-    user_type = get_user_type(session['id'])
-
-    all_jobs = mongo.db.jobs.find()
-    display_jobs = []
-    for job in all_jobs:
-        end_date = job['start_date'] + datetime.timedelta(days=int(job['duration'])-1)
-
-        # only display jobs that haven't ended
-        if end_date >= datetime.datetime.today():
-            job['end_date'] = end_date
-            job['start_date'] = job['start_date'].strftime("%d %B, %Y")
-            job['end_date'] = job['end_date'].strftime("%d %B, %Y")
-            job['date_created'] = job['date_created'].strftime("%d %B, %Y")
-
-            if 'candidates' in job:
-                job['allocated'] = True
-            else:
-                job['allocated'] = False
-            display_jobs.append(job)
-            print(display_jobs)
-
-    return render_template('view_created_jobs.html', s_name=s_name, user_type=user_type, jobs=display_jobs, total=len(display_jobs))
+	return redirect('view_created_jobs')
 
 
 @app.route('/view_document/<doc_name>', methods=['POST', 'GET'])
@@ -506,22 +478,22 @@ def dashboard():
     jobs = list(cursor)
     print(jobs)
 
-    today = datetime.datetime.today()
-    today = today.strftime("%d %B, %Y")
-    for i in range(len(jobs)):
-        j_id = jobs[i]['j_id']
-        job_details = mongo.db.jobs.find_one({'id': j_id})
-        jobs[i]['job_name'] = job_details['title']
-        jobs[i]['job_description'] = job_details['description']
-        jobs[i]['job_duration'] = job_details['duration']
-    print(jobs)
+	today = datetime.datetime.today()
+	today = today.strftime("%d %B, %Y")
+	for i in range(len(jobs)):
+		j_id = jobs[i]['j_id']
+		job_details = mongo.db.jobs.find_one({'id': j_id})
+		jobs[i]['job_name'] = job_details['title']
+		jobs[i]['job_description'] = job_details['description']
+		jobs[i]['job_duration'] = job_details['duration']
+	print(jobs)
 
-    return render_template('student_dashboard.html', title='Dashboard', s_name=s_name, project_nos=len(projects),
-                           impact_score=impact_score,
-                           coin_balance=coin_balance, projects=projects, total=len(all_students),
-                           all_students=all_students, today=today,
-                           student_impact_score=student_impact_score, student_rank=student_rank, jobs=jobs,
-                           user_type=user_type)
+	return render_template('student_dashboard.html', title='Dashboard', s_name=s_name, project_nos=len(projects),
+						   impact_score=impact_score,
+						   coin_balance=coin_balance, projects=projects, total=len(all_students),
+						   all_students=all_students, today=today,
+						   student_impact_score=student_impact_score, student_rank=student_rank, jobs=jobs,
+						   user_type=user_type)
 
 
 def get_mentor_details(projects):
@@ -642,32 +614,32 @@ def displayRanklist():
 
 @app.route("/get_open_jobs", methods=["POST", "GET"])
 def get_open_jobs():
-    jobs_ = mongo.db.jobs
-    jobs = jobs_.find({})
-    s_name = get_student_name(session['id'])
-    user_type = get_user_type(session['id'])
+	jobs_ = mongo.db.jobs
+	jobs = jobs_.find({})
+	s_name = get_student_name(session['id'])
+	user_type = get_user_type(session['id'])
 
-    # TODO: add condition for displaying only jobs w unfilled vacancies
+	# TODO: add condition for displaying only jobs w unfilled vacancies
 
-    L_title = []
-    L_description = []
-    L_vacancies = []
-    L_start_dates = []
-    L_id = []
-    for job in jobs:
-        print(job["title"], job["description"], job["vacancies"])
-        title, description, vacancies, id, start_date = job["title"], job["description"], job["vacancies"], job["id"], job['start_date']
-        L_title.append(title)
-        L_description.append(description)
-        L_vacancies.append(vacancies)
-        L_id.append(id)
-        start_date = start_date.strftime("%d %B, %Y")
-        L_start_dates.append(start_date)
-    total = len(L_title)
+	L_title = []
+	L_description = []
+	L_vacancies = []
+	L_start_dates = []
+	L_id = []
+	for job in jobs:
+		print(job["title"], job["description"], job["vacancies"])
+		title, description, vacancies, id, start_date = job["title"], job["description"], job["vacancies"], job["id"], job['start_date']
+		L_title.append(title)
+		L_description.append(description)
+		L_vacancies.append(vacancies)
+		L_id.append(id)
+		start_date = start_date.strftime("%d %B, %Y")
+		L_start_dates.append(start_date)
+	total = len(L_title)
 
-    return render_template('get_open_jobs.html', title_list=L_title, description_list=L_description,
-                           vacancies_list=L_vacancies, L_id=L_id, start_date_list = L_start_dates,
-                           total=total, s_name=s_name, user_type=user_type)
+	return render_template('get_open_jobs.html', title_list=L_title, description_list=L_description,
+						   vacancies_list=L_vacancies, L_id=L_id, start_date_list = L_start_dates,
+						   total=total, s_name=s_name, user_type=user_type)
 
 
 # Get candidates
@@ -742,7 +714,39 @@ def create_job():
     return render_template('create_job.html', create_job_form=form)
 
 
-# completed and tested
+@app.route('/view_created_jobs', methods=['POST', 'GET'])
+def view_created_jobs():
+	# TODO: Get jobs only allocated by supervisor, uncomment the below line
+	# all_jobs = mongo.db.jobs.find({"su_id":session['id']})
+	all_jobs = mongo.db.jobs.find({})
+	applicationHistory = mongo.db.applicationHistory
+	open_jobs = []
+	ongoing_jobs = []
+	completed_jobs = []
+	for job in all_jobs:
+		end_date = job['start_date'] + datetime.timedelta(days=int(job['duration'])-1)
+		job['end_date'] = end_date
+		job['start_date_'] = job['start_date'].strftime("%d %B, %Y")
+		job['end_date'] = job['end_date'].strftime("%d %B, %Y")
+		job['date_created'] = job['date_created'].strftime("%d %B, %Y")
+		graded_applicants = applicationHistory.find({"j_id": job["id"], "grade": None, "status": "selected"},{"s_id": 1})
+		graded_applicants = [item['s_id'] for item in graded_applicants]
+		job["is_graded"] = True
+		if len(graded_applicants) > 0:
+			job["is_graded"] = False
+
+		if job["start_date"] > datetime.datetime.today():
+			open_jobs.append(job)
+
+		elif job["start_date"] < datetime.datetime.today() < end_date and job['is_graded']==False:
+			# If job is graded assume it is completed
+			ongoing_jobs.append(job)
+		else:  # Completed Job
+			completed_jobs.append(job)
+
+	return render_template('view_created_jobs.html', open_jobs=open_jobs, total_open_jobs=len(open_jobs),  ongoing_jobs=ongoing_jobs, total_ongoing_jobs=len(ongoing_jobs), completed_jobs=completed_jobs, total_completed_jobs = len(completed_jobs))
+
+
 def allocate_job(job_id):
     applicationHistory = mongo.db.applicationHistory
     all_applicants = applicationHistory.find({'j_id': job_id}, {"s_id": 1, "_id": 0})
@@ -772,6 +776,31 @@ def allocate_job(job_id):
             applicationHistory.update_one({'j_id': job_id, 's_id': candidate}, {'$set': {'status': 'rejected'}})
 
     return selected_candidates
+
+@app.route('/selected_students/<job_id>', methods=['GET', 'POST'])
+def selected_students(job_id):
+	selected_students_ = allocate_job(job_id)
+	jobs = mongo.db.jobs
+	jobs.update_one({"id": job_id}, {"$set":{"selected_students": selected_students_, "is_allocated":True}})
+	this_job = jobs.find_one({"id":job_id})
+	return render_template("selected_students.html", selected_students=selected_students_, job_title=this_job['title'], total = len(selected_students_))
+
+
+@app.route('/allocated_students/<job_id>', methods=['GET', 'POST'])
+def allocated_students(job_id):
+	jobs = mongo.db.jobs
+	this_job = jobs.find_one({"id":job_id})
+	return render_template("allocated_students.html", selected_students=this_job["selected_students"], job_title=this_job['title'], total=len(this_job["selected_students"]))
+
+
+@app.route('/grade_jobs/<job_id>', methods=['GET', 'POST'])
+def grade_jobs(job_id):
+	# jobs = mongo.db.jobs
+	applicationHistory = mongo.db.applicationHistory
+	students = applicationHistory.find({'j_id':job_id, 'grade':None, "status":"selected"}, {"s_id":1, "_id":0})
+	students = [item['s_id'] for item in students]
+	return render_template("grade_jobs.html", students=students, job_id=job_id, total=len(students))
+
 
 
 @app.route('/grade_job/<job_id>/<candidate_id>', methods=['GET', 'POST'])
