@@ -669,35 +669,18 @@ def get_open_jobs():
 # Get candidates
 @app.route("/get_candidates/<job_id>", methods=["POST", "GET"])
 def get_candidates(job_id):
-	jobs_ = mongo.db.jobs
-	job = jobs_.find_one({"id": job_id})
-	job_title = job["title"]
-	job_vacancies = job["vacancies"]
+	applicationHistory = mongo.db.applicationHistory
+	students = mongo.db.students
 
-	candidates = job["candidates"]
-	candidates_db = mongo.db.students
-
-	L_id = []
-	L_name = []
-	L_description = []
-	L_resume = []
+	candidates = applicationHistory.find({"j_id":job_id, "status":"applied"}, {"_id":0, "s_id":1})
+	candidates = [item['s_id'] for item in candidates]
+	all_candidates = []
 
 	for candidate_id in candidates:
-		candidate = candidates_db.find_one({"id": candidate_id})
+		candidate = students.find_one({"id": candidate_id})
+		all_candidates.append(candidate)
 
-		print(candidate["id"], candidate["name"], candidate["description"], candidate["resume"])
-		id, name, description, resume = candidate["id"], candidate["name"], candidate["description"], candidate[
-			"resume"]
-
-		L_id.append(id)
-		L_name.append(name)
-		L_description.append(description)
-		L_resume.append(resume)
-
-		total = len(L_id)
-
-	return render_template('get_candidates.html', id_list=L_id, name_list=L_name, description_list=L_description,
-						   resume_list=L_resume, total=total, title=job_title, vacancies=job_vacancies, job_id=job_id)
+	return render_template('get_candidates.html', all_candidates=all_candidates, total = len(all_candidates))
 
 
 # Apply for job
@@ -783,15 +766,14 @@ def allocate_job(job_id):
 		scores = {}
 		# Generate scores of students for the given job
 		for applicant in all_applicants:
-			all_grades = applicationHistory.find({"s_id": applicant, "status": "selected"}, {"grade": 1, "_id": 0})
-			all_grades = [item['grade'] for item in all_grades]
+			all_grades = applicationHistory.find({"s_id": applicant, "status": "selected", "grade":{"$ne":None}}, {"grade": 1, "_id": 0})
+			all_grades = [int(item['grade']) for item in all_grades]
 			# If it is his first job give him an implicit rating of 9
-			scores[applicant] = 9 if len(all_grades) == 0 else (sum(all_grades) / len(all_grades))
+			scores[applicant] = 9 if len(all_grades) ==0 else (sum(all_grades) / len(all_grades))
 
 		for key in scores.keys():
 			scores[key] = scores[key] * random.uniform(0.7, 1.0)
-		selected_candidates = list(dict(sorted(scores.items(), key=lambda item: item[1], reverse=True)).keys())[
-							  :int(curr_job["vacancies"])]
+		selected_candidates = list(dict(sorted(scores.items(), key=lambda item: item[1], reverse=True)).keys())[:int(curr_job["vacancies"])]
 
 	for candidate in all_applicants:
 		if candidate in selected_candidates:
@@ -826,16 +808,20 @@ def grade_jobs(job_id):
 	return render_template("grade_jobs.html", students=students, job_id=job_id, total=len(students))
 
 
-
 @app.route('/grade_job/<job_id>/<candidate_id>', methods=['GET', 'POST'])
 def grade_job(job_id, candidate_id):
 	form = GradeJob(request.form)
 	applicationHistory = mongo.db.applicationHistory
 	if form.is_submitted():
 		applicationHistory.update_one({"s_id": candidate_id, "j_id": job_id}, {"$set": {"grade": form.grade.data}})
-		flash('The job has been graded')
-		# TODO: Should the student be intimated that his job has been completed?
-		return (redirect("/teacher_dashboard"))
+		flash('The job has been graded', "success")
+		graded_applicants = applicationHistory.find({"j_id": job_id, "grade": None, "status": "selected"},{"s_id": 1})
+		graded_applicants = [item['s_id'] for item in graded_applicants]
+		if len(graded_applicants) > 0:
+			return redirect(url_for("grade_jobs", job_id=job_id))
+		else:
+			return redirect('supervisor_dashboard')
+	# TODO: Should the student be intimated that his job has been completed?
 	return render_template('grade_job.html', form=form)
 
 

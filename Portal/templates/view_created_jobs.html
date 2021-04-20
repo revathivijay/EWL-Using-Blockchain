@@ -24,7 +24,8 @@
                     {% if job['is_allocated']==false %}
                         <a href= "{{ url_for('selected_students', job_id=job['id']) }}" class="btn amber black-text center">Allocate Job</a>
                     {% else %}
-                        <a href= "{{ url_for('allocated_students', job_id=job['id']) }}" class="btn amber black-text center">View Allocate Job</a>
+                        <a href= "{{ url_for('allocated_students', job_id=job['id']) }}" class="btn amber black-text center">View Allocated Students</a>
+                        <a href= "{{ url_for('selected_students', job_id=job['id']) }}" class="btn amber black-text center">Allocate Again</a>
                     {% endif %}
 
 
@@ -76,7 +77,7 @@
                         <li class="collection-item"><b>Position created on:</b> {{ job['date_created'] }}</li>
                         <li class="collection-item"><b>Position start date:</b> {{ job['start_date'] }}</li>
                         <li class="collection-item"><b>Position ends on:</b> {{ job['end_date'] }} <i>(Duration: {{job['duration']}} days)</i></li>
-                        <li class="collection-item"><b>Coins Spent: </b>0</li>
+                        <li class="collection-item"><b>Coins Spent: </b>100</li>
                     </ul>
                 </div>
                 <div class="card-action">
