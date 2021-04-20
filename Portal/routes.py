@@ -241,6 +241,12 @@ def update_project(id):
         print("Inserted in reports")
 
     project = mongo.db.research.find_one({'_id': ObjectId(id)})
+    print("HEY THERE: ", project)
+    project = get_mentor_details([project])
+    # print("NOW: ", project)
+    project = project[0]
+
+
     filelist = project['filelist']
 
     print("DBs Updated")

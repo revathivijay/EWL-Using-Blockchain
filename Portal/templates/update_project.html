@@ -13,12 +13,11 @@
 
     <div class="dim center-align">
         <h4><b>{{ project['topic'] }}</b></h4>
-        <h6>Mentor(s):
+        <h6><i>Mentor(s):</i>
         {% for mentor in project['mentors'] %}
                         {{ mentor }}
-                        {% endfor %}</h6>
-
-        <i>Status:</i> Submitted for publication <br>
+                        {% endfor %}
+        </h6>
        <br>
     </div>
     <div class="dim">
