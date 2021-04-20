@@ -13,9 +13,7 @@ from flask import Flask, render_template, url_for, request, session, redirect, s
 from flask_pymongo import PyMongo, MongoClient
 import bcrypt
 import os.path
-import datetime
-
-import datetime
+from Portal.UC3 import make_payment
 
 import datetime
 
@@ -32,7 +30,7 @@ mongo = PyMongo(app)
 APP_ROOT = os.path.dirname(os.path.abspath(__file__))
 print(APP_ROOT)
 
-
+port_no = 9000
 @app.route('/register', methods=['POST', 'GET'])
 def register():
 	form = LoginForm(request.form)
@@ -326,14 +324,19 @@ def verify_report(p_id, report_name):
 
 	gradedReports = mongo.db.reports
 	research = mongo.db.research
+	wallets = mongo.db.wallets
 	project = research.find_one({"_id": ObjectId(p_id)})
 	topic = project['topic']
+	students = project['students']
 	form = VerifyReport(request.form)
 	if form.is_submitted():
 		gradedReports.update_one({"projectID": p_id, "reportName": report_name}, {
 			"$set": {"effort": form.effort.data, "relevance": form.relevance.data, "novelty": form.novelty.data, "date_verified":datetime.datetime.today()}})
 		project['filelist'][report_name] = True
 		research.update_one({"_id": ObjectId(p_id)}, {"$set": {"filelist": project['filelist']}})
+		for student in students:
+			wallet_address = wallets.find_one({"s_id":student})
+			result = make_payment(port_no,wallet_address, 100)
 		return redirect("/teacher_dashboard")
 
 	return render_template('verify_report.html', topic=topic, form=form, s_name=s_name, user_type=user_type)
@@ -345,10 +348,12 @@ def verify_publication(p_id):
 	s_name = get_faculty_name(s_id)
 	user_type = get_user_type(s_id)
 	research = mongo.db.research
+	wallets = mongo.db.wallets
 	project = research.find_one({"_id": ObjectId(p_id)})
 	topic = project['topic']
 	doi = project['publicationDOI']
 	publicationJournal = project['publicationJournal']
+	students = project['students']
 	# publicationJournal = "ARCHIVES OF COMPUTATIONAL METHODS IN ENGINEERING"
 
 	form = VerifyPublication(request.form)
@@ -373,6 +378,9 @@ def verify_publication(p_id):
 				students = mongo.db.students
 				students.update({"id": student_id}, {'$set': {"impactScore": each_student_impact_factor}})
 			flash('Verification was successful!', 'success')
+			for student in students:
+				wallet_address = wallets.find_one({"s_id": student})
+				result = make_payment(port_no, wallet_address, 100)
 			return redirect('/teacher_dashboard')
 		elif 'notVerify' in request.form:
 			flash('Verification was not successful!', 'danger')
@@ -812,11 +820,16 @@ def grade_jobs(job_id):
 def grade_job(job_id, candidate_id):
 	form = GradeJob(request.form)
 	applicationHistory = mongo.db.applicationHistory
+	wallets = mongo.db.wallets
 	if form.is_submitted():
 		applicationHistory.update_one({"s_id": candidate_id, "j_id": job_id}, {"$set": {"grade": form.grade.data}})
 		flash('The job has been graded', "success")
 		graded_applicants = applicationHistory.find({"j_id": job_id, "grade": None, "status": "selected"},{"s_id": 1})
 		graded_applicants = [item['s_id'] for item in graded_applicants]
+
+		wallet_address = wallets.find_one({"s_id":candidate_id})
+		result = make_payment(port_no,wallet_address, 100)
+
 		if len(graded_applicants) > 0:
 			return redirect(url_for("grade_jobs", job_id=job_id))
 		else:

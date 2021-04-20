@@ -101,7 +101,7 @@ def get_port(account):
     if account!=None:
         return 9002
 
-@app.route("/make_payment/<account>/<receiver>/<amount>", methods=["POST", "GET"])
+# @app.route("/make_payment/<account>/<receiver>/<amount>", methods=["POST", "GET"])
 def make_payment(account, receiver, amount):
 
     # Details of the transaction
