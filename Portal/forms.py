@@ -95,6 +95,6 @@ class CreatePost(FlaskForm):
 
 
 class MakePayment(FlaskForm):
-    # receiverId = StringField("Receiver's ID", validators=[DataRequired()])
     amount = IntegerField("Amount", validators=[DataRequired()])
+    receiverID = StringField("Receiver", validators=[DataRequired()])
     submit = SubmitField("Make Payment")
