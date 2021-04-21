@@ -34,13 +34,13 @@
     {% endfor %}
     <!-- Modal Structure -->
         <div id="demo-modal" class="modal" >
-            <form method="POST" action="{{ url_for('view_posts') }}">
+            <form method="POST">
             <div class="modal-content" style="opacity: 0.8;">
                 <h5><b>Payment</b></h5>
                 <p>
                 Let us know how much you want to contribute!
                 </p>
-                <span>This is your coin balance (to be done): </span>
+                <span>This is your coin balance: {{balance}}</span>
             </div>
                 <div class="form-group">
                 <h6><b style="padding:25px; opacity: 0.8;">Enter Amount</b></h6>

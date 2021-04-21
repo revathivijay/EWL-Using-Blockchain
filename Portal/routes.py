@@ -2,19 +2,14 @@ from Portal.forms import SubmitResearchWork, VerifyReport, LoginForm, UpdateRese
 	VerifyProjectMentor, GradeJob, MakePayment, CreatePost
 from Portal.__init__ import csv_file
 from werkzeug.utils import secure_filename
-import hashlib  # for SHA512
-from flask_login import login_user, current_user, logout_user, login_required
-import requests
 import random
 import os
-import shutil
 from bson.objectid import ObjectId
-from bson import json_util
-from flask import Flask, render_template, url_for, request, session, redirect, send_from_directory, jsonify, flash
-from flask_pymongo import PyMongo, MongoClient
+from flask import Flask, render_template, url_for, request, session, redirect, flash
+from flask_pymongo import PyMongo
 import bcrypt
 import os.path
-from Portal.UC3 import make_payment
+from Portal.UC3 import make_payment, getBalance, makeTransaction
 
 import datetime
 

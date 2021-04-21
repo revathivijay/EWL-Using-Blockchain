@@ -131,6 +131,16 @@ def make_payment(account, receiver, amount):
     # print(r.text)
     # return 'Done'
 
+def getBalance(wallet_address):
+    url = "/checkBalance"
+    balance = requests.get(url)
+    return balance
+
+def makeTransaction(reciver_key, sender_key):
+    url = '/makeTransaction'
+    data = {"receiver_public_key":reciver_key, "sender_public_key":sender_key, "bounty":0, "message":"Crowfunding"}
+    result = requests.post(url, data)
+    return result
 
 if __name__ == '__main__':
     app.run(debug=True, port=5000, host='0.0.0.0')

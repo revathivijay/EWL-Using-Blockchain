@@ -6,9 +6,20 @@
 </head>
 
         <div class="row valign wrapper">
+            <div class="center-align form-group mt-3">
+                    <h4>Verify Project Teams</h4>
+                    <br>
+                        {% if total_vm == 0 %}
+                            <p>You have no teams to verify!</p>
+                        {% else %}
+
+                            {% for i in range(0, total_vm) %}
+                                <b><a href = "{{ url_for('verify_project_mentor' ,  p_id = p_id_vm[i] ) }}" class="button-border hoverable waves-effect waves-light btn-large gradient-45deg-light-blue-cyan black-text">{{vm_topic_list[i]}} </a></b>
+                            {% endfor %}
+                        {% endif %}
+            </div>
 
             <div>
-
                 <h4 class="mt-3 center-align"><i>Documents that need your attention</i></h4>
                 <br><br>
                 <div class="center-align form-group">
@@ -28,7 +39,7 @@
                 </div>
                 <br><hr><br>
                 <div class="center-align form-group mt-3">
-                    <h3>Verify Publications</h3>
+                    <h4>Verify Publications</h4>
                     <br>
                         {% if total_vp == 0 %}
                             <p>You have no publications to review!</p>
