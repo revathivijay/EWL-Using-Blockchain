@@ -9,7 +9,7 @@
             <h4><b>Add new project</b></h4>
             <br>
 
-        <form method="POST" action="{{ url_for('dashboard') }}" enctype="multipart/form-data">
+        <form method="POST">
             <div class="form-group">
                 <h6><b>Students (Please enter institude IDs separated by commas)</b></h6>
                     {% if submit_work_form.students.errors %}

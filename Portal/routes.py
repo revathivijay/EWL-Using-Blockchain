@@ -152,10 +152,11 @@ def add_project():
             )
 
             print('Project inserted!')
+            flash("Project Added! ", 'success')
             my_projects, topic_list, filelists = get_project_lists()
             total = len(my_projects)
 
-            return render_template('student_dashboard.html', msg="", submit_work_form=submit_work_form,
+            return render_template('add_project.html', msg="", submit_work_form=submit_work_form,
                                    update_work_form=update_work_form, my_projects=my_projects, topic_list=topic_list,
                                    filelists=filelists, total=total, s_name=s_name, user_type=user_type)
     else:
