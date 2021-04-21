@@ -10,8 +10,8 @@
 </script>
 <div class="row">
     {% for post in posts %}
-    <div class="col s12 m6">
-      <div class="card blue-grey darken-2">
+    <div class="col s12 m12" style="padding-left: 50px; padding-right:50px;">
+      <div class="card blue-grey darken-1">
         <div class="card-content white-text">
             <span class="card-title center-align white-text"><b>{{post['cause']}}</b></span>
 
@@ -26,19 +26,18 @@
             <p>Amount Collected so far: <span class="WebRupee">&#x20B9;</span> {{ post['contributed'] }}</p>
             <p>Date needed by: {{post['end_date']}}</p>
         </div>
-        <div class="card-action">
+        <div class="card-action center-align">
           <a class="waves-effect waves-light btn amber black-text modal-trigger" href="#demo-modal">Contribute</a>
         </div>
       </div>
     </div>
-    {% endfor %}
     <!-- Modal Structure -->
         <div id="demo-modal" class="modal" >
             <form method="POST">
             <div class="modal-content" style="opacity: 0.8;">
                 <h5><b>Payment</b></h5>
                 <p>
-                Let us know how much you want to contribute!
+                    Let us know how much you want to contribute to <b> {{ post['created_by_name'] }} (ID: {{post['created_by']}})</b>
                 </p>
                 <span>This is your coin balance: {{balance}}</span>
             </div>
@@ -55,17 +54,25 @@
                     <span style="padding:20px; padding-right:50px;">{{ make_payment_form.amount(class="form-control form-control-lg") }}</span>
                     {% endif %}
                 </div>
+                <div class="form-group">
+                <h6><b style="padding:25px; opacity: 0.8;">To confirm your payment, please enter the receiver's ID as shown above:</b></h6>
+                    {% if make_payment_form.receiverID.errors %}
+                        {{ make_payment_form.receiverID(class="form-control form-control-lg is-invalid") }}
+                        <div class="invalid-feedback">
+                            {% for error in make_payment_form.receiverID.errors %}
+                                <span>{{ error }}</span>
+                            {% endfor %}
+                        </div>
+                    {% else %}
+                    <span style="padding:20px; padding-right:50px;">{{ make_payment_form.receiverID(class="form-control form-control-lg") }}</span>
+                    {% endif %}
+                </div>
             </form>
 
             <div class="modal-footer" style="padding-bottom:40px; padding-right:20px;">
-<!--                <a href="#!" class="modal-action modal-close waves-effect waves-green btn green lighten-1">-->
-<!--                    Make Payment-->
-<!--                </a>-->
-
                 <div class="form-group">
                 <a> <b> {{ make_payment_form.submit(class="modal-action modal-close waves-effect waves-green btn green lighten-1") }} </b> </a>
                 </div>
-
             </div>
         </div>
     </div>
@@ -75,5 +82,6 @@
         }
         )
     </script>
+    {% endfor %}
 
 {% endblock content %}
