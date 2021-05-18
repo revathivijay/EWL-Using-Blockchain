@@ -1,0 +1,41 @@
+{% extends "layout.html" %}
+{% block content %}
+<html itemscope itemtype="http://schema.org/Article">
+<body>
+        <fieldset class="form-group">
+            <div class = "dim card blue-grey lighten-5 hoverable col s6" style="margin-left:20%">
+                <form method="POST" >
+                        <div class="card-content black-text">
+                            <span class="card-title"></span>
+                            <ul class="collection">
+                                <li class="collection-item"><b>Title: {{project_topic}}</b>
+                                </li>
+                                <li class="collection-item"><b>Students: </b>
+                                    {% for student in students %}
+                                    <a href="#" class="<waves-effect waves-light btn amber black-text">{{ student }}</a>
+                                    {% endfor %}
+                                </li>
+                            </ul>
+                         <div class="card-action">
+                            {% if user_type=='student' %}
+                                <a href= {{url_for("update_project",id=project['_id'])}} class="btn amber black-text center">Update Project</a>
+                            {% endif %}
+                        </div>
+                    </div>
+                    <div class="form-group center-align" style="display:inline">
+                        <b> {{ form.verify(class="button-border hoverable waves-effect waves-light btn-large light-green lighten-2 black-text") }} </b>
+                     </div>
+
+                    <div class="form-group center-align"  style="display:inline">
+                        <b> {{ form.not_verify(class="button-border hoverable waves-effect waves-light btn-large red lighten-2 black-text") }} </b>
+                     </div>
+                </form>
+
+                <br>
+            </div>
+        </fieldset>
+    </div>
+   </body>
+</html>
+
+{% endblock content %}

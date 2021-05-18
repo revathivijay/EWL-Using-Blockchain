@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+<html lang="en">
+
+  <head>
+    <script src="./../static/js/nav.js"></script>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="msapplication-tap-highlight" content="no">
+      {% if title %}
+        <title>{{ title }}</title>
+      {% else %}
+        <title>Student Engagement</title>
+      {% endif %}
+    <!-- Favicons-->
+    <link rel="icon" href="./../static/images/favicon/favicon-32x32.png" sizes="32x32">
+    <!-- Favicons-->
+    <link rel="apple-touch-icon-precomposed" href="./../static/images/favicon/apple-touch-icon-152x152.png">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <!-- For Windows Phone -->
+    <!-- CORE CSS-->
+    <link href="{{ url_for('static',filename='css/materialize.css') }}" type="text/css" rel="stylesheet">
+    <link href="{{ url_for('static',filename='css/style.css') }}" type="text/css" rel="stylesheet">
+    <!-- Custome CSS-->
+    <link href="{{ url_for('static',filename='css/custom/custom.css') }}" type="text/css" rel="stylesheet">
+    <!-- INCLUDED PLUGIN CSS ON THIS PAGE -->
+    <link href="{{ url_for('static',filename='vendors/perfect-scrollbar/perfect-scrollbar.css') }}" type="text/css" rel="stylesheet">
+    <link href="{{ url_for('static',filename='vendors/flag-icon/css/flag-icon.min.css')}} " type="text/css" rel="stylesheet">
+    <!--BACKGROUND -->
+    <link href="{{ url_for('static',filename='background.css') }}" type="text/css" rel="stylesheet">
+  </head>
+  <body>
+    <!-- Start Page Loading -->
+    <div id="loader-wrapper">
+      <div id="loader"></div>
+      <div class="loader-section section-left"></div>
+      <div class="loader-section section-right"></div>
+    </div>
+    <!-- End Page Loading -->
+    <!-- //////////////////////////////////////////////////////////////////////////// -->
+    <!-- START HEADER -->
+    <header id="header" class="page-topbar">
+      <!-- start header nav-->
+      <div class="navbar-fixed">
+        <nav class="navbar-color blue-grey darken-3">
+          <div class="nav-wrapper">
+            <ul class="left">
+              <li>
+                <h1 class="logo-wrapper">
+                  {% if user_type=='student' %}
+                    <a href={{url_for('student_dashboard')}} class="brand-logo darken-1">
+                      <img  src="{{ url_for('static', filename='images/logo/vjti-logo.png') }}" >
+                      <span class="logo-text hide-on-med-and-down">VJTI Activities</span>
+                    </a>
+                  {% elif user_type == 'faculty' %}
+                    <a href={{url_for('teacher_dashboard')}} class="brand-logo darken-1">
+                      <img  src="{{ url_for('static', filename='images/logo/vjti-logo.png') }}" >
+                      <span class="logo-text hide-on-med-and-down">VJTI Activities</span>
+                    </a>
+                  {% else %}
+                    <a href={{url_for('supervisor_dashboard')}} class="brand-logo darken-1">
+                      <img  src="{{ url_for('static', filename='images/logo/vjti-logo.png') }}" >
+                      <span class="logo-text hide-on-med-and-down">VJTI Activities</span>
+                    </a>
+                  {% endif %}
+                </h1>
+              </li>
+            </ul>
+
+            <ul class="right hide-on-med-and-down">
+
+              <li>
+                <a href="/logout"  class="waves-effect waves-block waves-light chat-collapse">
+                  Logout
+                </a>
+              </li>
+            </ul>
+
+          </div>
+        </nav>
+      </div>
+      <!-- end header nav-->
+    </header>
+    <!-- END HEADER -->
+    <!-- //////////////////////////////////////////////////////////////////////////// -->
+    <!-- START MAIN -->
+    <div id="main">
+      <!-- START WRAPPER -->
+      <div class="wrapper">
+        <!-- START LEFT SIDEBAR NAV-->
+        <aside id="left-sidebar-nav">
+          <ul id="slide-out" class="side-nav fixed leftside-navigation" style="width: 15%">
+
+            <li class="user-details teal lighten-5">
+              <div class="row">
+                <div class="col col s4 m4 l4">
+                  {% if user_type=='student' %}
+                    <img src="{{ url_for('static',filename='images/avatar/revathi.jpg')}}" alt="" class="circle responsive-img valign halign profile-image cyan" style="height: 85px; width:75px;">
+                  {% else %}
+                    <img src="{{ url_for('static',filename='images/avatar/faculty.jpg')}}" alt="" class="circle responsive-img valign halign profile-image cyan">
+                  {% endif %}
+                </div>
+                <div class="col col s8 m8 l8">
+
+                  <a class="waves-effect waves-light black-text" style="font-size: 18px" href="#" > {{s_name}}</a>
+                  <p class="user-roal black-text"  style="font-size: 16px">
+                    {% if user_type=='student' %} Student
+                    {% elif user_type=='faculty' %} Faculty
+                    {% else %} Supervisor
+                    {% endif %}
+                  </p>
+                </div>
+              </div>
+            </li>
+            <hr>
+            <li class="no-padding">
+              {% if user_type=='student' %}
+                <ul class="collapsible center-align" data-collapsible="accordion">
+                  <li class="bold">
+                    <a href="{{ url_for('student_dashboard') }}" class="link waves-effect waves-teal">
+                        <span class="nav-text" style="font-size: 16px">Dashboard</span>
+                      </a>
+                  </li>
+                  <li class="bold">
+                    <a href="{{ url_for('add_project') }}" class="waves-effect waves-teal">
+                        <span class="nav-text" style="font-size: 16px">Add Project</span>
+                      </a>
+                  </li>
+                  <li class="bold">
+                    <a href="{{ url_for('view_projects', user_type='student') }}" class="waves-effect waves-teal">
+                        <span class="nav-text" style="font-size: 16px">View and Update Projects</span>
+                      </a>
+                  </li>
+                  <li class="bold">
+                    <a href="{{url_for('ranklist')}}" class="waves-effect waves-teal">
+                        <span class="nav-text" style="font-size: 16px">View Research Ranklist</span>
+                      </a>
+                  </li>
+
+                  <li class="bold">
+                    <a href={{url_for('get_open_jobs')}} class="waves-effect waves-teal">
+
+                        <span class="nav-text" style="font-size: 16px">Apply for Student Positions</span>
+                      </a>
+                  </li>
+                  <li class="bold">
+                    <a href={{url_for('view_posts')}} class="waves-effect waves-teal">
+
+                        <span class="nav-text" style="font-size: 16px">View Posts (to contribute)</span>
+                      </a>
+                  </li>
+                  <li class="bold">
+                    <a href={{url_for('create_post')}} class="waves-effect waves-teal">
+
+                        <span class="nav-text" style="font-size: 16px">Create Post for Crowdfunding</span>
+                      </a>
+                  </li>
+                  <li class="bold">
+                    <a href="form-layouts.html" class="waves-effect waves-teal">
+
+                        <span class="nav-text" style="font-size: 16px">Account</span>
+                      </a>
+                  </li>
+                </ul>
+              {% elif user_type=='faculty' %}
+                <ul class="collapsible center-align" data-collapsible="accordion">
+                <li class="bold">
+                  <a href="{{ url_for('teacher_dashboard') }}" class="waves-effect waves-teal">
+                      <span class="nav-text" style="font-size: 16px">Dashboard</span>
+                    </a>
+                </li>
+                <li class="bold">
+                  <a href="{{ url_for('view_projects', user_type=user_type)}}" class="waves-effect waves-teal">
+                      <span class="nav-text" style="font-size: 16px">Projects</span>
+                    </a>
+                </li>
+                <li class="bold">
+                  <a href="{{ url_for('teacher_dashboard') }}" class="waves-effect waves-teal">
+                      <span class="nav-text" style="font-size: 16px">View and Grade Reports</span>
+                    </a>
+                </li>
+                  <li class="bold">
+                    <a href={{url_for('view_posts')}} class="waves-effect waves-teal">
+
+                        <span class="nav-text" style="font-size: 16px">View Posts (to contribute)</span>
+                      </a>
+                  </li>
+                <li class="bold">
+                  <a href={{url_for('create_post')}} class="waves-effect waves-teal">
+
+                      <span class="nav-text" style="font-size: 16px">Create Post for Crowdfunding</span>
+                    </a>
+                </li>
+                <li class="bold">
+                  <a href="{{url_for('ranklist')}}" class="waves-effect waves-teal">
+                      <span class="nav-text" style="font-size: 16px">View Student Research Ranklist</span>
+                    </a>
+                </li>
+
+
+                <li class="bold">
+                  <a href="{{url_for('teacher_dashboard')}}" class="waves-effect waves-teal">
+                      <span class="nav-text" style="font-size: 16px">Account</span>
+                    </a>
+                </li>
+              </ul>
+              {% else %}
+              <ul class="collapsible center-align" data-collapsible="accordion">
+                  <li class="bold">
+                    <a href="{{url_for('create_job')}}" class="waves-effect waves-teal">
+                        <span class="nav-text" style="font-size: 16px">Create Jobs</span>
+                      </a>
+                  </li>
+                <li class="bold">
+                    <a href="{{url_for('view_created_jobs')}}" class="waves-effect waves-teal">
+                        <span class="nav-text" style="font-size: 16px">View Created Jobs</span>
+                      </a>
+                  </li>
+                <li class="bold">
+                    <a href={{url_for('view_posts')}} class="waves-effect waves-teal">
+
+                        <span class="nav-text" style="font-size: 16px">View Posts (to contribute)</span>
+                      </a>
+                  </li>
+                <li class="bold">
+                    <a href={{url_for('create_post')}} class="waves-effect waves-teal">
+
+                        <span class="nav-text" style="font-size: 16px">Create Post for Crowdfunding</span>
+                      </a>
+                  </li>
+                <li class="bold">
+                    <a href="{{url_for('supervisor_dashboard')}}" class="waves-effect waves-teal">
+                        <span class="nav-text" style="font-size: 16px">Account</span>
+                      </a>
+                  </li>
+              </ul>
+            {% endif %}
+            </li>
+          </ul>
+          <a href="#" data-activates="slide-out" class="sidebar-collapse btn-floating btn-medium waves-effect waves-light amber darken-2 hide-on-large-only">
+            <i class="material-icons">menu</i>
+            </a>
+
+        </aside>
+        <!-- END LEFT SIDEBAR NAV-->
+        <!-- //////////////////////////////////////////////////////////////////////////// -->
+        <main role="main" class="main-div">
+      <div class="row">
+        <div class="col s12">
+          {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+              {% for category, message in messages %}
+                <div class="alert alert-{{ category }}">
+                  {{ message }}
+                </div>
+              {% endfor %}
+            {% endif %}
+          {% endwith %}
+          {% block content %} {% endblock %}
+        </div>
+      </div>
+    </main>
+
+      </div>
+      <!-- END WRAPPER -->
+    </div>
+    <!-- END MAIN -->
+    <!-- //////////////////////////////////////////////////////////////////////////// -->
+    <!-- START FOOTER -->
+    <footer class="blue-grey darken-3">
+        <div class="footer-copyright">
+          <div class="container">
+            <span class="white-text">Designed by NERR</span>
+
+          </div>
+        </div>
+    </footer>
+    <!-- END FOOTER -->
+    <!-- ================================================
+    Scripts
+    ================================================ -->
+    <!-- jQuery Library -->
+    <script type="text/javascript" src="{{ url_for('static',filename='vendors/jquery-3.2.1.min.js') }}"></script>
+    <!--materialize js-->
+    <script type="text/javascript" src="{{ url_for('static',filename='js/materialize.min.js') }}"></script>
+    <!--scrollbar-->
+    <script type="text/javascript" src="{{ url_for('static',filename='vendors/perfect-scrollbar/perfect-scrollbar.min.js') }}"></script>
+    <!--plugins.js - Some Specific JS codes for Plugin Settings-->
+    <script type="text/javascript" src="{{ url_for('static',filename='js/plugins.js') }}"></script>
+    <!--custom-script.js - Add your own theme custom JS-->
+    <script type="text/javascript" src="{{ url_for('static',filename='js/custom-script.js') }}"></script>
+  </body>
+</html>

@@ -1,0 +1,42 @@
+{% extends "layout.html" %}
+{% block content %}
+<html itemscope itemtype="http://schema.org/Article">
+<body>
+        <hr>
+    <div class = "col s12" style="width: 100%; float:center; height:100%;">
+
+        <br>
+        <h4 class="center-align"><b>Open Positions</b></h4>
+        <br>
+        <div class="row">
+            {% for i in range(0, total) %}
+                <div class="card hoverable light-blue lighten-5 col s6" style="margin: 5px; width: 32%">
+                    <fieldset class="form-group black-text" style="font-size: 18px;">
+                        <h5><class="center-align">Position: {{ title_list[i] }}</h5>
+                        <hr>
+                        <h6><b>Vacancies:</b>  {{ vacancies_list[i] }}</h6>
+                        <h6><b>Description:</b>  {{ description_list[i] }}</h6>
+                        <h6><b>Start Date:</b>  {{ start_date_list[i] }}</h6>
+                        <br>
+
+                        <div class="center-align form-group" style="display:inline">
+                            <b><a class="center-align hoverable waves-effect waves-light btn teal white-text" href = "{{ url_for('apply_for_job', job_id=L_id[i]) }}"> Apply </a></b>
+                        </div>
+
+                        <div class="center-align form-group" style="dislay:inline">
+
+                        </div>
+                    </fieldset>
+                </div>
+
+           {% endfor %}
+        </div>
+    </div>
+</body>
+</html>
+
+{% endblock content %}
+
+
+
+

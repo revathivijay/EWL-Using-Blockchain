@@ -1,0 +1,92 @@
+{% extends "layout.html" %}
+{% block content %}
+
+<html itemscope itemtype="http://schema.org/Article">
+    <body>
+    <div style="margin-left: 20%">
+        {% for project in projects %}
+        <span><h4><b> {{project['topic']}} </b></h4></span>
+        <div class="card teal lighten-5" style="width: 70%">
+            <div class="card-content black-text">
+                <span class="card-title"></span>
+                <ul class="collection">
+                    <li class="collection-item"><b>Students: </b>
+                        {% for student in project['students'] %}
+                        <a href="#!" class="black-text">{{ student }} | </a>
+                        {% endfor %}
+                    </li>
+                    <li class="collection-item"><b>Mentors:</b>
+                        {% if project['isVerified'] is sameas true %}
+                            {% for staff in project['mentors'] %}
+                            <a href="#!" class="black-text">{{ staff }}</a>
+                            {% endfor %}
+                        {% else %}
+                        <h7>Project has not been accepted by mentors yet.</h7>
+                        {% endif %}
+                    </li>
+                    <li class="collection-item"><b>Departments:</b>
+                        {% for dept in project['departments'] %}
+                        <a href="#!" class="black-text">{{ dept }}</a>
+                        {% endfor %}
+                    </li>
+<!--                    <li class="collection-item"><b>Date of start:</b> {{ project['date'] }}</li>-->
+<!--                    <li class="collection-item"><b>Coming Deadline:</b> {{ project['date']}}</li>-->
+                    <li class="collection-item"><b>Uploaded documents:</b>
+                        {% if 'filelist' in project %}
+                            {% if project['filelist']=={} %}
+                                No Documents uploaded
+                            {% else %}
+                                {% for file in project['filelist'] %}
+                                    <a href = "{{ url_for('view_document', pid=project['_id'], doc_name=file)}}" class="<waves-effect waves-light btn indigo darken-1 white-text">{{file}}</a>
+                                {% endfor %}
+                            {% endif %}
+                        {% else %}
+                            {% if project['filelist']=={} or project['filelist']==None or 'fileist' not in project%}
+                              No Documents uploaded
+                            {% else %}
+                                {% for file in project['filelist'] %}
+                                    <a href="#!" class="<waves-effect waves-light btn blue black-text">{{ file }}</a>
+                                {% endfor %}
+                            {% endif %}
+                        {% endif %}
+                    </li>
+                    <li class="collection-item"><b>Paper Published:</b>
+                        {% if project['isPublished']==True %}
+                            Yes
+                        {% else %}
+                            No
+                        {% endif %}
+                    </li>
+                    <li class="collection-item"><b>Status:</b>
+                        {% if 'completed' in project %}
+                            {% if project['completed'] is sameas true %} Completed
+                            {% else %} Ongoing
+                            {% endif %}
+                        {% else %} Ongoing
+                        {% endif %}
+                    </li>
+                    <li class="collection-item"><b>Coins Earned: </b> 60
+                    </li>
+
+                </ul>
+            </div>
+            <div class="card-action">
+                {% if user_type=='student' %}
+                    {% if project['isVerified'] is sameas true %}
+                    <a href= {{url_for("update_project",id=project['_id'])}} class="btn indigo darken-2 white-text center">Update Project</a>
+                    {% else %}
+                    <span class="tooltipped" data-position="bottom" data-tooltip="Project can be updated only after mentors verify!">
+                        <a href= {{url_for("update_project",id=project['_id'])}} class="btn grey black-text center disabled">Update Project</a>
+                    </span>
+<!--                    <a href= {{url_for("update_project",id=project['_id'])}} class="btn tooltipped amber accent-2 black-text center" data-position="bottom" data-tooltip="Mentors need to verify!">Update Project</a>-->
+                    {% endif %}
+                {% endif %}
+            </div>
+        </div>
+        <br>
+        {% endfor %}
+    </div>
+    </body>
+</html>
+
+{% endblock content %}

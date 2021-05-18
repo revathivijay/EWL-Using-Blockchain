@@ -1,0 +1,63 @@
+{% extends "layout.html" %}
+{% block content %}
+
+<html itemscope itemtype="http://schema.org/Article">
+<body>
+<br>
+    <div class="valign center-align dim card blue lighten-5">
+        <form method="POST" action="/register_staff">
+            {{ form.hidden_tag() }}
+            <fieldset class="form-group">
+                <h3><b>Staff</b></h3>
+                <hr>
+                <br>
+
+                <div class="form-group">
+                    {{ form.id.label(class="form-control-label") }}
+                    {% if form.id.errors %}
+                        {{ form.id(class="form-control form-control-lg is-invalid") }}
+                        <div class="invalid-feedback">
+                            {% for error in form.id.errors %}
+                                <span>{{ error }}</span>
+                            {% endfor %}
+                        </div>
+                    {% else %}
+                        {{ form.id(class="form-control form-control-lg") }}
+                    {% endif %}
+                </div>
+
+                <div class="form-group">
+                    {{ form.email.label(class="form-control-label") }}
+                    {% if form.email.errors %}
+                        {{ form.email(class="form-control form-control-lg is-invalid") }}
+                        <div class="invalid-feedback">
+                            {% for error in form.email.errors %}
+                                <span>{{ error }}</span>
+                            {% endfor %}
+                        </div>
+                    {% else %}
+                        {{ form.email(class="form-control form-control-lg") }}
+                    {% endif %}
+                </div>
+                <div class="form-group">
+                    {{ form.password.label(class="form-control-label") }}
+                    {% if form.password.errors %}
+                        {{ form.password(class="form-control form-control-lg is-invalid") }}
+                        <div class="invalid-feedback">
+                            {% for error in form.password.errors %}
+                                <span>{{ error }}</span>
+                            {% endfor %}
+                        </div>
+                    {% else %}
+                        {{ form.password(class="form-control form-control-lg") }}
+                    {% endif %}
+                </div>
+            <br>
+            
+            <div class="form-group">
+            <b> {{ form.submit(class="button-border hoverable waves-effect waves-light btn-large blue lighten-3 black-text") }} </b>
+            </div>
+        </form>
+    </body>
+</html>
+{% endblock content %}

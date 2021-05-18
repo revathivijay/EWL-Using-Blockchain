@@ -1,0 +1,171 @@
+{% extends "layout.html" %}
+{% block content %}
+<section id="content">
+          <!--start container-->
+          <div class="container">
+            <!--card stats start-->
+            <div id="card-stats">
+              <div class="row mt-1">
+                <div class="col s12 m6 l3">
+                    <div class = "card gradient-shadow min-height-100 white-text" style="background:linear-gradient(45deg, #0d47a1, #b3e5fc);">
+                    <div class="padding-4">
+                      <div class="col s7 m7">
+
+                        <p>Projects</p>
+                      </div>
+                      <div class="col s5 m5 right-align">
+
+                        <h5 class="mb-0">{{project_nos}}</h5>
+
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="col s12 m6 l3">
+                    <div class = "card gradient-shadow min-height-100 white-text" style="background:linear-gradient(45deg, #ff4018, #ff80ab);">
+                    <div class="padding-4">
+                      <div class="col s7 m7">
+
+                        <p>Current Impact Score</p>
+                      </div>
+                      <div class="col s5 m5 right-align">
+                        <h5 class="mb-0">{{impact_score}}</h5>
+
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="col s12 m6 l3">
+                  <div class = "card gradient-shadow min-height-100 white-text" style="background:linear-gradient(45deg, #33691e, #9ccc65);">
+                    <div class="padding-4">
+                      <div class="col s7 m7">
+                        <p>Current Rank In Research Projects</p>
+                      </div>
+                      <div class="col s5 m5 right-align">
+                        <h5 class="mb-0">{{student_rank}}</h5>
+
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="col s12 m6 l3">
+                  <div class = "card gradient-shadow min-height-100 white-text" style="background:linear-gradient(45deg, #ff6f00, #ffeb3b);">
+                    <div class="padding-4">
+                      <div class="col s7 m7">
+
+                        <p>Coins Earned So Far</p>
+                      </div>
+                      <div class="col s5 m5 right-align">
+                        <h5 class="mb-0">{{coin_balance}}</h5>
+
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+              </div>
+            </div>
+
+            <!--card widgets start-->
+            <div id="card-widgets">
+              <div class="row">
+                <div class="col s12 m6 l6" style="border: none">
+                  <ul id="task-card" class="collection with-header">
+                    <li class="collection-header teal lighten-2">
+                      <h4 class="task-card-title">My Tasks</h4>
+                      <p class="task-card-date black-text">{{today}}</p>
+                    </li>
+                    <br>
+                    <li class="collection-item dismissable">
+                      <input type="checkbox" id="task1" />
+                      <label for="task1" style="font-size: 18px"><b>EWL-Biweekly Report</b>
+                      </label>
+                      <span class="task-cat teal lighten-4 black-text">Report</span>
+                    </li>
+                    <br>
+                    <li class="collection-item dismissable">
+                      <input type="checkbox" id="task2" />
+                      <label for="task2" style="font-size: 18px"><b>Survey Paper-Publication Submission</b>
+
+                      </label>
+                      <span class="task-cat grey lighten-2 black-text">Publication</span>
+                    </li>
+                    <br>
+                    <li class="collection-item dismissable">
+                      <input type="checkbox" id="task4"  />
+                      <label for="task4" style="font-size: 18px"><b>BCT Project Report Submission</b></label>
+                      <span class="task-cat teal lighten-4 black-text">Report</span>
+                    </li>
+                     </ul>
+                </div>
+
+                <div id="work-collections">
+                <div class="col s6 m6 l6">
+                  <ul id="projects-collection" class="collection z-depth-1">
+                    <li class="collection-item avatar">
+                      <i class="material-icons blue darken-4 circle">assignment</i>
+                      <h5><b>Projects</b></h5>
+                    </li>
+                    {% for project in projects %}
+                    <li class="collection-item">
+                      <div class="row">
+                        <div class="col s9">
+                          <p class="collections-title"><a href={{url_for('update_project',id=project['_id'])}} style="font-size: 17px"> {{ project['topic'] }}</a></p>
+                          <p class="collections-content">{{", ".join(project['mentors'])}}</p>
+                        </div>
+                        <div class="col s3">
+                          {% if project['isVerified'] is sameas true %}
+                            {% if project['completed'] is sameas true %}
+                            <span class="task-cat light-green" style="font-size: 15px" style="font-size: 17px">Completed</span>
+                            {% else %}
+                            <span class="task-cat light-blue darken-1">Ongoing</span>
+                            {% endif %}
+                          {% else %}
+                            <span class="task-cat red lighten-2">Not verified</span>
+                          {% endif %}
+                        </div>
+                      </div>
+                    </li>
+                    {% endfor %}
+                  </ul>
+                </div>
+
+              </div>
+                <div id="jobs-collections">
+                <div class="col s6 m6 l6">
+                  <ul id="jobs-collection" class="collection z-depth-1">
+                    <li class="collection-item avatar">
+                      <i class="material-icons blue darken-4 circle">assignment_ind</i>
+                      <h5><b>Campus Positions</b></h6>
+                    </li>
+                    {% for job in jobs %}
+                    <li class="collection-item">
+                      <div class="row">
+                        <div class="col s9">
+                          <p class="collections-title"> <b>{{ job['job_name'] }} </b></p>
+                          <p class="collections-content">{{ job['job_description'] }}</p>
+                        </div>
+                        <div class="col s3">
+                          {% if job['status']=='applied' %}
+                            <span class="task-cat light-blue darken-1"> Applied</span>
+                          {% elif job['status']=='selected' %}
+                            <span class="task-cat light-green">Selected</span>
+                          <span class="col s9">Rating <b>{{ job['grade'] }}</b></span>
+                          {% else %}
+                           <span class="task-cat red lighten-2">Rejected</span>
+                          {% endif %}
+                        </div>
+                      </div>
+                    </li>
+                    {% endfor %}
+                  </ul>
+                </div>
+
+              </div>
+
+              </div>
+
+            </div>
+          </div>
+        </section>
+{% endblock content %}

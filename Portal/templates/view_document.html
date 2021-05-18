@@ -1,0 +1,15 @@
+{% extends "layout.html" %}
+{% block content %}
+    {% if user_type=='student' %}
+        <div>
+            <br>
+            <embed src="./../static/documents/{{ doc_name }}" type="application/pdf" height="800px" width="100%">
+        </div>
+    {% else %}
+        <div>
+            <br>
+            <embed src="./../static/documents/{{ doc_name }}" type="application/pdf" height="600px" width="100%">
+        </div>
+        <b><a href = "{{ url_for('verify_report', p_id=pid, report_name=doc_name)}}" class="button-border hoverable center-align waves-effect waves-light btn-large gradient-45deg-light-blue-cyan black-text">Grade Report</a></b>
+    {% endif %}
+{% endblock content %}

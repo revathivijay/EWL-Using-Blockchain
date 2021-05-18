@@ -1,0 +1,111 @@
+{% extends "layout.html" %}
+{% block content %}
+<html itemscope itemtype="http://schema.org/Article">
+<body>
+<br>
+     <div class = "blue lighten-5 col s12" style="width: 60%; margin-left:20%">
+        <fieldset class="form-group">
+            <br>
+            <h4><b>Create new job</b></h4>
+             <br>
+
+        <form method="POST" action="{{ url_for('create_job') }}" enctype="multipart/form-data">
+            <div class="form-group">
+                <h6><b>Title</b></h6>
+                    {% if create_job_form.title.errors %}
+                        {{ create_job_form.title(class="form-control form-control-lg is-invalid") }}
+                        <div class="invalid-feedback">
+                            {% for error in create_job_form.title.errors %}
+                                <span>{{ error }}</span>
+                            {% endfor %}
+                        </div>
+                    {% else %}
+                        {{ create_job_form.title(class="form-control form-control-lg") }}
+                    {% endif %}
+            </div>
+            <br>
+
+            <div class="form-group">
+                <h6><b>Duration</b></h6>
+                    {% if create_job_form.duration.errors %}
+                        {{ create_job_form.duration(class="form-control form-control-lg is-invalid") }}
+                        <div class="invalid-feedback">
+                            {% for error in create_job_form.duration.errors %}
+                                <span>{{ error }}</span>
+                            {% endfor %}
+                        </div>
+                    {% else %}
+                        {{ create_job_form.duration(class="form-control form-control-lg") }}
+                    {% endif %}
+            </div>
+            <br>
+
+            <div class="form-group">
+                <h6><b>Description</b></h6>
+                    {% if create_job_form.description.errors %}
+                        {{ create_job_form.description(class="form-control form-control-lg is-invalid") }}
+                        <div class="invalid-feedback">
+                            {% for error in create_job_form.description.errors %}
+                                <span>{{ error }}</span>
+                            {% endfor %}
+                        </div>
+                    {% else %}
+                        {{ create_job_form.description(class="form-control form-control-lg") }}
+                    {% endif %}
+            </div>
+            <br>
+
+            <div class="form-group">
+                <h6><b>Vacancies</b></h6>
+                    {% if create_job_form.vacancies.errors %}
+                        {{ create_job_form.vacancies(class="form-control form-control-lg is-invalid") }}
+                        <div class="invalid-feedback">
+                            {% for error in create_job_form.vacancies.errors %}
+                                <span>{{ error }}</span>
+                            {% endfor %}
+                        </div>
+                    {% else %}
+                        {{ create_job_form.vacancies(class="form-control form-control-lg") }}
+                    {% endif %}
+            </div>
+            <div class="form-group">
+                <h6><b>Start Date</b></h6>
+                    {% if create_job_form.start_date.errors %}
+                        {{ create_job_form.start_date(class="form-control form-control-lg is-invalid") }}
+                        <div class="invalid-feedback">
+                            {% for error in create_job_form.start_date.errors %}
+                                <span>{{ error }}</span>
+                            {% endfor %}
+                        </div>
+                    {% else %}
+                        {{ create_job_form.start_date(class="datepicker", type="text") }}
+                        <script>
+                            var dates = document.getElementsByClassName('datepicker')
+                            for (var i=0; i<dates.length; i++){
+                                dates[i].addEventListener("mousedown", function preventClosing(event) {
+                                  event.preventDefault();
+                                });
+                             }
+
+                        </script>
+
+                    {% endif %}
+
+            </div>
+            <br>
+            <div class="form-group">
+            <a> <b> {{ create_job_form.createJob(class="button-border hoverable waves-effect waves-light btn-large blue white-text") }} </b> </a>
+            </div>
+            </b></h4>
+        </form>
+    </fieldset>
+</div>
+
+
+</body>
+</html>
+
+{% endblock content %}
+
+
+

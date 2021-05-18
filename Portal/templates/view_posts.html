@@ -1,0 +1,87 @@
+{% extends "layout.html" %}
+{% block content %}
+<br>
+<script src="{{url_for('static', filename='js/jquery-3.1.0.min.js')}}"></script>
+<script>
+   document.addEventListener('DOMContentLoaded', function() {
+    var elems = document.querySelectorAll('.modal');
+    var instances = M.Modal.init(elems, options);
+  });
+</script>
+<div class="transparent row">
+    {% for post in posts %}
+    <div class="transparent col s12 m12" style="padding-left: 50px; padding-right:50px; width: 60%; margin-left: 17%">
+      <div class="card indigo lighten-5">
+        <div class="card-content black-text">
+            <span class="card-title center-align black-text"><b>{{post['cause']}}</b></span>
+
+            Created by: <i>{{post['created_by_name']}} </i> <span>&#124;</span> <i>Created on: {{post['date_created']}}</i>
+            <hr>
+            {% if post['description']=="" %}
+            <p>Description not provided.</p>
+            {% else %}
+              <p>Description: {{post['description']}}</p>
+            {% endif %}
+            <p>Total Amount required: <span class="WebRupee">&#x20B9;</span> <b>{{post['amount']}}</b></p>
+            <p>Amount Collected so far: <span class="WebRupee">&#x20B9;</span> {{ post['contributed'] }}</p>
+            <p>Date needed by: {{post['end_date']}}</p>
+        </div>
+        <div class="card-action center-align">
+          <a class="waves-effect waves-light btn indigo darken-4 white-text modal-trigger" href="#demo-modal">Contribute</a>
+        </div>
+      </div>
+    </div>
+    <!-- Modal Structure -->
+        <div id="demo-modal" class="modal" style="overflow-x:hidden" >
+            <form method="POST">
+            <div class="modal-content" style="opacity: 0.8;">
+                <h5><b>Payment</b></h5>
+                <p>
+                    Let us know how much you want to contribute to <b> {{ post['created_by_name'] }} (ID: {{post['created_by']}})</b>
+                </p>
+                <span>This is your coin balance: {{balance}}</span>
+            </div>
+                <div class="form-group">
+                <h6><b style="padding:25px; opacity: 0.8;">Enter Amount</b></h6>
+                    {% if make_payment_form.amount.errors %}
+                        {{ make_payment_form.amount(class="form-control form-control-lg is-invalid") }}
+                        <div class="invalid-feedback">
+                            {% for error in make_payment_form.amount.errors %}
+                                <span>{{ error }}</span>
+                            {% endfor %}
+                        </div>
+                    {% else %}
+                    <span style="padding:20px; padding-right:50px; width: 40%">{{ make_payment_form.amount(class="form-control form-control-lg") }}</span>
+                    {% endif %}
+                </div>
+                <div class="form-group">
+                <h6><b style="padding:25px; opacity: 0.8; width: 40%">To confirm your payment, please enter the receiver's ID as shown above:</b></h6>
+                    {% if make_payment_form.receiverID.errors %}
+                        {{ make_payment_form.receiverID(class="form-control form-control-lg is-invalid") }}
+                        <div class="invalid-feedback">
+                            {% for error in make_payment_form.receiverID.errors %}
+                                <span>{{ error }}</span>
+                            {% endfor %}
+                        </div>
+                    {% else %}
+                    <span style="padding:20px; padding-right:50px; width: 40%">{{ make_payment_form.receiverID(class="form-control form-control-lg") }}</span>
+                    {% endif %}
+                </div>
+            </form>
+
+            <div class="modal-footer" style="padding-bottom:40px; padding-right:300px">
+                <div class="form-group">
+                <a> <b> {{ make_payment_form.submit(class="modal-action modal-close waves-effect waves-light btn light-green") }} </b> </a>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script>
+        $(document).ready(function () {
+            $('.modal').modal();
+        }
+        )
+    </script>
+    {% endfor %}
+
+{% endblock content %}

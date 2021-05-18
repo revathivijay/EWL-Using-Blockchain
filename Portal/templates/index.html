@@ -1,0 +1,324 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="msapplication-tap-highlight" content="no">
+
+    <title>Earn While Learn</title>
+    <!-- Favicons-->
+    <link rel="icon" href="./../static/images/favicon/favicon-32x32.png" sizes="32x32">
+    <!-- Favicons-->
+    <link rel="apple-touch-icon-precomposed" href="./../static/images/favicon/apple-touch-icon-152x152.png">
+
+    <!-- For Windows Phone -->
+    <!-- CORE CSS-->
+    <link href="{{ url_for('static',filename='css/materialize.css') }}" type="text/css" rel="stylesheet">
+    <link href="{{ url_for('static',filename='css/style.css') }}" type="text/css" rel="stylesheet">
+    <!-- Custome CSS-->
+    <link href="{{ url_for('static',filename='css/custom/custom.css') }}" type="text/css" rel="stylesheet">
+    <!-- INCLUDED PLUGIN CSS ON THIS PAGE -->
+    <link href="{{ url_for('static',filename='vendors/perfect-scrollbar/perfect-scrollbar.css') }}" type="text/css" rel="stylesheet">
+    <link href="{{ url_for('static',filename='vendors/flag-icon/css/flag-icon.min.css')}} " type="text/css" rel="stylesheet">
+  </head>
+  <body>
+    <!-- Start Page Loading -->
+    <div id="loader-wrapper">
+      <div id="loader"></div>
+      <div class="loader-section section-left"></div>
+      <div class="loader-section section-right"></div>
+    </div>
+    <!-- End Page Loading -->
+    <!-- //////////////////////////////////////////////////////////////////////////// -->
+    <!-- START HEADER -->
+    <header id="header" class="page-topbar">
+      <!-- start header nav-->
+      <div class="navbar-fixed">
+        <nav class="navbar-color gradient-45deg-light-blue-cyan">
+          <div class="nav-wrapper">
+            <ul class="left">
+              <li>
+                <h1 class="logo-wrapper">
+                  <a href="index.html" class="brand-logo darken-1">
+                    <img  src="{{ url_for('static', filename='images/logo/vjti-logo.png') }}" >
+                    <span class="logo-text hide-on-med-and-down">EWL</span>
+                  </a>
+                </h1>
+              </li>
+            </ul>
+
+            <ul class="right hide-on-med-and-down">
+
+
+              <li>
+                <a href="/logout"  class="waves-effect waves-block waves-light chat-collapse">
+                  Logout
+                </a>
+              </li>
+            </ul>
+
+          </div>
+        </nav>
+      </div>
+      <!-- end header nav-->
+    </header>
+    <!-- END HEADER -->
+    <!-- //////////////////////////////////////////////////////////////////////////// -->
+    <!-- START MAIN -->
+    <div id="main">
+      <!-- START WRAPPER -->
+      <div class="wrapper">
+        <!-- START LEFT SIDEBAR NAV-->
+        <aside id="left-sidebar-nav">
+          <ul id="slide-out" class="side-nav fixed leftside-navigation">
+            <li class="user-details red darken-2">
+              <div class="row">
+                <div class="col col s4 m4 l4">
+                  <img src="{{ url_for('static',filename='images/avatar/Ritu.jpg') }}" alt="" class="circle responsive-img valign profile-image cyan">
+                </div>
+                <div class="col col s8 m8 l8">
+
+                  <a class="btn-flat dropdown-button waves-effect waves-light white-text profile-btn" href="#" >Ritu Gala</a>
+                  <p class="user-roal">Student</p>
+                </div>
+              </div>
+            </li>
+            <li class="no-padding">
+              <ul class="collapsible" data-collapsible="accordion">
+                <li class="bold">
+                  <a href="{{ url_for('dashboard') }}" class="waves-effect waves-cyan">
+                      <span class="nav-text">Dashboard</span>
+                    </a>
+                </li>
+                <li class="bold">
+                  <a href="{{ url_for('add_project') }}" class="waves-effect waves-cyan">
+                      <span class="nav-text">Add Project</span>
+                    </a>
+                </li>
+                <li class="bold">
+                  <a href="{{ url_for('view_projects') }}" class="waves-effect waves-cyan">
+                      <span class="nav-text">View Projects</span>
+                    </a>
+                </li>
+                <li class="bold">
+                  <a href="ui-basic-buttons.html" class="waves-effect waves-cyan">
+                      <span class="nav-text">View Research Ranklist</span>
+                    </a>
+                </li>
+                <li class="bold">
+                  <a href="form-layouts.html" class="waves-effect waves-cyan">
+
+                      <span class="nav-text">Account</span>
+                    </a>
+                </li>
+              </ul>
+            </li>
+          </ul>
+          <a href="#" data-activates="slide-out" class="sidebar-collapse btn-floating btn-medium waves-effect waves-light hide-on-large-only">
+            <i class="material-icons">menu</i>
+          </a>
+        </aside>
+        <!-- END LEFT SIDEBAR NAV-->
+        <!-- //////////////////////////////////////////////////////////////////////////// -->
+        <!-- START CONTENT -->
+        <section id="content">
+          <!--start container-->
+          <div class="container">
+            <!--card stats start-->
+            <div id="card-stats">
+              <div class="row mt-1">
+                <div class="col s12 m6 l3">
+                  <div class="card gradient-45deg-light-blue-cyan gradient-shadow min-height-100 white-text">
+                    <div class="padding-4">
+                      <div class="col s7 m7">
+
+                        <p>Projects</p>
+                      </div>
+                      <div class="col s5 m5 right-align">
+
+                        <h5 class="mb-0">4</h5>
+
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="col s12 m6 l3">
+                  <div class="card gradient-45deg-red-pink gradient-shadow min-height-100 white-text">
+                    <div class="padding-4">
+                      <div class="col s7 m7">
+
+                        <p>Current Impact Score</p>
+                      </div>
+                      <div class="col s5 m5 right-align">
+                        <h5 class="mb-0">1.65</h5>
+
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="col s12 m6 l3">
+                  <div class="card gradient-45deg-green-teal gradient-shadow min-height-100 white-text">
+                    <div class="padding-4">
+                      <div class="col s7 m7">
+                        <p>Current Rank In BTech Research Projects</p>
+                      </div>
+                      <div class="col s5 m5 right-align">
+                        <h5 class="mb-0">12</h5>
+
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="col s12 m6 l3">
+                  <div class="card gradient-45deg-amber-amber gradient-shadow min-height-100 white-text">
+                    <div class="padding-4">
+                      <div class="col s7 m7">
+
+                        <p>Coins Earned So Far</p>
+                      </div>
+                      <div class="col s5 m5 right-align">
+                        <h5 class="mb-0">65</h5>
+
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+              </div>
+            </div>
+
+            <!--card widgets start-->
+            <div id="card-widgets">
+              <div class="row">
+                <div class="col s12 m6 l6">
+                  <ul id="task-card" class="collection with-header">
+                    <li class="collection-header teal accent-4">
+                      <h4 class="task-card-title">My Task</h4>
+                      <p class="task-card-date">January 30, 2020</p>
+                    </li>
+                    <li class="collection-item dismissable">
+                      <input type="checkbox" id="task1" />
+                      <label for="task1">EWL-Biweekly Report
+                      </label>
+                      <span class="task-cat cyan">Report</span>
+                    </li>
+                    <li class="collection-item dismissable">
+                      <input type="checkbox" id="task2" />
+                      <label for="task2">Survey Paper-Publication Submission
+
+                      </label>
+                      <span class="task-cat red accent-2">Publication</span>
+                    </li>
+
+                    <li class="collection-item dismissable">
+                      <input type="checkbox" id="task4"  />
+                      <label for="task4">BCT Project Report Submission</label>
+                      <span class="task-cat cyan">Report</span>
+                    </li>
+                  </ul>
+                </div>
+                <div id="work-collections">
+
+                <div class="col s6 m6 l6">
+                  <ul id="projects-collection" class="collection z-depth-1">
+                    <li class="collection-item avatar">
+                      <i class="material-icons cyan circle">card_travel</i>
+                      <h6 class="collection-header m-0">Projects</h6>
+
+                    </li>
+                    <li class="collection-item">
+                      <div class="row">
+                        <div class="col s9">
+                          <p class="collections-title">Earn While Learn</p>
+                          <p class="collections-content">Mentor: Dr Dhiren Patel</p>
+                        </div>
+                        <div class="col s3">
+                          <span class="task-cat cyan">Ongoing</span>
+                        </div>
+                      </div>
+                    </li>
+                    <li class="collection-item">
+                      <div class="row">
+                        <div class="col s9">
+                          <p class="collections-title">Survey Paper</p>
+                          <p class="collections-content">Mentor: Dr Dhiren Patel</p>
+                        </div>
+                        <div class="col s3">
+                          <span class="task-cat cyan">Ongoing</span>
+                        </div>
+                      </div>
+                    </li>
+                    <li class="collection-item">
+                      <div class="row">
+                        <div class="col s9">
+                          <p class="collections-title">BCT Project</p>
+                          <p class="collections-content">Mentor: Dr Dhiren Patel</p>
+                        </div>
+                        <div class="col s3">
+                          <span class="task-cat cyan">Ongoing</span>
+                        </div>
+                      </div>
+                    </li>
+                    <li class="collection-item">
+                      <div class="row">
+                        <div class="col s9">
+                          <p class="collections-title">MIS Project</p>
+                          <p class="collections-content">Mentor: Dr P M Chawan</p>
+                        </div>
+                        <div class="col s3">
+                          <span class="task-cat deep-orange accent-2">Completed</span>
+                        </div>
+                      </div>
+                    </li>
+                  </ul>
+                </div>
+              </div>
+
+
+              </div>
+
+            <!--card widgets end-->
+            
+            <!--work collections start-->
+
+
+            </div>
+            <!--work collections end-->
+            
+            <!-- //////////////////////////////////////////////////////////////////////////// -->
+          </div>
+          <!--end container-->
+        </section>
+        <!-- END CONTENT -->
+
+      </div>
+      <!-- END WRAPPER -->
+    </div>
+    <!-- END MAIN -->
+    <!-- //////////////////////////////////////////////////////////////////////////// -->
+    <!-- START FOOTER -->
+    <footer class="page-footer gradient-45deg-light-blue-cyan">
+        <div class="footer-copyright">
+          <div class="container">
+            <span>Designed by NERR</span>
+
+          </div>
+        </div>
+    </footer>
+    <!-- END FOOTER -->
+    <!-- ================================================
+    Scripts
+    ================================================ -->
+    <!-- jQuery Library -->
+    <script type="text/javascript" src="{{ url_for('static',filename='vendors/jquery-3.2.1.min.js') }}"></script>
+    <!--materialize js-->
+    <script type="text/javascript" src="{{ url_for('static',filename='js/materialize.min.js') }}"></script>
+    <!--scrollbar-->
+    <script type="text/javascript" src="{{ url_for('static',filename='vendors/perfect-scrollbar/perfect-scrollbar.min.js') }}"></script>
+    <!--plugins.js - Some Specific JS codes for Plugin Settings-->
+    <script type="text/javascript" src="{{ url_for('static',filename='js/plugins.js') }}"></script>
+    <!--custom-script.js - Add your own theme custom JS-->
+    <script type="text/javascript" src="{{ url_for('static',filename='js/custom-script.js') }}"></script>
+  </body>
+</html>

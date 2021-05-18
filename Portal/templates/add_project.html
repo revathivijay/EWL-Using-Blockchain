@@ -1,0 +1,85 @@
+{% extends "layout.html" %}
+{% block content %}
+<html itemscope itemtype="http://schema.org/Article">
+<body>
+
+<br>
+     <div class = "center-align child-div col s9 valign " style="margin-left:20%; width: 60%;" >
+          <h4><b>Add new project</b></h4>
+        <fieldset class="form-group teal lighten-5 lighten-5">
+            <br>
+           <form method="POST">
+            <div class="form-group">
+                <h6><b>Students (Please enter institute IDs separated by commas)</b></h6>
+                    {% if submit_work_form.students.errors %}
+                        {{ submit_work_form.students(class="form-control form-control-lg is-invalid") }}
+                        <div class="invalid-feedback">
+                            {% for error in submit_work_form.students.errors %}
+                                <span>{{ error }}</span>
+                            {% endfor %}
+                        </div>
+                    {% else %}
+                        {{ submit_work_form.students(class="form-control form-control-lg") }}
+                    {% endif %}
+            </div>
+            <br>
+
+            <div class="form-group">
+                <h6><b>Mentor</b></h6>
+                    {% if submit_work_form.staff.errors %}
+                        {{ submit_work_form.staff(class="form-control form-control-lg is-invalid") }}
+                        <div class="invalid-feedback">
+                            {% for error in submit_work_form.staff.errors %}
+                                <span>{{ error }}</span>
+                            {% endfor %}
+                        </div>
+                    {% else %}
+                        {{ submit_work_form.staff(class="form-control form-control-lg") }}
+                    {% endif %}
+            </div>
+            <br>
+
+            <div class="form-group">
+                <h6><b>Research topic</b></h6>
+                    {% if submit_work_form.topic.errors %}
+                        {{ submit_work_form.topic(class="form-control form-control-lg is-invalid") }}
+                        <div class="invalid-feedback">
+                            {% for error in submit_work_form.topic.errors %}
+                                <span>{{ error }}</span>
+                            {% endfor %}
+                        </div>
+                    {% else %}
+                        {{ submit_work_form.topic(class="form-control form-control-lg") }}
+                    {% endif %}
+            </div>
+            <br>
+
+            <div class="form-group">
+                <h6><b>Department</b></h6>
+                    {% if submit_work_form.departments.errors %}
+                        {{ submit_work_form.departments(class="form-control form-control-lg is-invalid") }}
+                        <div class="invalid-feedback">
+                            {% for error in submit_work_form.departments.errors %}
+                                <span>{{ error }}</span>
+                            {% endfor %}
+                        </div>
+                    {% else %}
+                        {{ submit_work_form.departments(class="form-control form-control-lg") }}
+                    {% endif %}
+            </div>
+            <br>
+
+            <div class="form-group">
+                <a href = "{{ url_for('student_dashboard') }}"> <b onclick="Materialize.toast('Submitted!', 5000)"> {{ submit_work_form.submit(class="button-border hoverable waves-effect waves-light btn-large amber black-text") }} </b> </a>
+            </div>
+        </form>
+    </fieldset>
+</div>
+
+    </body>
+</html>
+
+{% endblock content %}
+
+
+

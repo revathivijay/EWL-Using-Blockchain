@@ -1,0 +1,72 @@
+{% extends "layout.html" %}
+{% block content %}
+<html itemscope itemtype="http://schema.org/Article">
+<body>
+
+
+        <fieldset class="form-group">
+
+            <div class = "dim card blue-grey lighten-5 hoverable col s6" style="margin-left:20%">
+                <form method="POST" >
+               <span class="col s12">
+                    <h5><b>Verify Publication</b></h5>
+                    <div class="form-group col s4">
+                     {{ form.topic.label(class="form-control-label") }}
+                     {% if form.topic.errors %}
+                         {{ form.topic(class="form-control form-control-lg is-invalid") }}
+                         <div class="invalid-feedback">
+                             {% for error in form.topic.errors %}
+                                 <span>{{ error }}</span>
+                             {% endfor %}
+                         </div>
+                     {% else %}
+                         {{ form.topic(class="form-control form-control-lg" , value= topic  ) }}
+                     {% endif %}
+                    </div>
+
+                    <div class="form-group col s4">
+                     {{ form.publicationJournal.label(class="form-control-label") }}
+                     {% if form.publicationJournal.errors %}
+                         {{ form.publicationJournal(class="form-control form-control-lg is-invalid") }}
+                         <div class="invalid-feedback">
+                             {% for error in form.publicationJournal.errors %}
+                                 <span>{{ error }}</span>
+                             {% endfor %}
+                         </div>
+                     {% else %}
+                         {{ form.publicationJournal(class="form-control form-control-lg", value = publicationJournal) }}
+                     {% endif %}
+                    </div>
+
+                    <div class="form-group col s4">
+                     {{ form.DOI.label(class="form-control-label") }}
+                     {% if form.DOI.errors %}
+                         {{ form.DOI(class="form-control form-control-lg is-invalid") }}
+                         <div class="invalid-feedback">
+                             {% for error in form.DOI.errors %}
+                                 <span>{{ error }}</span>
+                             {% endfor %}
+                         </div>
+                     {% else %}
+                         {{ form.DOI(class="form-control form-control-lg", value=doi) }}
+                     {% endif %}
+                    </div>
+
+                </span>
+                    <div class="form-group center-align" style="display:inline">
+                        <b> {{ form.verify(class="button-border hoverable waves-effect waves-light btn-large light-green lighten-2 black-text") }} </b>
+                     </div>
+
+                    <div class="form-group center-align"  style="display:inline">
+                        <b> {{ form.notVerify(class="button-border hoverable waves-effect waves-light btn-large red lighten-2 black-text") }} </b>
+                     </div>
+                </form>
+                <br>
+                <br>
+            </div>
+       </fieldset>
+    </div>
+   </body>
+</html>
+
+{% endblock content %}

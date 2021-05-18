@@ -1,0 +1,51 @@
+{% extends "layout.html" %}
+{% block content %}
+<html itemscope itemtype="http://schema.org/Article">
+    <body>
+
+
+            <fieldset class="form-group">
+
+                <div class = "dim card light-blue center-align accent-2 hoverable col s6" style="height:400px">
+                    <br/>
+                    <div class="valign col s12  transparent">
+                        <form method="POST">
+                            {{ form.hidden_tag() }}
+                            <fieldset class="form-group">
+                                <h3><b>Grade Job</b></h3>
+                                <hr>
+                                <br>
+                                <h3>{{ topic }}</h3>
+
+                                 <div class="form-group black-text">
+                                    {{ form.grade.label(class="") }}
+                                    {% if form.grade.errors %}
+                                        {{ form.grade(class="form-control form-control-lg is-invalid") }}
+                                        <div class="invalid-feedback">
+                                            {% for error in form.grade.errors %}
+                                                <span>{{ error }}</span>
+                                            {% endfor %}
+                                        </div>
+                                    {% else %}
+                                        {{ form.grade(class="form-control form-control-lg") }}
+                                    {% endif %}
+                                </div>
+
+                                <div class="form-group">
+                                    {{ form.submit(class="button-border hoverable waves-effect waves-light btn-large blue lighten-5 black-text") }}
+                                </div>
+
+                            </fieldset>
+
+                        </form>
+                    </div>
+
+                    <br>
+                    <hr style="height:1px;border:none;color:#333;background-color:#333;" />
+                    <br>
+                </div>
+            </fieldset>
+        </body>
+</html>
+
+{% endblock content %}

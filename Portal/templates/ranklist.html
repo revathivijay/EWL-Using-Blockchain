@@ -1,0 +1,41 @@
+{% extends "layout.html" %}
+{% block content %}
+<style>
+
+table.striped > tbody > tr:nth-child(odd) {
+  background-color: rgba(170, 213, 213, 0.5);
+}
+
+</style>
+<div class = "container">
+    <h3 class="center-align">Student Ranklist</h3>
+    <div class="card center align" style="margin-left: 20%; width: 50% ">
+    <table class="striped">
+        <thead class="center-align">
+          <tr>
+              <th>Rank</th>
+              <th>Student ID</th>
+              <th>Student Name</th>
+              <th>Individual Impact Score</th>
+          </tr>
+        </thead>
+        <tbody class="center-align">
+        {% for i in range(0,total) %}
+          <tr>
+              <td><b>{{i+1}}</b></td>
+              <td>{{all_students[i]}}</td>
+              <td>{{student_names[i]}}</td>
+              <td>{{student_impact_score[i]}}</td>
+          </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+    </div>
+</div>
+<!--        <div class="center-align form-group">-->
+<!--            <h3>Current Ranklist of Students</h3>-->
+<!--            {% for i in range(0, total) %}-->
+<!--                <b><a href = "#" class="button-border hoverable waves-effect waves-light btn-large amber black-text">{{i+1}}&nbsp&nbsp{{all_students[i]}}&nbsp&nbsp{{student_impact_score[i]}} </a></b><br>-->
+<!--            {% endfor %}-->
+<!--        </div>-->
+{% endblock content %}

@@ -1,0 +1,57 @@
+{% extends "layout.html" %}
+{% block content %}
+
+<head>
+    <script src="./../static/js/pdfobject.js"></script>
+</head>
+
+      <div class="row valign wrapper">
+        <div class="col s4">
+            <h3 class="account-heading black-text"><b>Welcome, </b>studentName </h3>
+        </div>
+      </div>
+    <div class = "dim card blue lighten-5 col s6">
+        <fieldset class="form-group">
+            <br>
+            <h4><b>Account Info</b></h4>
+            <hr>
+            <br>
+
+            <div class="form-group">
+                <h5><b>ID number</b></h5>
+                ID number
+            </div>
+            <br>
+
+            <div class="form-group">
+                <h5><b>Department</b></h5>
+                dummyDept
+            </div>
+            <br>
+
+            <div class="form-group">
+                <h5><b>Email</b></h5>
+                studentEmail
+            </div>
+            <br>
+
+        </fieldset>
+
+        <div class="center-align form-group">
+            <b><a href = "{{ url_for('add_project') }}" class="button-border hoverable waves-effect waves-light btn-large amber black-text"> My Projects </a></b>
+        </div>
+
+    </div>
+    <div class = "dim card blue lighten-5 col s6"></div>
+        <div class="center-align form-group">
+            <h3>Current Ranklist of Students</h3>
+            {% for i in range(0, total) %}
+                <b><a href = "#" class="button-border hoverable waves-effect waves-light btn-large amber black-text">{{i+1}}&nbsp&nbsp{{all_students[i]}}&nbsp&nbsp{{student_impact_score[i]}} </a></b><br>
+            {% endfor %}
+        </div>
+    <hr>
+{% endblock content %}
+
+
+
+

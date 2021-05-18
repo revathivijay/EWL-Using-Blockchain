@@ -1,0 +1,33 @@
+{% extends "layout.html" %}
+{% block content %}
+<style>
+table.striped > tbody > tr:nth-child(odd) {
+  background-color: rgba(170, 213, 213, 0.5);
+}
+</style>
+
+<div class = "container">
+    <h3 class="center-align">Students Who Have Applied for the Job: {{job_title}}</h3>
+    {% if total == 0 %}
+    Not Students Have Applied for this job
+    {%else%}
+    <table class="striped" style="width:50%; margin-left: 50px">
+        <thead class="center-align">
+          <tr>
+              <th></th>
+              <th>Student ID</th>
+          </tr>
+        </thead>
+        <tbody class="center-align">
+        {% for i in range(0,total) %}
+          <tr>
+              <td><b>{{i+1}}</b></td>
+              <td>{{all_candidates[i]['id']}}</td>
+          </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+    {%endif%}
+</div>
+
+{% endblock content %}

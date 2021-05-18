@@ -1,0 +1,70 @@
+{% extends "layout.html" %}
+{% block content %}
+
+<head>
+    <script src="static/js/pdfobject.js"></script>
+</head>
+<br>
+<div style="margin-left:25%">
+        <div class="card hoverable blue lighten-5" style="width:60%">
+        <div class="row valign wrapper">
+            <div class="center-align form-group mt-3">
+                    <h5>Verify Project Teams</h5>
+                <br>
+                        {% if total_vm == 0 %}
+                            <p>You have no teams to verify!</p>
+                        {% else %}
+
+                            {% for i in range(0, total_vm) %}
+                                <b><a href = "{{ url_for('verify_project_mentor' ,  p_id = p_id_vm[i] ) }}" class="button-border hoverable waves-effect waves-light btn-large gradient-45deg-light-blue-cyan black-text">{{vm_topic_list[i]}} </a></b>
+                            {% endfor %}
+                        <br>
+                        {% endif %}
+                <br>
+            </div>
+            </div>
+        </div>
+
+            <div class="hoverable card mt-3 center-align light-blue lighten-5" style="width:60%">
+                <br>
+                <div class="center-align form-group">
+                    <h5>Grade Reports</h5>
+                    <div class="form-group center-align">
+
+
+                        <br>
+                        {% if total_vr == 0 %}
+                            <p st>You have no reports to review!</p>
+                        {% else %}
+                            {% for i in range(0, total_vr) %}
+                                <b><a href = "{{ url_for('view_document', pid=p_id_vr[i], doc_name=report_name_vr[i])}}" class="button-border hoverable waves-effect waves-light btn-large gradient-45deg-light-blue-cyan black-text">{{vr_topic_list[i]}} </a></b>
+                            {% endfor %}
+                        <br>
+                        {% endif %}
+                        <br>
+                    </div>
+                </div>
+             </div>
+
+                <div class="hoverable card center-align form-group mt-3 blue lighten-5" style="width:60%">
+                    <br>
+                    <h5>Verify Publications</h5>
+                    <br>
+                        {% if total_vp == 0 %}
+                            <p>You have no publications to review!</p>
+                        {% else %}
+
+                            {% for i in range(0, total_vp) %}
+                                <b><a href = "{{ url_for('verify_publication' ,  p_id = p_id_vp[i] ) }}" class="button-border hoverable waves-effect waves-light btn-large gradient-45deg-light-blue-cyan black-text">{{vp_topic_list[i]}} </a></b>
+                                <br><br>
+                            {% endfor %}
+                        {% endif %}
+                        <br>
+                </div>
+</div>
+
+{% endblock content %}
+
+
+
+

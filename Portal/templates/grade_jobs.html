@@ -1,0 +1,36 @@
+{% extends "layout.html" %}
+{% block content %}
+<style>
+table.striped > tbody > tr:nth-child(odd) {
+  background-color: rgba(170, 213, 213, 0.5);
+}
+</style>
+
+<div class = "container">
+    <h3 class="center-align">Grade The Following Students</h3>
+    {% if total == 0 %}
+      You shouldnt be seeing this page
+    {%else%}
+    <table class="striped" style="width:50%; margin-left: 50px">
+        <thead class="center-align">
+          <tr>
+              <th></th>
+              <th>Student ID</th>
+              <th>Grade Student</th>
+          </tr>
+        </thead>
+        <tbody class="center-align">
+        {% for i in range(0,total) %}
+          <tr>
+              <td><b>{{i+1}}</b></td>
+              <td>{{students[i]}}</td>
+              <td><a href= "{{ url_for('grade_job', job_id=job_id, candidate_id = students[i]) }}" class="btn amber black-text center">Assign Grade</a></td>
+
+          </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+    {%endif%}
+</div>
+
+{% endblock content %}
