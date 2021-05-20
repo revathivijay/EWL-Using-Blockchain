@@ -16,80 +16,80 @@ import requests
 # Login and Register
 
 # TODO: Do this later if time permits
-@app.route('/register', methods=['POST', 'GET'])
-def register():
-	form = LoginForm(request.form)
-	# if 'username' in session:
-	#     print("IN Session")
-	#     return redirect('/')
-
-	if request.method == 'POST':
-		print("using db")
-		users = mongo.db.students
-		user_id = request.form.get('id')
-		user_email = request.form.get('email')
-		print(user_id, user_email)
-
-		print("search for user")
-		existing_user = users.find_one({'id': user_id})
-		if existing_user is None:
-			print("user doesn't exist")
-			hashpass = bcrypt.hashpw(request.form.get('password').encode('utf-8'), bcrypt.gensalt())
-			users.insert(
-				{'id': user_id,
-				 'email': user_email,
-				 'password': hashpass})
-
-			session['username'] = "Eshita"
-
-			print('go home')
-			return redirect('/')
-
-		print('user exists')
-		return render_template('register.html', msg="The username is taken, please enter a different username",
-		                       form=form)
-
-	print('send to signup')
-	return render_template('register.html', msg="", form=form)
-
-
-# TODO: Do this later if time permits
-@app.route('/register_staff', methods=['POST', 'GET'])
-def register_staff():
-	form = LoginForm(request.form)
-	if 'username' in session:
-		print("IN Session")
-		return redirect('/')
-
-	if request.method == 'POST':
-		print("using db")
-		users = mongo.db.faculty
-		user_id = request.form.get('id')
-		user_email = request.form.get('email')
-		print(user_id, user_email)
-
-		print("search for user")
-		existing_user = users.find_one({'id': user_id})
-		if existing_user is None:
-			print("user doesn't exist")
-			hashpass = bcrypt.hashpw(request.form.get('password').encode('utf-8'), bcrypt.gensalt())
-			users.insert(
-				{'id': user_id,
-				 'email': user_email,
-				 'password': hashpass})
-
-			session['username'] = "Prof. Murli"
-
-			print('go home')
-			return redirect('/')
-
-		print('user exists')
-		return render_template('register_staff.html', msg="The username is taken, please enter a different username",
-		                       form=form)
-
-	print('send to signup')
-	return render_template('register_staff.html', msg="", form=form)
-
+# @app.route('/register', methods=['POST', 'GET'])
+# def register():
+# 	form = LoginForm(request.form)
+# 	# if 'username' in session:
+# 	#     print("IN Session")
+# 	#     return redirect('/')
+#
+# 	if request.method == 'POST':
+# 		print("using db")
+# 		users = mongo.db.students
+# 		user_id = request.form.get('id')
+# 		user_email = request.form.get('email')
+# 		print(user_id, user_email)
+#
+# 		print("search for user")
+# 		existing_user = users.find_one({'id': user_id})
+# 		if existing_user is None:
+# 			print("user doesn't exist")
+# 			hashpass = bcrypt.hashpw(request.form.get('password').encode('utf-8'), bcrypt.gensalt())
+# 			users.insert(
+# 				{'id': user_id,
+# 				 'email': user_email,
+# 				 'password': hashpass})
+#
+# 			session['username'] = "Eshita"
+#
+# 			print('go home')
+# 			return redirect('/')
+#
+# 		print('user exists')
+# 		return render_template('register.html', msg="The username is taken, please enter a different username",
+# 		                       form=form)
+#
+# 	print('send to signup')
+# 	return render_template('register.html', msg="", form=form)
+#
+#
+# # TODO: Do this later if time permits
+# @app.route('/register_staff', methods=['POST', 'GET'])
+# def register_staff():
+# 	form = LoginForm(request.form)
+# 	if 'username' in session:
+# 		print("IN Session")
+# 		return redirect('/')
+#
+# 	if request.method == 'POST':
+# 		print("using db")
+# 		users = mongo.db.faculty
+# 		user_id = request.form.get('id')
+# 		user_email = request.form.get('email')
+# 		print(user_id, user_email)
+#
+# 		print("search for user")
+# 		existing_user = users.find_one({'id': user_id})
+# 		if existing_user is None:
+# 			print("user doesn't exist")
+# 			hashpass = bcrypt.hashpw(request.form.get('password').encode('utf-8'), bcrypt.gensalt())
+# 			users.insert(
+# 				{'id': user_id,
+# 				 'email': user_email,
+# 				 'password': hashpass})
+#
+# 			session['username'] = "Prof. Murli"
+#
+# 			print('go home')
+# 			return redirect('/')
+#
+# 		print('user exists')
+# 		return render_template('register_staff.html', msg="The username is taken, please enter a different username",
+# 		                       form=form)
+#
+# 	print('send to signup')
+# 	return render_template('register_staff.html', msg="", form=form)
+#
 
 @app.route('/helper_login_student')
 def helper_login_student():
@@ -530,65 +530,24 @@ def getRanklist():
 
 @app.route("/get_open_jobs", methods=["POST", "GET"])
 def get_open_jobs():
-	jobs_ = mongo.db.jobs
-	jobs = jobs_.find({})
+	today_date = datetime.datetime.today()
+	jobs = list(mongo.db.jobs.find({"start_date": {"$gt": today_date}}))
 	s_name = get_student_name(session['id'])
 	user_type = get_user_type(session['id'])
+	total = len(jobs)
 
-	# TODO: add condition for displaying only jobs w unfilled vacancies
-
-	L_title = []
-	L_description = []
-	L_vacancies = []
-	L_start_dates = []
-	L_id = []
 	for job in jobs:
-		print(job["title"], job["description"], job["vacancies"])
-		title, description, vacancies, id, start_date = job["title"], job["description"], job["vacancies"], job["id"], \
-		                                                job['start_date']
-		L_title.append(title)
-		L_description.append(description)
-		L_vacancies.append(vacancies)
-		L_id.append(id)
-		start_date = start_date.strftime("%d %B, %Y")
-		L_start_dates.append(start_date)
-	total = len(L_title)
+		job["start_date"] = job["start_date"].strftime("%d %B, %Y")
 
-	return render_template('get_open_jobs.html', title_list=L_title, description_list=L_description,
-	                       vacancies_list=L_vacancies, L_id=L_id, start_date_list=L_start_dates,
-	                       total=total, s_name=s_name, user_type=user_type)
+	return render_template('get_open_jobs.html', jobs = jobs, total=total, s_name=s_name, user_type=user_type)
 
 
-# Get candidates
-@app.route("/get_candidates/<job_id>", methods=["POST", "GET"])
-def get_candidates(job_id):
-	s_id = session['id']
-	s_name = get_user_name()
-	user_type = get_user_type(s_id)
-
-	applicationHistory = mongo.db.applicationHistory
-	students = mongo.db.students
-
-	candidates = applicationHistory.find({"j_id": job_id}, {"_id": 0, "s_id": 1})
-	candidates = [item['s_id'] for item in candidates]
-	all_candidates = []
-
-	for candidate_id in candidates:
-		candidate = students.find_one({"id": candidate_id})
-		all_candidates.append(candidate)
-
-	return render_template('get_candidates.html', all_candidates=all_candidates, total=len(all_candidates),
-	                       s_name=s_name, user_type=user_type)
-
-
-# Apply for job
 @app.route("/apply_for_job/<job_id>", methods=["POST", "GET"])
-# by student applying for jobs
 def apply_for_job(job_id):
-	student_id = session['id']  # student id who has logged in
+	student_id = session['id']
 	applicationHistory = mongo.db.applicationHistory
 	hasApplied = applicationHistory.find_one({'s_id': student_id, 'j_id': job_id})
-	# Dont allow same student to apply multiple times for a job
+
 	if hasApplied:
 		flash("You have already applied for this job, you will be contacted shortly with the results. ", "success")
 		return redirect(url_for('get_open_jobs'))
@@ -608,7 +567,6 @@ def create_job():
 	form = CreateJob(request.form)
 
 	if form.is_submitted():
-		print("using db")
 		jobs = mongo.db.jobs
 		id = str(jobs.count())
 		title = request.form.get('title')
@@ -618,8 +576,16 @@ def create_job():
 		start_date = datetime.datetime.strptime(request.form.get('start_date'), '%d %B, %Y')
 		date_created = datetime.datetime.today()
 		jobs.insert(
-			{"id": id, "title": title, "description": description, "duration": duration, "vacancies": vacancies,
-			 "start_date": start_date, "date_created": date_created})
+			{
+				"id": id,
+				"title": title,
+				"description": description,
+				"duration": duration,
+				"vacancies": vacancies,
+				"start_date": start_date,
+				"date_created": date_created
+			}
+		)
 		return redirect("/supervisor_dashboard")
 	return render_template('create_job.html', create_job_form=form, user_type=user_type, s_name=s_name)
 
@@ -644,8 +610,16 @@ def view_created_jobs():
 		job['start_date_'] = job['start_date'].strftime("%d %B, %Y")
 		job['end_date'] = job['end_date'].strftime("%d %B, %Y")
 		job['date_created'] = job['date_created'].strftime("%d %B, %Y")
-		graded_applicants = applicationHistory.find({"j_id": job["id"], "grade": None, "status": "selected"},
-		                                            {"s_id": 1})
+		graded_applicants = applicationHistory.find(
+			{
+				"j_id": job["id"],
+				"grade": None,
+				"status": "selected"
+			},
+			{
+				"s_id": 1
+			}
+		)
 		graded_applicants = [item['s_id'] for item in graded_applicants]
 		job["is_graded"] = True
 		if len(graded_applicants) > 0:
@@ -666,36 +640,39 @@ def view_created_jobs():
 	                       s_name=s_name, user_type=user_type)
 
 
-def allocate_job(job_id):
+@app.route("/get_candidates/<job_id>", methods=["POST", "GET"])
+def get_candidates(job_id):
+	s_id = session['id']
+	s_name = get_user_name()
+	user_type = get_user_type(s_id)
+
 	applicationHistory = mongo.db.applicationHistory
-	all_applicants = applicationHistory.find({'j_id': job_id}, {"s_id": 1, "_id": 0})
-	all_applicants = [item['s_id'] for item in all_applicants]
-	curr_job = mongo.db.jobs.find_one({"id": job_id})
+	students = mongo.db.students
 
-	if len(list(applicationHistory.find({'status': 'selected'}))) < 0:
-		selected_candidates = random.sample(all_applicants, int(curr_job["vacancies"]))
-	else:
-		scores = {}
-		# Generate scores of students for the given job
-		for applicant in all_applicants:
-			all_grades = applicationHistory.find({"s_id": applicant, "status": "selected", "grade": {"$ne": None}},
-			                                     {"grade": 1, "_id": 0})
-			all_grades = [int(item['grade']) for item in all_grades]
-			# If it is his first job give him an implicit rating of 9
-			scores[applicant] = 9 if len(all_grades) == 0 else (sum(all_grades) / len(all_grades))
+	candidates = applicationHistory.find({"j_id": job_id}, {"_id": 0, "s_id": 1})
+	candidates = [item['s_id'] for item in candidates]
+	all_candidates = []
 
-		for key in scores.keys():
-			scores[key] = scores[key] * random.uniform(0.7, 1.0)
-		selected_candidates = list(dict(sorted(scores.items(), key=lambda item: item[1], reverse=True)).keys())[
-		                      :int(curr_job["vacancies"])]
+	for candidate_id in candidates:
+		candidate = students.find_one({"id": candidate_id})
+		all_candidates.append(candidate)
 
-	for candidate in all_applicants:
-		if candidate in selected_candidates:
-			applicationHistory.update_one({'j_id': job_id, 's_id': candidate}, {'$set': {'status': 'selected'}})
-		else:
-			applicationHistory.update_one({'j_id': job_id, 's_id': candidate}, {'$set': {'status': 'rejected'}})
+	return render_template('get_candidates.html', all_candidates=all_candidates, total=len(all_candidates),
+	                       s_name=s_name, user_type=user_type)
 
-	return selected_candidates
+
+@app.route('/allocated_students/<job_id>', methods=['GET', 'POST'])
+def allocated_students(job_id):
+	s_id = session['id']
+	s_name = get_user_name()
+	user_type = get_user_type(s_id)
+
+	jobs = mongo.db.jobs
+	this_job = jobs.find_one({"id": job_id})
+	return render_template("allocated_students.html", selected_students=this_job["selected_students"],
+	                       job_title=this_job['title'], total=len(this_job["selected_students"]),
+	                       s_name=s_name, user_type=user_type)
+
 
 
 @app.route('/selected_students/<job_id>', methods=['GET', 'POST'])
@@ -711,18 +688,6 @@ def selected_students(job_id):
 	return render_template("selected_students.html", selected_students=selected_students_, job_title=this_job['title'],
 	                       total=len(selected_students_), s_name=s_name, user_type=user_type)
 
-
-@app.route('/allocated_students/<job_id>', methods=['GET', 'POST'])
-def allocated_students(job_id):
-	s_id = session['id']
-	s_name = get_user_name()
-	user_type = get_user_type(s_id)
-
-	jobs = mongo.db.jobs
-	this_job = jobs.find_one({"id": job_id})
-	return render_template("allocated_students.html", selected_students=this_job["selected_students"],
-	                       job_title=this_job['title'], total=len(this_job["selected_students"]),
-	                       s_name=s_name, user_type=user_type)
 
 
 @app.route('/grade_jobs/<job_id>', methods=['GET', 'POST'])
@@ -761,9 +726,11 @@ def grade_job(job_id, candidate_id):
 			return redirect(url_for("grade_jobs", job_id=job_id))
 		else:
 			return redirect('supervisor_dashboard')
-	# TODO: Should the student be intimated that his job has been completed?
+
 	return render_template('grade_job.html', form=form)
 
+
+# UC3
 
 @app.route('/create_post', methods=['POST', 'GET'])
 def create_post():
@@ -884,3 +851,35 @@ def get_project_lists():
 			else:
 				filelists.append([])
 	return my_projects, topic_list, filelists
+
+
+def allocate_job(job_id):
+	applicationHistory = mongo.db.applicationHistory
+	all_applicants = applicationHistory.find({'j_id': job_id}, {"s_id": 1, "_id": 0})
+	all_applicants = [item['s_id'] for item in all_applicants]
+	curr_job = mongo.db.jobs.find_one({"id": job_id})
+
+	if len(list(applicationHistory.find({'status': 'selected'}))) < 0:
+		selected_candidates = random.sample(all_applicants, int(curr_job["vacancies"]))
+	else:
+		scores = {}
+		# Generate scores of students for the given job
+		for applicant in all_applicants:
+			all_grades = applicationHistory.find({"s_id": applicant, "status": "selected", "grade": {"$ne": None}},
+			                                     {"grade": 1, "_id": 0})
+			all_grades = [int(item['grade']) for item in all_grades]
+			# If it is his first job give him an implicit rating of 9
+			scores[applicant] = 9 if len(all_grades) == 0 else (sum(all_grades) / len(all_grades))
+
+		for key in scores.keys():
+			scores[key] = scores[key] * random.uniform(0.7, 1.0)
+		selected_candidates = list(dict(sorted(scores.items(), key=lambda item: item[1], reverse=True)).keys())[
+		                      :int(curr_job["vacancies"])]
+
+	for candidate in all_applicants:
+		if candidate in selected_candidates:
+			applicationHistory.update_one({'j_id': job_id, 's_id': candidate}, {'$set': {'status': 'selected'}})
+		else:
+			applicationHistory.update_one({'j_id': job_id, 's_id': candidate}, {'$set': {'status': 'rejected'}})
+
+	return selected_candidates
